@@ -37,7 +37,7 @@ export default function TemplateGrid({
 
           <div className="min-w-0 flex-1">
             <div className="flex items-center justify-between gap-2">
-              <h3 className="truncate text-xs font-bold text-secondary transition-colors group-hover:text-primary">
+              <h3 className="truncate font-bold text-secondary transition-colors group-hover:text-primary">
                 {template.name}
               </h3>
               <div className="relative" onClick={(e) => e.stopPropagation()}>

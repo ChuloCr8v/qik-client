@@ -25,11 +25,12 @@ export default function LandingPage({ onGetStarted, onDemoSignIn, authError }: L
       {/* Features Section */}
       <Features />
 
-      {/* Social Proof (CTA) */}
-      <SocialProof onGetStarted={onGetStarted} />
-
       {/* Benefits Content */}
       <Benefits />
+      
+       {/* Social Proof (CTA) */}
+      <SocialProof onGetStarted={onGetStarted} />
+
     </div>
   );
 }

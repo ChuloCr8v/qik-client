@@ -10,7 +10,7 @@ export function GoogleSignInButton({ isLoading, onClick }: GoogleSignInButtonPro
     <button
       onClick={onClick}
       disabled={isLoading}
-      className="group flex w-full items-center justify-center gap-3 rounded-xl border border-border bg-white px-6 py-3 text-xs font-bold text-secondary transition-all hover:bg-slate-50 active:scale-[0.98] shadow-xs"
+      className="group h-10! flex w-full items-center justify-center gap-3 rounded-xl border border-border bg-white px-6 py-3 text-xs font-bold text-secondary transition-all hover:bg-slate-50 active:scale-[0.98] shadow-xs"
     >
       {isLoading ? (
         <Loader2 className="h-4 w-4 animate-spin text-primary" />

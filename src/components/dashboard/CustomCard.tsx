@@ -4,7 +4,7 @@ import React from 'react'
 type Props = {
     okText?: string;
     onOk?: () => void;
-    icon: React.ElementType;
+    icon?: React.ElementType;
     title: string;
     children?: React.ReactNode;
     headerAction?: () => void;
@@ -17,7 +17,7 @@ const CustomCard = (props: Props) => {
         <div className={`${props.className} rounded-2xl border border-border bg-white p-5 shadow-sm`}>
             <div className="flex justify-between">
                 <div className="mb-3 flex items-center gap-2">
-                    <props.icon className="h-3.5 w-3.5 text-primary" />
+                    {props.icon && <props.icon className="h-3.5 w-3.5 text-primary" />}
                     <h3 className="font-semibold text-secondary">{props.title}</h3>
                 </div>
                 {props.headerAction &&

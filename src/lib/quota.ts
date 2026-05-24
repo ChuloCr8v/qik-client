@@ -1,21 +1,53 @@
 export const PLAN_LIMITS = {
   Free: {
-    meetings: 5,
+    meetings: Infinity,
     agendaItemsPerMeeting: 10,
-    aiGenerations: 5,
-    features: ['Real-time collaboration', 'Export to PDF', 'Basic Templates']
+    aiGenerations: 3,
+    teamMembers: 0,
+    tasksAndDecisions: false,
+    dashboard: false,
+    guestInvites: true,
+    features: [
+      '3 AI agenda generations/month',
+      'Unlimited one-off meetings',
+      'Guest invites (not permanent team)',
+      'Basic agenda view'
+    ]
   },
-  Pro: {
+  Organisation: {
     meetings: Infinity,
-    agendaItemsPerMeeting: 50,
-    aiGenerations: Infinity,
-    features: ['Everything in Free', 'Unlimited Meetings', 'AI Agenda Coaching', 'Custom Branding', 'Priority Support']
+    agendaItemsPerMeeting: Infinity,
+    aiGenerations: Infinity,        // admin only
+    memberAiGenerations: 10,        // per team member
+    teamMembers: 15,
+    tasksAndDecisions: true,
+    dashboard: true,
+    guestInvites: true,
+    features: [
+      'Unlimited AI generations for admin',
+      '10 AI generations/month per member',
+      'Up to 15 team members',
+      'Tasks & decisions per agenda',
+      'Full team dashboard',
+      'Meeting history & analytics',
+      'Export everything'
+    ]
   },
-  Enterprise: {
+  OrganisationPlus: {
     meetings: Infinity,
-    agendaItemsPerMeeting: 100,
+    agendaItemsPerMeeting: Infinity,
     aiGenerations: Infinity,
-    features: ['Everything in Pro', 'SSO & SAML', 'Detailed Audit Logs', 'Dedicated Success Manager', 'Custom Contracts']
+    memberAiGenerations: 15,
+    teamMembers: 50,
+    tasksAndDecisions: true,
+    dashboard: true,
+    guestInvites: true,
+    features: [
+      'Everything in Organisation',
+      'Up to 50 team members',
+      '15 AI generations/month per member',
+      'Priority support'
+    ]
   }
 };
 

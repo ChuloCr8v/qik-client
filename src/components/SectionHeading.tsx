@@ -1,19 +1,19 @@
 import React from 'react';
 
-interface PageHeaderProps {
+interface SectionHeadingProps {
   title: string;
   description?: string;
   action?: React.ReactNode;
 }
 
-export default function PageHeader({
+export default function SectionHeading({
   title, description, action
-}: PageHeaderProps) {
+}: SectionHeadingProps) {
   return (
-    <div className="">
+    <div className="border-b border-border pb-1 mb-6">
       <div className="flex flex-row items-center justify-between gap-4 sm:gap-6">
         <div className="min-w-0 flex-1">
-          <h1 className="text-lg font-semibold tracking-tight text-secondary sm:text-base break-words">
+          <h1 className="text-sm font-semibold tracking-tight text-secondary sm:text-base break-words">
             {title}
           </h1>
           {description && (

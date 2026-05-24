@@ -1,10 +1,18 @@
-import type { FormEvent, ReactNode } from 'react';
-import { useMemo, useState } from 'react';
-import { CalendarClock, FileText, LayoutTemplate, Loader2, Plus, Sparkles } from 'lucide-react';
-import TemplatePreviewModal from '../TemplatePreviewModal';
-import { MEETING_TEMPLATES, MeetingTemplate } from '../../constants/templates';
-import CustomCard from './CustomCard';
-import { getTemplateDuration, parseInvitees } from './dashboardUtils';
+
+import type { FormEvent, ReactNode } from "react";
+import React, { useMemo, useState } from 'react';
+import {
+    CalendarClock,
+    FileText,
+    LayoutTemplate,
+    Loader2,
+    Plus,
+    Sparkles
+} from "lucide-react";
+import TemplatePreviewModal from "../TemplatePreviewModal";
+import { MEETING_TEMPLATES, MeetingTemplate } from "../../constants/templates";
+import CustomCard from "./CustomCard";
+import { getTemplateDuration, parseInvitees } from "./dashboardUtils";
 
 type CreateMeetingInput = {
     title: string;
@@ -19,36 +27,41 @@ type Props = {
     onBrowseTemplates: () => void;
 };
 
-type CreationMode = 'details' | 'templates';
+type CreationMode = "details" | "templates";
 
 export default function NewMeetingCard({
     isCreatingMeeting,
     onCreateMeeting,
-    onBrowseTemplates,
+    onBrowseTemplates
 }: Props) {
-    const [mode, setMode] = useState<CreationMode>('details');
-    const [title, setTitle] = useState('');
-    const [scheduledAt, setScheduledAt] = useState('');
-    const [invitees, setInvitees] = useState('');
-    const [selectedTemplateForPreview, setSelectedTemplateForPreview] = useState<MeetingTemplate | null>(null);
+    const [mode, setMode] = useState<CreationMode>("details");
+    const [title, setTitle] = useState("");
+    const [scheduledAt, setScheduledAt] = useState("");
+    const [invitees, setInvitees] = useState("");
+    const [selectedTemplateForPreview, setSelectedTemplateForPreview] =
+        useState<MeetingTemplate | null>(null);
 
     const featuredTemplates = useMemo(() => MEETING_TEMPLATES.slice(0, 3), []);
 
     const resetForm = () => {
-        setTitle('');
-        setScheduledAt('');
-        setInvitees('');
+        setTitle("");
+        setScheduledAt("");
+        setInvitees("");
     };
 
-    const handleCreateMeeting = async (event?: FormEvent, template?: MeetingTemplate, templateStartTime?: string) => {
+    const handleCreateMeeting = async (
+        event?: FormEvent,
+        template?: MeetingTemplate,
+        templateStartTime?: string
+    ) => {
         event?.preventDefault();
         if (!title.trim() && !template) return;
 
         await onCreateMeeting({
-            title: title.trim() || template?.name || 'Untitled Meeting',
+            title: title.trim() || template?.name || "Untitled Meeting",
             template,
             scheduledAt: templateStartTime || scheduledAt,
-            invitees: parseInvitees(invitees),
+            invitees: parseInvitees(invitees)
         });
         resetForm();
     };
@@ -56,14 +69,15 @@ export default function NewMeetingCard({
     return (
         <>
             <CustomCard
-                className='col-span-4'
-                icon={Sparkles}
+                className="col-span-4"
+                //   icon={Sparkles}
                 title="Create Meeting"
-                headerAction={() => setMode(mode === 'details' ? 'templates' : 'details')}
-                headerActionText={mode === 'details' ? 'Templates' : 'Details'}
+                headerAction={() =>
+                    setMode(mode === "details" ? "templates" : "details")
+                }
+                headerActionText={mode === "details" ? "Templates" : "Details"}
             >
-
-                {mode === 'details' ? (
+                {mode === "details" ? (
                     <form onSubmit={handleCreateMeeting} className="space-y-3">
                         <div className="space-y-1.5">
                             <label>Meeting Name</label>
@@ -72,7 +86,7 @@ export default function NewMeetingCard({
                                 type="text"
                                 placeholder="e.g. Design Sync"
                                 value={title}
-                                onChange={(event) => setTitle(event.target.value)}
+                                onChange={event => setTitle(event.target.value)}
                                 className="input-field"
                             />
                         </div>
@@ -81,7 +95,9 @@ export default function NewMeetingCard({
                             <input
                                 type="datetime-local"
                                 value={scheduledAt}
-                                onChange={(event) => setScheduledAt(event.target.value)}
+                                onChange={event =>
+                                    setScheduledAt(event.target.value)
+                                }
                                 className="input-field"
                             />
                         </div>
@@ -91,7 +107,9 @@ export default function NewMeetingCard({
                                 type="text"
                                 placeholder="Emails separated by commas"
                                 value={invitees}
-                                onChange={(event) => setInvitees(event.target.value)}
+                                onChange={event =>
+                                    setInvitees(event.target.value)
+                                }
                                 className="input-field"
                             />
                         </div>
@@ -99,7 +117,11 @@ export default function NewMeetingCard({
                             disabled={isCreatingMeeting}
                             className="button-primary flex w-full items-center justify-center gap-2"
                         >
-                            {isCreatingMeeting ? <Loader2 className="h-3 w-3 animate-spin" /> : <Plus className="h-3 w-3" />}
+                            {isCreatingMeeting ? (
+                                <Loader2 className="h-3 w-3 animate-spin" />
+                            ) : (
+                                <Plus className="h-3 w-3" />
+                            )}
                             <span>Create Meeting</span>
                         </button>
                     </form>
@@ -111,9 +133,13 @@ export default function NewMeetingCard({
                                     <LayoutTemplate className="h-4 w-4" />
                                 </div>
                                 <div>
-                                    <p className="text-xs font-semibold text-secondary">Start structured</p>
+                                    <p className="text-xs font-semibold text-secondary">
+                                        Start structured
+                                    </p>
                                     <p className="mt-0.5 text-[11px] leading-relaxed text-muted">
-                                        Pick a framework, preview the agenda, then launch with the same meeting details.
+                                        Pick a framework, preview the agenda,
+                                        then launch with the same meeting
+                                        details.
                                     </p>
                                 </div>
                             </div>
@@ -124,8 +150,10 @@ export default function NewMeetingCard({
                                 <button
                                     key={template.name}
                                     disabled={isCreatingMeeting}
-                                    onClick={() => setSelectedTemplateForPreview(template)}
-                                    className="group flex items-center justify-between rounded-xl border border-border p-3 text-left transition-all hover:border-primary hover:bg-slate-50"
+                                    onClick={() =>
+                                        setSelectedTemplateForPreview(template)
+                                    }
+                                    className="group flex h-full! items-center justify-between rounded-xl border border-border p-3 text-left transition-all hover:border-primary hover:bg-slate-50"
                                 >
                                     <div className="min-w-0">
                                         <span className="block truncate text-[11px] font-semibold text-secondary group-hover:text-primary">
@@ -135,7 +163,10 @@ export default function NewMeetingCard({
                                             <FileText className="h-3 w-3" />
                                             {template.items.length} sections
                                             <CalendarClock className="ml-1 h-3 w-3" />
-                                            {getTemplateDuration(template.items)}m
+                                            {getTemplateDuration(
+                                                template.items
+                                            )}
+                                            m
                                         </span>
                                     </div>
                                     <Plus className="h-3.5 w-3.5 shrink-0 text-border group-hover:text-primary" />
@@ -144,7 +175,7 @@ export default function NewMeetingCard({
 
                             <button
                                 onClick={onBrowseTemplates}
-                                className="group bg-primary text-white text-center rounded-xl p-3 transition-all hover:bg-primary/60"
+                                className="group h-full! bg-primary text-white text-center rounded-xl p-3 transition-all hover:bg-primary/60"
                             >
                                 More Templates
                             </button>
@@ -157,9 +188,13 @@ export default function NewMeetingCard({
                 isOpen={!!selectedTemplateForPreview}
                 onClose={() => setSelectedTemplateForPreview(null)}
                 template={selectedTemplateForPreview}
-                onApply={async (startTime) => {
+                onApply={async startTime => {
                     if (!selectedTemplateForPreview) return;
-                    await handleCreateMeeting(undefined, selectedTemplateForPreview, startTime);
+                    await handleCreateMeeting(
+                        undefined,
+                        selectedTemplateForPreview,
+                        startTime
+                    );
                     setSelectedTemplateForPreview(null);
                 }}
             />

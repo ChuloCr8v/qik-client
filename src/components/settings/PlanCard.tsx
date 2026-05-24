@@ -41,7 +41,7 @@ export default function PlanCard({ profile, onOpenPricing }: PlanCardProps) {
           <div className="space-y-2">
             <p className="text-[10px] font-bold uppercase tracking-widest text-secondary">Plan Benefits</p>
             <div className="space-y-2">
-              {limits.features.slice(0, 4).map((feature, i) => (
+              {limits?.features.slice(0, 4).map((feature, i) => (
                 <div key={i} className="flex items-center gap-2 text-[11px] font-medium text-muted">
                   <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
                   {feature}

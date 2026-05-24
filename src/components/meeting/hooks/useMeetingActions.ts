@@ -1,6 +1,10 @@
-import { DropResult } from '@hello-pangea/dnd';
+import {
+  DropResult
+} from '@hello-pangea/dnd';
 import toast from 'react-hot-toast';
-import { MeetingTemplate } from '../../../constants/templates';
+import {
+  MeetingTemplate
+} from '../../../constants/templates';
 import {
   useAddAgendaItemMutation,
   useReorderAgendaMutation,
@@ -12,7 +16,10 @@ import {
   useUpdateMeetingMutation,
   useUpdateMeetingProgressMutation,
 } from '../../../features/meetings/meetingsApi';
-import { AgendaItem, Meeting } from '../../../types';
+import {
+  AgendaItem,
+  Meeting
+} from '../../../types';
 
 type UseMeetingActionsInput = {
   meetingId: string;
@@ -39,16 +46,26 @@ export function useMeetingActions({
   const [updateMeetingProgress] = useUpdateMeetingProgressMutation();
   const [updateMeeting] = useUpdateMeetingMutation();
 
-  const handleAddItem = async (data: { title: string; description: string; duration: number }) => {
-    await addAgendaItem({ meetingId, item: { ...data, order: agenda.length } });
+  const handleAddItem = async (data: {
+    title: string; description: string; duration: number
+  }) => {
+    await addAgendaItem( {
+      meetingId, item: {
+        ...data, order: agenda.length
+      }
+    });
   };
 
   const handleUpdateItem = async (
     editingItem: AgendaItem | null,
-    data: { title: string; description: string; duration: number },
+    data: {
+      title: string; description: string; duration: number
+    },
   ) => {
     if (!editingItem) return;
-    await updateAgendaItem({ meetingId, itemId: editingItem.id, data });
+    await updateAgendaItem( {
+      meetingId, itemId: editingItem.id, data
+    });
   };
 
   const handleOnDragEnd = (result: DropResult) => {
@@ -59,7 +76,9 @@ export function useMeetingActions({
     items.splice(result.destination.index, 0, reorderedItem);
 
     setAgenda(items);
-    reorderAgendaItems({ meetingId, items });
+    reorderAgendaItems( {
+      meetingId, items
+    });
   };
 
   const handleSendReminders = async () => {
@@ -70,7 +89,7 @@ export function useMeetingActions({
 
     try {
       const result = await sendMeetingReminders(meetingId).unwrap();
-      toast.success(`Sent ${result.sent} reminder${result.sent === 1 ? '' : 's'}.`);
+      toast.success(`Sent ${result.sent} reminder${result.sent === 1 ? '': 's'}.`);
     } catch (error) {
       console.error(error);
       toast.error('Failed to send reminders.');
@@ -95,24 +114,45 @@ export function useMeetingActions({
 
   const applyTemplate = async (template: MeetingTemplate, scheduledAt?: string) => {
     if (scheduledAt) {
-      await updateMeetingProgress({ meetingId, data: { scheduledAt } });
+      await updateMeetingProgress( {
+        meetingId, data: {
+          scheduledAt
+        }
+      });
     }
     for (let i = 0; i < template.items.length; i++) {
-      await addAgendaItem({ meetingId, item: { ...template.items[i], order: agenda.length + i } });
+      await addAgendaItem( {
+        meetingId, item: {
+          ...template.items[i], order: agenda.length + i
+        }
+      });
     }
   };
 
   const handleAddInvitee = async (email: string) => {
-    if (!meeting) return;
-    const normalizedEmail = email.trim().toLowerCase();
-    await sendMeetingInvite({ meetingId, email: normalizedEmail }).unwrap();
-    toast.success('Invitation sent.');
+    try {
+      if (!meeting) return;
+      const normalizedEmail = email.trim().toLowerCase();
+      await sendMeetingInvite( {
+        meetingId, email: normalizedEmail
+      }).unwrap();
+      toast.success('Invitation sent.');
+    } catch {(error) => {
+        console.log(error)
+        toast.error("Unable to send invite")
+      }
+    }
+
   };
 
   const handleTogglePublic = async () => {
     if (!meeting) return;
-    await updateMeeting({ id: meetingId, data: { isPublic: !meeting.isPublic } }).unwrap();
-    toast.success(meeting.isPublic ? 'Meeting is now private.' : 'Meeting is now public.');
+    await updateMeeting( {
+      id: meetingId, data: {
+        isPublic: !meeting.isPublic
+      }
+    }).unwrap();
+    toast.success(meeting.isPublic ? 'Meeting is now private.': 'Meeting is now public.');
   };
 
   return {

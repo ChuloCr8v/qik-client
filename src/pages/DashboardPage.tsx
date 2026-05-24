@@ -21,8 +21,8 @@ export default function DashboardPage() {
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-      <div className="grid grid-cols-1">
-        <div className="space-y-6 lg:grid grid-cols-6 gap-6">
+      <div className="grid grid-cols-1 gap-4">
+        <div className="space-y-6 md:grid grid-cols-6 gap-6">
           <NewMeetingCard
             isCreatingMeeting={isCreatingMeeting}
             onCreateMeeting={handleCreateMeeting}

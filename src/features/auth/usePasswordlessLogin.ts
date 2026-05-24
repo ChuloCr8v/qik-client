@@ -1,12 +1,19 @@
-import { FormEvent, useState } from 'react';
+import {
+  FormEvent,
+  useState
+} from 'react';
 import toast from 'react-hot-toast';
-import { setToken } from './authSlice';
+import {
+  setToken
+} from './authSlice';
 import {
   useGoogleSignInMutation,
   useStartEmailSignInMutation,
   useVerifyEmailSignInMutation,
 } from './authApi';
-import { useAppDispatch } from '../../store/hooks';
+import {
+  useAppDispatch
+} from '../../store/hooks';
 import {
   googleClientId,
   isGoogleSignInConfigured,
@@ -18,12 +25,18 @@ type UsePasswordlessLoginOptions = {
 };
 
 export function usePasswordlessLogin(options: UsePasswordlessLoginOptions = {}) {
-  const [email, setEmail] = useState('');
-  const [code, setCode] = useState('');
-  const [devCode, setDevCode] = useState('');
-  const [isCodeStep, setIsCodeStep] = useState(false);
-  const [isEmailLoading, setIsEmailLoading] = useState(false);
-  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [email,
+    setEmail] = useState('');
+  const [code,
+    setCode] = useState('');
+  const [devCode,
+    setDevCode] = useState('');
+  const [isCodeStep,
+    setIsCodeStep] = useState(false);
+  const [isEmailLoading,
+    setIsEmailLoading] = useState(false);
+  const [isGoogleLoading,
+    setIsGoogleLoading] = useState(false);
   const dispatch = useAppDispatch();
   const [startEmailSignIn] = useStartEmailSignInMutation();
   const [verifyEmailSignIn] = useVerifyEmailSignInMutation();
@@ -48,7 +61,9 @@ export function usePasswordlessLogin(options: UsePasswordlessLoginOptions = {}) 
           }
 
           try {
-            const result = await googleSignIn({ credential: response.credential }).unwrap();
+            const result = await googleSignIn( {
+              credential: response.credential
+            }).unwrap();
             dispatch(setToken(result.token));
             toast.success('Successfully signed in!');
             options.onAuthenticated?.();
@@ -78,7 +93,9 @@ export function usePasswordlessLogin(options: UsePasswordlessLoginOptions = {}) 
 
     setIsEmailLoading(true);
     try {
-      const result = await startEmailSignIn({ email }).unwrap();
+      const result = await startEmailSignIn( {
+        email
+      }).unwrap();
       setIsCodeStep(true);
       setDevCode(result.devCode || '');
       if (result.devCode) {
@@ -99,7 +116,9 @@ export function usePasswordlessLogin(options: UsePasswordlessLoginOptions = {}) 
 
     setIsEmailLoading(true);
     try {
-      const result = await verifyEmailSignIn({ email, code }).unwrap();
+      const result = await verifyEmailSignIn( {
+        email, code
+      }).unwrap();
       dispatch(setToken(result.token));
       toast.success('Successfully signed in!');
       options.onAuthenticated?.();

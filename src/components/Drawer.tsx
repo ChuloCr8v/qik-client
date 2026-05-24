@@ -51,7 +51,7 @@ export default function Drawer({ isOpen, onClose, title, children, footer, class
             )}
           >
             {/* Header */}
-            <div className="flex items-start justify-between border-b border-border px-6 py-4">
+            <div className="flex items-start justify-between border-b border-border px-6 py-2">
               <div className="flex items-start gap-4 flex-1 pr-4">
                 {icon && (
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-slate-50 border border-slate-100/50">

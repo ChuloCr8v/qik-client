@@ -1,4 +1,7 @@
-import { useEffect, useState } from 'react';
+import {
+  useEffect,
+  useState
+} from 'react';
 import toast from 'react-hot-toast';
 import PageHeader from '../components/PageHeader';
 import PricingDrawer from '../components/PricingDrawer';
@@ -8,16 +11,34 @@ import PlanCard from '../components/settings/PlanCard';
 import PreferencesPanel from '../components/settings/PreferencesPanel';
 import ProfileSummaryCard from '../components/settings/ProfileSummaryCard';
 import QuickActionsPanel from '../components/settings/QuickActionsPanel';
-import { User } from '../types';
-import { useAuth } from '../features/auth/AuthProvider';
-import { useGetCurrentUserQuery, useUpdateCurrentUserMutation } from '../features/users/usersApi';
+import {
+  User
+} from '../types';
+import {
+  useAuth
+} from '../features/auth/AuthProvider';
+import {
+  useGetCurrentUserQuery,
+  useUpdateCurrentUserMutation
+} from '../features/users/usersApi';
 
 export default function SettingsPage() {
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-  const [isPricingOpen, setIsPricingOpen] = useState(false);
-  const [profile, setProfile] = useState<User | null>(null);
-  const { user, signOut } = useAuth();
-  const { data: profileData, refetch } = useGetCurrentUserQuery(undefined, { skip: !user });
+  const [isProfileModalOpen,
+    setIsProfileModalOpen] = useState(false);
+  const [isPricingOpen,
+    setIsPricingOpen] = useState(false);
+  const [profile,
+    setProfile] = useState < User | null > (null);
+  const {
+    user,
+    signOut
+  } = useAuth();
+  const {
+    data: profileData,
+    refetch
+  } = useGetCurrentUserQuery(undefined, {
+      skip: !user
+    });
   const [updateUserProfile] = useUpdateCurrentUserMutation();
 
   useEffect(() => {
@@ -33,7 +54,7 @@ export default function SettingsPage() {
     signOut();
   };
 
-  const handleToggleNotification = async (key: keyof NonNullable<User['notifications']>) => {
+  const handleToggleNotification = async (key: keyof NonNullable < User['notifications'] >) => {
     if (!profile) return;
 
     const currentNotifications = profile.notifications || {
@@ -41,11 +62,18 @@ export default function SettingsPage() {
       reminders: true,
       aiCoach: false
     };
-    const newNotifications = { ...currentNotifications, [key]: !currentNotifications[key] };
+    const newNotifications = {
+      ...currentNotifications,
+      [key]: !currentNotifications[key]
+    };
 
     try {
-      await updateUserProfile({ notifications: newNotifications }).unwrap();
-      setProfile(prev => prev ? { ...prev, notifications: newNotifications } : null);
+      await updateUserProfile( {
+        notifications: newNotifications
+      }).unwrap();
+      setProfile(prev => prev ? {
+        ...prev, notifications: newNotifications
+      }: null);
       toast.success('Preferences updated');
     } catch (error) {
       toast.error('Failed to update preferences');
@@ -58,11 +86,11 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+    <div className="space-y-4 mx-auto max-w-6xl px-4 py-8 sm:px-6">
       <PageHeader
         title="Account Settings"
-        description="Manage your profile, subscription, and application preferences."
-      />
+
+        />
 
       <div className="grid gap-8 lg:grid-cols-12">
         <div className="space-y-6 lg:col-span-4">
@@ -71,7 +99,7 @@ export default function SettingsPage() {
             profile={profile}
             onEdit={() => setIsProfileModalOpen(true)}
             onLogout={handleLogout}
-          />
+            />
           <PlanCard profile={profile} onOpenPricing={() => setIsPricingOpen(true)} />
         </div>
 
@@ -90,7 +118,7 @@ export default function SettingsPage() {
           onClose={() => setIsProfileModalOpen(false)}
           user={user}
           onSuccess={handleProfileSuccess}
-        />
+          />
       )}
 
       <PricingDrawer isOpen={isPricingOpen} onClose={() => setIsPricingOpen(false)} />
