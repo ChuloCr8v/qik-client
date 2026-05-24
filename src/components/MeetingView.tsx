@@ -15,6 +15,7 @@ import InviteesPanel from "./meeting/InviteesPanel";
 import LiveStickyBar from "./meeting/LiveStickyBar";
 import MeetingHeader from "./meeting/MeetingHeader";
 import MeetingModals from "./meeting/MeetingModals";
+import UpgradePrompt from "./billing/UpgradePrompt";
 import { useMeetingActions } from "./meeting/hooks/useMeetingActions";
 import { useMeetingRealtime } from "./meeting/hooks/useMeetingRealtime";
 import { useMeetingUiState } from "./meeting/hooks/useMeetingUiState";
@@ -203,6 +204,13 @@ export default function MeetingView({
                         ui.setIsTemplateListOpen(false);
                     }}
                     onAddInvitee={actions.handleAddInvitee}
+                />
+
+                <UpgradePrompt
+                    isOpen={ai.isUpgradePromptOpen}
+                    onClose={ai.closeUpgradePrompt}
+                    currentPlan={ai.currentPlan}
+                    missingFeature="You have reached your monthly AI generation limit. Upgrade to continue generating agendas."
                 />
 
                 <LiveStickyBar

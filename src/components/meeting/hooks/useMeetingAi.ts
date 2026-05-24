@@ -1,23 +1,33 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { useAddAgendaItemMutation } from '../../../features/meetings/meetingsApi';
+import { useAddAgendaItemMutation, useGenerateAgendaMutation } from '../../../features/meetings/meetingsApi';
 import { useSendNotificationMutation } from '../../../features/notifications/notificationsApi';
-import { analyzeAgenda, generateAgenda } from '../../../services/groqService';
+import { useGetBillingUsageQuery } from '../../../features/billing/billingApi';
+import { analyzeAgenda } from '../../../services/groqService';
 import { AgendaItem, Meeting, User } from '../../../types';
 
 export function useMeetingAi(meetingId: string, meeting: Meeting | null, agenda: AgendaItem[], user: User | null) {
   const [aiContext, setAiContext] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<string | null>(null);
+  const [isUpgradePromptOpen, setIsUpgradePromptOpen] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [addAgendaItem] = useAddAgendaItemMutation();
+  const [generateAgenda] = useGenerateAgendaMutation();
   const [sendNotification] = useSendNotificationMutation();
+  const { data: billingUsage } = useGetBillingUsageQuery(undefined, { skip: !user });
 
   const handleGenerateAI = async () => {
     if (!aiContext.trim() || !meeting) return;
     setIsGenerating(true);
     try {
-      const suggestedItems = await generateAgenda(meeting.title, aiContext, 60);
+      const result = await generateAgenda({
+        meetingId,
+        meetingTitle: meeting.title,
+        context: aiContext,
+        duration: 60,
+      }).unwrap();
+      const suggestedItems = result.agenda;
       for (let i = 0; i < suggestedItems.length; i++) {
         const item = suggestedItems[i];
         await addAgendaItem({
@@ -42,6 +52,12 @@ export function useMeetingAi(meetingId: string, meeting: Meeting | null, agenda:
       }
     } catch (error) {
       console.error(error);
+      const message = (error as any)?.data?.message || 'Failed to generate agenda.';
+      if ((error as any)?.status === 403) {
+        setIsUpgradePromptOpen(true);
+      } else {
+        toast.error(message);
+      }
     } finally {
       setIsGenerating(false);
     }
@@ -69,5 +85,8 @@ export function useMeetingAi(meetingId: string, meeting: Meeting | null, agenda:
     handleGenerateAI,
     handleAnalyzeAgenda,
     dismissAnalysis: () => setAnalysisResult(null),
+    isUpgradePromptOpen,
+    closeUpgradePrompt: () => setIsUpgradePromptOpen(false),
+    currentPlan: billingUsage?.plan || 'Free',
   };
 }

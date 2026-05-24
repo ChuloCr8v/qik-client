@@ -14,10 +14,10 @@ import {
 import { cn } from "../lib/utils";
 import PricingDrawer from "./PricingDrawer";
 import { User } from "../types";
-import { PLAN_LIMITS, getUsageStatus, PlanName } from "../lib/quota";
+import { PLAN_LIMITS, getUsageStatus, type PlanName } from "../lib/quota";
 import { useAuth } from "../features/auth/AuthProvider";
-import { useGetMeetingsQuery } from "../features/meetings/meetingsApi";
 import { useGetCurrentUserQuery } from "../features/users/usersApi";
+import { useGetBillingUsageQuery } from "../features/billing/billingApi";
 
 interface SidebarProps {
     isOpen: boolean;
@@ -42,17 +42,16 @@ export default function Sidebar({
 }: SidebarProps) {
     const [isPricingOpen, setIsPricingOpen] = useState(false);
     const { user } = useAuth();
-    const { data: meetings = [] } = useGetMeetingsQuery(undefined, {
-        skip: !user
-    });
     const { data: profile = null } = useGetCurrentUserQuery(undefined, {
         skip: !user
     });
-    const meetingCount = meetings?.length;
+    const { data: usage } = useGetBillingUsageQuery(undefined, {
+        skip: !user
+    });
 
     const planName = (profile?.plan || "Free") as PlanName;
-    const limits = PLAN_LIMITS[planName];
-    const { percentage, label } = getUsageStatus(meetingCount, limits?.meetings);
+    const aiLimit = usage?.aiGenerationsLimit ?? PLAN_LIMITS[planName]?.aiGenerations ?? 0;
+    const { percentage, label } = getUsageStatus(usage?.aiGenerationsUsed || 0, aiLimit);
 
     const handleNavigate = (path: string) => {
         onNavigate(path);
@@ -142,7 +141,7 @@ export default function Sidebar({
                                 <div className="space-y-1.5">
                                     <div className="flex items-center justify-between text-[10px] font-semibold">
                                         <span className="text-secondary">
-                                            Meetings
+                                            AI generations
                                         </span>
                                         <span className="text-muted">
                                             {label}
@@ -167,7 +166,7 @@ export default function Sidebar({
                                         className="w-full py-2 bg-secondary text-white rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-slate-800 transition-all shadow-sm active:scale-[0.98] flex items-center justify-center gap-2"
                                     >
                                         <CreditCard className="h-3 w-3" />
-                                        Upgrade to Pro
+                                        Upgrade
                                     </button>
                                 )}
                             </div>

@@ -59,6 +59,10 @@ export const meetingsApi = baseApi.injectEndpoints({
       query: ({ meetingId, email }) => ({ url: `/meetings/${meetingId}/invite`, method: 'POST', body: { email } }),
       invalidatesTags: (_r, _e, { meetingId }) => [{ type: 'Meeting', id: meetingId }, 'Meeting'],
     }),
+    generateAgenda: builder.mutation<{ agenda: Array<{ title: string; duration: number; description: string }> }, { meetingId: string; meetingTitle: string; context: string; duration: number }>({
+      query: body => ({ url: '/ai/agenda', method: 'POST', body }),
+      invalidatesTags: ['Billing'],
+    }),
     sendMeetingReminders: builder.mutation<{ ok: boolean; sent: number }, string>({
       query: id => ({ url: `/meetings/${id}/reminders`, method: 'POST' }),
     }),
@@ -96,6 +100,7 @@ export const {
   useStartMeetingMutation,
   useStopMeetingMutation,
   useSendMeetingInviteMutation,
+  useGenerateAgendaMutation,
   useSendMeetingRemindersMutation,
   useUpdateMeetingProgressMutation,
   useUpdatePresenceMutation,

@@ -9,7 +9,7 @@ export interface User {
   updatedAt?: any;
   role?: 'Owner' | 'Admin' | 'Member';
   status?: 'Active' | 'Away' | 'Inactive';
-  plan?: 'Free' | 'Pro' | 'Enterprise';
+  plan?: 'Free' | 'Organisation' | 'OrganisationPlus';
   subscriptionStatus?: 'active' | 'trial' | 'cancelled' | string;
   subscriptionDate?: any;
   notifications?: {

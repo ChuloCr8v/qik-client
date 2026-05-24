@@ -1,6 +1,6 @@
 import { CheckCircle2, Star, Zap } from 'lucide-react';
 import { User } from '../../types';
-import { PLAN_LIMITS, PlanName } from '../../lib/quota';
+import { PLAN_LIMITS, type PlanName } from '../../config/plans';
 import { cn } from '../../lib/utils';
 
 interface PlanCardProps {
@@ -24,7 +24,7 @@ export default function PlanCard({ profile, onOpenPricing }: PlanCardProps) {
             <p className="text-[10px] font-bold uppercase tracking-widest text-muted">Subscription</p>
             <h4 className="flex items-center gap-2 text-xl font-bold text-secondary">
               {planName} Plan
-              {planName === 'Pro' && <Star className="h-4 w-4 fill-amber-500 text-amber-500" />}
+              {planName !== 'Free' && <Star className="h-4 w-4 fill-amber-500 text-amber-500" />}
             </h4>
           </div>
           <div className={cn(
@@ -52,7 +52,7 @@ export default function PlanCard({ profile, onOpenPricing }: PlanCardProps) {
 
           <div className="space-y-3 pt-4">
             <button onClick={onOpenPricing} className="w-full rounded-xl bg-primary px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest text-white shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]">
-              {planName === 'Free' ? 'Upgrade to Pro' : 'Manage Subscription'}
+              {planName === 'Free' ? 'Upgrade' : 'Manage Subscription'}
             </button>
             <p className="text-center text-[9px] text-muted">
               Next billing date: <span className="font-bold text-secondary">{profile?.subscriptionDate ? new Date(profile.subscriptionDate.seconds * 1000).toLocaleDateString() : 'N/A'}</span>

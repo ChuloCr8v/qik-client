@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import Modal from './Modal';
 import { Mail, Loader2, Send } from 'lucide-react';
+import toast from 'react-hot-toast';
+import UpgradePrompt from './billing/UpgradePrompt';
+import { useGetBillingUsageQuery } from '../features/billing/billingApi';
+import { useInviteTeamMemberMutation } from '../features/team/teamApi';
 
 interface TeamInviteModalProps {
   isOpen: boolean;
@@ -12,6 +16,9 @@ export default function TeamInviteModal({ isOpen, onClose }: TeamInviteModalProp
   const [role, setRole] = useState('Member');
   const [isSending, setIsSending] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [showUpgradePrompt, setShowUpgradePrompt] = useState(false);
+  const { data: usage } = useGetBillingUsageQuery();
+  const [inviteTeamMember] = useInviteTeamMemberMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,6 +26,7 @@ export default function TeamInviteModal({ isOpen, onClose }: TeamInviteModalProp
 
     setIsSending(true);
     try {
+      await inviteTeamMember({ email, role }).unwrap();
       const subject = encodeURIComponent('Join QikAgenda');
       const body = encodeURIComponent(`You've been invited as ${role} on QikAgenda.`);
       window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
@@ -30,12 +38,19 @@ export default function TeamInviteModal({ isOpen, onClose }: TeamInviteModalProp
       }, 2000);
     } catch (error) {
       console.error(error);
+      const message = (error as any)?.data?.message || 'Unable to send invitation.';
+      if ((error as any)?.status === 403) {
+        setShowUpgradePrompt(true);
+      } else {
+        toast.error(message);
+      }
     } finally {
       setIsSending(false);
     }
   };
 
   return (
+    <>
     <Modal 
       isOpen={isOpen} 
       onClose={onClose} 
@@ -111,5 +126,12 @@ export default function TeamInviteModal({ isOpen, onClose }: TeamInviteModalProp
         </div>
       </div>
     </Modal>
+    <UpgradePrompt
+      isOpen={showUpgradePrompt}
+      onClose={() => setShowUpgradePrompt(false)}
+      currentPlan={usage?.plan || 'Free'}
+      missingFeature="Free users can invite guests to individual meetings, but permanent team members require an Organisation plan."
+    />
+    </>
   );
 }

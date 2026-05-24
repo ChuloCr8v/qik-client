@@ -34,7 +34,7 @@ export function LoginFormPanel({
   meetingId,
 }: LoginFormPanelProps) {
   return (
-    <div className="w-full max-w-sm space-y-4 -mt-48">
+    <div className="w-full max-w-sm space-y-4 max-lg:-mt-48">
       <div className="text-center lg:text-left space-y-2">
         <div className="lg:hidden mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 mb-6">
           <CalendarArrowDown className="h-6 w-6 text-primary" />
@@ -62,7 +62,7 @@ export function LoginFormPanel({
           isLoading={isEmailLoading}
           onEmailChange={onEmailChange}
           onSubmit={onEmailSubmit}
-          />
+        />
       </div>
 
       <p className="text-center text-xs text-gray-600 px-8">

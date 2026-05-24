@@ -10,8 +10,8 @@ import {
     Loader2
 } from "lucide-react";
 import toast from "react-hot-toast";
-import { useUpdateCurrentUserMutation } from "../features/users/usersApi";
-import { PLAN_LIMITS, PlanName } from "../lib/quota";
+import { useUpgradePlanMutation } from "../features/billing/billingApi";
+import { PLAN_LIMITS, type PlanName } from "../config/plans";
 
 interface PricingDrawerProps {
     isOpen: boolean;
@@ -75,17 +75,13 @@ const accentStyles: Record<
 
 export default function PricingDrawer({ isOpen, onClose }: PricingDrawerProps) {
     const [upgradingPlan, setUpgradingPlan] = useState<string | null>(null);
-    const [updateUser] = useUpdateCurrentUserMutation();
+    const [upgradePlan] = useUpgradePlanMutation();
 
     const handleUpgrade = async (planName: string) => {
         setUpgradingPlan(planName);
         try {
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            await updateUser({
-                plan: planName as any,
-                subscriptionStatus: "active",
-                subscriptionDate: new Date().toISOString() as any
-            }).unwrap();
+            // TODO: Stripe - stub payment, just update DB for now.
+            await upgradePlan({ planType: planName as PlanName }).unwrap();
             toast.success(`Successfully upgraded to ${planName}!`);
             onClose();
         } catch (error) {
