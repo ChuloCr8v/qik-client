@@ -1,83 +1,33 @@
+import { ArrowLeft, ChevronRight, FileText } from "lucide-react";
+import SectionHeading from "../SectionHeading";
+import Table, { TableCell, TableRow } from "../Table";
+import { Meeting } from "../../types";
 import {
-  ArrowLeft,
-  ChevronRight,
-  FileText
-} from 'lucide-react';
-import SectionHeading from '../SectionHeading';
-import Table, {
-  TableCell,
-  TableRow
-} from '../Table';
-import {
-  Meeting
-} from '../../types';
-import {
-  getMeetingStatusClassName,
-  getMeetingStatusDotClassName,
-  getMeetingStatusLabel,
-} from './dashboardUtils';
+    getMeetingStatusClassName,
+    getMeetingStatusDotClassName,
+    getMeetingStatusLabel
+} from "./dashboardUtils";
+import SummarySectionCard from "./SummarySectionCard";
 
 type Props = {
-  meetings: Meeting[];
-  onShowAll: () => void;
-  onOpenMeeting: (meetingId: string) => void;
+    meetings: Meeting[];
+    onShowAll: () => void;
+    onOpenMeeting: (meetingId: string) => void;
 };
 
 export default function RecentMeetingsCard({
-  meetings, onShowAll, onOpenMeeting
+    meetings,
+    onShowAll,
+    onOpenMeeting
 }: Props) {
-  return (
-    <div className="space-y-6">
-      <SectionHeading
-        title={`Your Meetings (${meetings.length})`}
-        action={
-        <button
-          onClick={onShowAll}
-          className="flex items-center gap-2 text-xs text-primary"
-          >
-          <span>Show All</span>
-          <ChevronRight className="h-4 w-4 -mt-0.5 transition-transform group-hover:translate-x-0.5" />
-        </button>
-        }
-        />
-
-      {meetings.length > 0 ? (
-        <Table headers={['#', 'Meeting', 'Status', '']}>
-          {meetings.slice(0, 4).map((meeting, index) => (
-            <TableRow key={meeting.id} onClick={() => onOpenMeeting(meeting.id)}>
-              <TableCell className="w-8 font-semibold text-muted">{index + 1}</TableCell>
-              <TableCell className="">
-                <span className="truncate text-xs font-semibold leading-tight text-slate-900">{meeting.title}</span>
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center gap-1.5">
-                  <div className={`h-1.5 w-1.5 rounded-full ${getMeetingStatusDotClassName(meeting.status)}`} />
-                  <span className={`whitespace-nowrap font-bold text-xs ${getMeetingStatusClassName(meeting.status)}`}>
-                    {getMeetingStatusLabel(meeting.status)}
-                  </span>
-                </div>
-              </TableCell>
-              <TableCell className="text-right">
-                <button className="rounded-full p-1.5 text-muted transition-colors hover:bg-slate-50 hover:text-primary">
-                  <ArrowLeft className="h-4 w-4 rotate-180" />
-                </button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </Table>
-      ): (
-        <div className="rounded-3xl border-2 border-dashed border-slate-100 bg-slate-50/30 py-12 text-center">
-          <FileText className="mx-auto h-12 w-12 text-slate-200" />
-          <div className="mt-4 space-y-1">
-            <p className="text-[12px] font-semibold text-secondary">
-              Cloud-based meetings
-            </p>
-            <p className="text-[11px] text-muted">
-              Create your first meeting to start collaborating.
-            </p>
-          </div>
+    return (
+        <div className="">
+            <SummarySectionCard
+                okText="Show All"
+                meetings={meetings}
+                onShowAll={onShowAll}
+                onOpenMeeting={onOpenMeeting}
+            />
         </div>
-      )}
-    </div>
-  );
+    );
 }
