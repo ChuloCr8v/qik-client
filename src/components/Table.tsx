@@ -60,7 +60,7 @@ export default function Table({
       children, className
     }) => {
     return (
-      <td className={cn("px-3 py-1 sm:px-4 whitespace-nowrap", className)}>
+      <td className={cn("px-3 py-2 sm:px-4 whitespace-nowrap", className)}>
         {children}
       </td>
     );

@@ -63,7 +63,7 @@ export default function TemplateEditorDrawer({
             required
             value={name}
             onChange={(e) => onNameChange(e.target.value)}
-            className="w-full rounded-lg border border-border px-4 py-3 text-xs shadow-sm outline-none transition-all focus:border-primary"
+            className="w-full rounded-lg border border-border px-4 py-3 text-xs   outline-none transition-all focus:border-primary"
             placeholder="e.g. Weekly Strategy Sync"
             />
         </div>
@@ -72,7 +72,7 @@ export default function TemplateEditorDrawer({
           <textarea
             value={description}
             onChange={(e) => onDescriptionChange(e.target.value)}
-            className="h-24 w-full resize-none rounded-lg border border-border px-4 py-3 text-xs font-medium shadow-sm outline-none transition-all focus:border-primary"
+            className="h-24 w-full resize-none rounded-lg border border-border px-4 py-3 text-xs font-medium   outline-none transition-all focus:border-primary"
             placeholder="Describe what this meeting is for..."
             />
         </div>
@@ -94,18 +94,18 @@ export default function TemplateEditorDrawer({
                   <input
                   value={item.title}
                   onChange={(e) => onUpdateItem(index, 'title', e.target.value)}
-                  className="w-full bg-transparent text-xs font-semibold text-secondary shadow-sm rounded-lg p-2 outline-none placeholder:text-slate-300"
+                  className="w-full bg-transparent text-xs font-semibold text-secondary   rounded-lg p-2 outline-none placeholder:text-slate-300"
                   placeholder="Item Title"
                   />
                 <textarea
                   value={item.description || ''}
                   onChange={(e) => onUpdateItem(index, 'description', e.target.value)}
-                  className="w-full bg-transparent text-[10px] text-muted outline-none shadow-sm rounded-md p-2 placeholder:text-slate-200"
+                  className="w-full bg-transparent text-[10px] text-muted outline-none   rounded-md p-2 placeholder:text-slate-200"
                   placeholder="Add description..."
                   />
               </div>
               <div className="col-span-3 w-full flex items-center gap-2">
-                <div className="flex items-center gap-1.5 rounded-lg shadow-sm p-2 w-full">
+                <div className="flex items-center gap-1.5 rounded-lg   p-2 w-full">
                   <Clock className="h-3 w-3 text-muted" />
                   <input
                   type="number"

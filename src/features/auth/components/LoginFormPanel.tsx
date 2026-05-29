@@ -65,7 +65,7 @@ export function LoginFormPanel({
         />
       </div>
 
-      <p className="text-center text-xs text-gray-600 px-8">
+      <p className="text-center text-gray-600 px-8">
         By clicking continue, you agree to our <br></br>{' '}
         <a href="#" className="font-bold text-secondary hover:underline">Terms of Service</a> and{' '}
         <a href="#" className="font-bold text-secondary hover:underline">Privacy Policy</a>.

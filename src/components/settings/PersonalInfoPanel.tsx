@@ -9,7 +9,7 @@ interface PersonalInfoPanelProps {
 
 export default function PersonalInfoPanel({ user, profile, onEdit }: PersonalInfoPanelProps) {
   return (
-    <div className="overflow-hidden rounded-3xl border border-border bg-white shadow-sm">
+    <div className="overflow-hidden rounded-3xl border border-border bg-white  ">
       <div className="flex items-center gap-3 border-b border-border bg-slate-50/50 px-6 py-4">
         <UserIcon className="h-4 w-4 text-primary" />
         <h3 className="text-xs font-bold uppercase tracking-widest text-secondary">Personal Information</h3>

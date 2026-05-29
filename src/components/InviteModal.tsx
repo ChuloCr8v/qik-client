@@ -73,7 +73,7 @@ export default function InviteModal({
           form="invite-form"
           type="submit"
           disabled={isSending || success}
-          className={`flex items-center justify-center gap-2 text-xs font-semibold text-white shadow-sm transition-all active:scale-[0.98] ${success ? 'bg-emerald-500 shadow-emerald-200': 'bg-primary shadow-primary/20 hover:bg-primary/90'}`}
+          className={`flex items-center justify-center gap-2 text-xs font-semibold text-white   transition-all active:scale-[0.98] ${success ? 'bg-emerald-500 shadow-emerald-200': 'bg-primary shadow-primary/20 hover:bg-primary/90'}`}
           >
           {isSending ? (
             <Loader2 className="h-3.5 w-3.5 animate-spin" />

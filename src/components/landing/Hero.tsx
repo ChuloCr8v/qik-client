@@ -77,7 +77,7 @@ export default function Hero({
                 <div className="h-2 w-4/5 rounded bg-slate-200/30" />
                 <div className="h-2 w-full rounded bg-slate-200/50" />
               </div>
-              <div className="flex-1 rounded-lg bg-white border border-border/20 shadow-sm p-4 space-y-3">
+              <div className="flex-1 rounded-lg bg-white border border-border/20   p-4 space-y-3">
                 <div className="h-3 w-1/2 rounded bg-primary/10" />
                 <div className="space-y-1.5 text-left">
                   <div className="h-2 w-full rounded bg-slate-50" />

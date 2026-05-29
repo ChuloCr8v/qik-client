@@ -66,7 +66,7 @@ export default function AgendaItemModal({
             form="agenda-item-form"
             type="submit"
             disabled={loading || !formData.title.trim()}
-            className="flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-xs font-semibold text-white shadow-sm shadow-primary/20 transition-all hover:bg-primary/90 active:scale-[0.98] disabled:opacity-50"
+            className="flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-xs font-semibold text-white   shadow-primary/20 transition-all hover:bg-primary/90 active:scale-[0.98] disabled:opacity-50"
           >
             {loading && <Loader2 className="h-3 w-3 animate-spin" />}
             Save Changes
@@ -87,7 +87,7 @@ export default function AgendaItemModal({
               value={formData.title}
               onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
               placeholder="e.g., Marketing Update"
-              className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-3 text-xs font-semibold text-secondary focus:border-primary focus:bg-white focus:outline-none transition-all shadow-sm"
+              className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-3 text-xs font-semibold text-secondary focus:border-primary focus:bg-white focus:outline-none transition-all  "
             />
           </div>
 
@@ -103,7 +103,7 @@ export default function AgendaItemModal({
                 required
                 value={formData.duration}
                 onChange={(e) => setFormData(prev => ({ ...prev, duration: parseInt(e.target.value) || 0 }))}
-                className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-3 text-xs font-semibold text-secondary focus:border-primary focus:bg-white focus:outline-none transition-all shadow-sm"
+                className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-3 text-xs font-semibold text-secondary focus:border-primary focus:bg-white focus:outline-none transition-all  "
               />
             </div>
           </div>
@@ -118,7 +118,7 @@ export default function AgendaItemModal({
               value={formData.description}
               onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
               placeholder="Details about this topic..."
-              className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-3 text-xs font-medium text-secondary focus:border-primary focus:bg-white focus:outline-none transition-all resize-none custom-scrollbar shadow-sm"
+              className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-3 text-xs font-medium text-secondary focus:border-primary focus:bg-white focus:outline-none transition-all resize-none custom-scrollbar  "
             />
           </div>
         </div>

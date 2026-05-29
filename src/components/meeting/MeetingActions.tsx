@@ -28,7 +28,7 @@ interface MeetingActionsProps {
 }
 
 const sharedBtnClass =
-    "flex items-center gap-2 rounded-lg border border-border bg-white px-3 py-1.5 text-[11px] font-bold text-slate-600 shadow-sm transition-colors hover:border-primary";
+    "flex items-center gap-2 rounded-lg border border-border bg-white px-3 py-1.5 text-[11px] font-bold text-slate-600   transition-colors hover:border-primary";
 
 export default function MeetingActions({
     meeting,
@@ -59,7 +59,7 @@ export default function MeetingActions({
                 {hasInvitees && (
                     <button
                         onClick={onSendReminders}
-                        className="flex items-center gap-2 rounded-lg border border-primary/20 bg-primary/5 px-3 py-1.5 text-[11px] font-bold text-primary shadow-sm transition-colors hover:bg-primary/10"
+                        className="flex items-center gap-2 rounded-lg border border-primary/20 bg-primary/5 px-3 py-1.5 text-[11px] font-bold text-primary   transition-colors hover:bg-primary/10"
                     >
                         <Mail className="h-3.5 w-3.5" />
                         Remind
@@ -84,7 +84,7 @@ export default function MeetingActions({
 
                 <button
                     onClick={onExportPDF}
-                    className="flex items-center gap-2 rounded-lg bg-secondary px-3 py-1.5 text-[11px] font-bold text-white shadow-sm transition-opacity hover:opacity-90"
+                    className="flex items-center gap-2 rounded-lg bg-secondary px-3 py-1.5 text-[11px] font-bold text-white   transition-opacity hover:opacity-90"
                 >
                     <Download className="h-3.5 w-3.5" />
                     PDF
@@ -93,7 +93,7 @@ export default function MeetingActions({
                 {isOwner && (
                     <button
                         onClick={onDelete}
-                        className="flex h-9 w-9 items-center justify-center rounded-lg border border-red-100 bg-red-50 text-red-500 shadow-sm transition-colors hover:bg-red-100"
+                        className="flex h-9 w-9 items-center justify-center rounded-lg border border-red-100 bg-red-50 text-red-500   transition-colors hover:bg-red-100"
                     >
                         <Trash2 className="h-3 w-3" />
                     </button>

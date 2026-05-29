@@ -180,7 +180,7 @@ export default function Header({
         ): (
           <button
             onClick={onGoogleSignIn}
-            className="rounded-xl h-full! bg-primary px-4 py-2 text-xs font-semibold text-white shadow-sm hover:opacity-90 active:scale-95 transition-all"
+            className="rounded-xl h-full! bg-primary px-4 py-2 text-xs font-semibold text-white   hover:opacity-90 active:scale-95 transition-all"
             >
             Get Started
           </button>

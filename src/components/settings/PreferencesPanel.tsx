@@ -15,7 +15,7 @@ interface PreferencesPanelProps {
 
 export default function PreferencesPanel({ profile, onToggle }: PreferencesPanelProps) {
   return (
-    <div className="overflow-hidden rounded-3xl border border-border bg-white shadow-sm">
+    <div className="overflow-hidden rounded-3xl border border-border bg-white  ">
       <div className="flex items-center gap-3 border-b border-border bg-slate-50/50 px-6 py-4">
         <Bell className="h-4 w-4 text-primary" />
         <h3 className="text-xs font-bold uppercase tracking-widest text-secondary">Preferences</h3>
@@ -36,7 +36,7 @@ export default function PreferencesPanel({ profile, onToggle }: PreferencesPanel
                   isActive ? 'bg-primary shadow-[0_0_10px_rgba(251,191,36,0.3)]' : 'bg-slate-300'
                 )}
               >
-                <div className={cn('absolute top-1 h-4 w-4 rounded-full bg-white shadow-sm transition-all', isActive ? 'right-1' : 'left-1')} />
+                <div className={cn('absolute top-1 h-4 w-4 rounded-full bg-white   transition-all', isActive ? 'right-1' : 'left-1')} />
               </button>
             </div>
           );

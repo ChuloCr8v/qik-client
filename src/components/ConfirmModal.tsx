@@ -46,8 +46,8 @@ export default function ConfirmModal({
             disabled={isLoading}
             className={`flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl text-xs font-semibold text-white transition-all active:scale-[0.98] ${
               isDestructive 
-                ? 'bg-red-600 hover:bg-red-700 shadow-sm shadow-red-200' 
-                : 'bg-primary hover:bg-primary/90 shadow-sm shadow-primary/20'
+                ? 'bg-red-600 hover:bg-red-700   shadow-red-200' 
+                : 'bg-primary hover:bg-primary/90   shadow-primary/20'
             }`}
           >
             {isLoading && <Loader2 className="h-3 w-3 animate-spin" />}
