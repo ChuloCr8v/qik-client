@@ -65,7 +65,7 @@ const DashboardStatsCards = ({
                 return (
                     <div
                         key={s.label}
-                        className={`flex items-center gap-2 rounded-2xl border border-border bg-white p-3 shadow-xs transition-all hover:shadow-md sm:p-5`}
+                        className={`flex items-center gap-2 rounded-2xl border border-border bg-white p-3 transition-all hover:shadow-md sm:p-5`}
                     >
                         <div
                             className={`inline-flex items-center justify-center w-8 h-8 rounded-lg ${s.iconBg}`}

@@ -108,7 +108,7 @@ export default function PricingDrawer({ isOpen, onClose }: PricingDrawerProps) {
                     </button>
                     <button
                         onClick={onClose}
-                        className="px-6 py-2.5 text-xs font-semibold text-white bg-secondary hover:bg-slate-800 rounded-xl transition-all shadow-sm shadow-slate-200"
+                        className="px-6 py-2.5 text-xs font-semibold text-white bg-secondary hover:bg-slate-800 rounded-xl transition-all   shadow-slate-200"
                     >
                         View Billing
                     </button>
@@ -144,7 +144,7 @@ export default function PricingDrawer({ isOpen, onClose }: PricingDrawerProps) {
                             >
                                 {plan.popular && (
                                     <div
-                                        className={`absolute -top-3 left-1/2 -translate-x-1/2 rounded-full px-3 py-1 text-[9px] font-bold text-white uppercase tracking-widest shadow-sm ${accent?.badge}`}
+                                        className={`absolute -top-3 left-1/2 -translate-x-1/2 rounded-full px-3 py-1 text-[9px] font-bold text-white uppercase tracking-widest   ${accent?.badge}`}
                                     >
                                         Most Popular
                                     </div>
@@ -205,7 +205,7 @@ export default function PricingDrawer({ isOpen, onClose }: PricingDrawerProps) {
                                         !plan.disabled &&
                                         handleUpgrade(plan.name)
                                     }
-                                    className={`w-full rounded-2xl py-2.5 text-[10px] font-bold uppercase tracking-widest transition-all active:scale-[0.98] shadow-sm flex items-center justify-center gap-2 ${
+                                    className={`w-full rounded-2xl py-2.5 text-[10px] font-bold uppercase tracking-widest transition-all active:scale-[0.98]   flex items-center justify-center gap-2 ${
                                         plan.disabled
                                             ? "bg-slate-100 text-muted cursor-not-allowed"
                                             : accent

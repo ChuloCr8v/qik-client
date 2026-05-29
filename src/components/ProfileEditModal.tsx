@@ -81,7 +81,7 @@ export default function ProfileEditModal({
             form="profile-form"
             type="submit"
             disabled={loading || initialLoading}
-            className="flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-xs font-semibold text-white shadow-sm shadow-primary/20 transition-all hover:bg-primary/90 active:scale-[0.98] disabled:opacity-50"
+            className="flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-xs font-semibold text-white   shadow-primary/20 transition-all hover:bg-primary/90 active:scale-[0.98] disabled:opacity-50"
           >
             {loading && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
             Save Changes
@@ -122,7 +122,7 @@ export default function ProfileEditModal({
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
                   placeholder="e.g. Alex Rivera"
-                  className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-2.5 text-xs font-semibold focus:border-primary focus:bg-white focus:outline-none transition-all shadow-sm"
+                  className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-2.5 text-xs font-semibold focus:border-primary focus:bg-white focus:outline-none transition-all  "
                 />
               </div>
 
@@ -136,7 +136,7 @@ export default function ProfileEditModal({
                   value={jobTitle}
                   onChange={(e) => setJobTitle(e.target.value)}
                   placeholder="e.g. Senior Product Designer"
-                  className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-2.5 text-xs font-semibold focus:border-primary focus:bg-white focus:outline-none transition-all shadow-sm"
+                  className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-2.5 text-xs font-semibold focus:border-primary focus:bg-white focus:outline-none transition-all  "
                 />
               </div>
 
@@ -150,7 +150,7 @@ export default function ProfileEditModal({
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
                   placeholder="Tell us a little about yourself..."
-                  className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-2.5 text-xs font-medium focus:border-primary focus:bg-white focus:outline-none transition-all resize-none shadow-sm"
+                  className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-2.5 text-xs font-medium focus:border-primary focus:bg-white focus:outline-none transition-all resize-none  "
                 />
               </div>
 
@@ -164,7 +164,7 @@ export default function ProfileEditModal({
                   value={photoURL}
                   onChange={(e) => setPhotoURL(e.target.value)}
                   placeholder="https://images.unsplash.com/photo..."
-                  className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-2.5 text-xs font-semibold focus:border-primary focus:bg-white focus:outline-none transition-all shadow-sm"
+                  className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-2.5 text-xs font-semibold focus:border-primary focus:bg-white focus:outline-none transition-all  "
                 />
                 <p className="text-[9px] text-muted leading-tight">Use a direct link to an image (Unsplash, Google Photos, etc.)</p>
               </div>

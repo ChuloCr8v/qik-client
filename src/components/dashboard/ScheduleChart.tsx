@@ -86,27 +86,19 @@ export default function ScheduleChart({ data = DEFAULT_DATA }: Props) {
     };
 
     return (
-        <div className="space-y-3 bg-white p-3 rounded-xl border border-border col-span-2">
+        <div className="space-y-3 bg-white rounded-xl border border-border col-span-2">
             {/* Header */}
-            <div className="flex items-start justify-between border-b border-border pb-3">
-                <div>
-                    <h1 className="text-sm font-semibold tracking-tight text-secondary">
-                        This Week
-                    </h1>
-                    <p className="text-[11px] text-muted mt-0.5">
-                        Meeting activity
-                    </p>
-                </div>
-                <div className="text-right">
-                    <p className="text-lg font-bold text-secondary leading-tight">
-                        {totalThisWeek}
-                    </p>
-                    <p className="text-[10px] text-muted">total</p>
-                </div>
+            <div className="flex bg--50 overflow-hidden items-center justify-between border-b border-border py-2 px-3">
+                <h1 className="font-semibold tracking-tight text-secondary">
+                    This Week's Activities
+                </h1>
+                <p className="font-bold text-secondary leading-tight">
+                    {totalThisWeek}
+                </p>
             </div>
 
             {/* Bar Chart */}
-            <div className="h-28">
+            <div className="h-36 p-3">
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart
                         data={chartData}
@@ -147,7 +139,7 @@ export default function ScheduleChart({ data = DEFAULT_DATA }: Props) {
             </div>
 
             {/* Footer legend */}
-            <div className="flex items-center justify-between pt-1 border-t border-border">
+            <div className="flex items-center justify-between py-2 px-3 border-t border-border">
                 <div className="flex items-center gap-3">
                     <div className="flex items-center gap-1.5">
                         <div className="w-2 h-2 rounded-full bg-primary" />

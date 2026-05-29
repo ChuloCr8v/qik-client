@@ -76,7 +76,7 @@ export default function TeamInviteModal({ isOpen, onClose }: TeamInviteModalProp
             form="team-invite-form"
             type="submit"
             disabled={isSending || success}
-            className={`flex items-center justify-center gap-2 rounded-xl px-6 py-2.5 text-xs font-semibold text-white shadow-sm transition-all active:scale-[0.98] ${success ? 'bg-emerald-500 shadow-emerald-200' : 'bg-primary shadow-primary/20 hover:bg-primary/90'}`}
+            className={`flex items-center justify-center gap-2 rounded-xl px-6 py-2.5 text-xs font-semibold text-white   transition-all active:scale-[0.98] ${success ? 'bg-emerald-500 shadow-emerald-200' : 'bg-primary shadow-primary/20 hover:bg-primary/90'}`}
           >
             {isSending ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -102,14 +102,14 @@ export default function TeamInviteModal({ isOpen, onClose }: TeamInviteModalProp
               placeholder="colleague@company.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-2.5 text-xs font-semibold focus:border-primary focus:bg-white focus:outline-none transition-all shadow-sm"
+              className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-2.5 text-xs font-semibold focus:border-primary focus:bg-white focus:outline-none transition-all  "
             />
           </div>
 
           <div className="space-y-1.5">
             <label className="text-[10px] font-semibold uppercase tracking-widest text-muted">Role</label>
             <select 
-              className="w-full h-[38px] rounded-xl border border-border bg-slate-50/50 px-4 text-xs font-semibold focus:border-primary focus:bg-white focus:outline-none transition-all shadow-sm appearance-none"
+              className="w-full h-[38px] rounded-xl border border-border bg-slate-50/50 px-4 text-xs font-semibold focus:border-primary focus:bg-white focus:outline-none transition-all   appearance-none"
               value={role}
               onChange={(e) => setRole(e.target.value)}
             >

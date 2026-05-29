@@ -78,6 +78,7 @@ type Props = {
     meetings: Meeting[];
     onOk?: () => void;
     okText?: string;
+    title?: string;
     onOpenMeeting: (meetingId: string) => void;
     limit?: number;
 };
@@ -87,16 +88,17 @@ export default function SummarySectionCard({
     okText,
     onOk,
     onOpenMeeting,
-    limit = 4
+    limit = 4,
+    title
 }: Props) {
     const visible = meetings?.slice(0, limit) ?? [];
 
     return (
         <div className="bg-white overflow-hidden rounded-xl border border-border">
             {/* Header */}
-            <div className="bg-gray-50 min-w-0 flex items-center justify-between border-b border-border p-3">
-                <h1 className="text-sm font-semibold tracking-tight text-secondary sm:text-base">
-                    Upcoming
+            <div className="bg-gy-50 min-w-0 flex items-center justify-between border-b border-border p-3 py-2">
+                <h1 className="font-semibold tracking-tight text-secondary">
+                    {title}
                 </h1>
                 <button
                     onClick={onOk}
@@ -109,7 +111,7 @@ export default function SummarySectionCard({
 
             {/* Meeting list or empty state */}
             {visible.length > 0 ? (
-                <div className="">
+                <div className="h-50 overflow-y-scroll">
                     {visible.map((meeting, index) => (
                         <MeetingItemCard
                             key={meeting.id}

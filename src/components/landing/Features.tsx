@@ -107,7 +107,7 @@ export default function Features() {
               variants={itemVariants}
               className={`bg-gradient-to-tl ${feature.cardBg} to-transparent rounded-xl border border-border p-3 transition-all hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5`}
               >
-              <div className={`mb-2 flex h-10 w-10 items-center justify-center shadow-sm rounded-xl ${feature.bg}`}>
+              <div className={`mb-2 flex h-10 w-10 items-center justify-center   rounded-xl ${feature.bg}`}>
                 <feature.icon className={`h-5 w-5 ${feature.color}`} />
               </div>
               <h3 className="text-base font-semibold text-secondary">{feature.title}</h3>

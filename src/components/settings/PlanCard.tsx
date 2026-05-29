@@ -13,7 +13,7 @@ export default function PlanCard({ profile, onOpenPricing }: PlanCardProps) {
   const limits = PLAN_LIMITS[planName];
 
   return (
-    <div className="group relative overflow-hidden rounded-3xl border border-border bg-white p-6 shadow-sm">
+    <div className="group relative overflow-hidden rounded-3xl border border-border bg-white p-6  ">
       <div className="absolute right-0 top-0 rounded-bl-[100px] bg-primary p-4 opacity-5 transition-all group-hover:opacity-10">
         <Zap className="h-24 w-24 text-white" />
       </div>

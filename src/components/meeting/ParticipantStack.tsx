@@ -21,7 +21,7 @@ export default function ParticipantStack({
                 <div className="flex items-center gap-2">
                     <div
                         title={name}
-                        className="relative inline-block flex h-5 w-5 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-[10px] font-semibold shadow-sm ring-2 ring-white transition-transform hover:z-10 hover:scale-110"
+                        className="relative inline-block flex h-5 w-5 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-[10px] font-semibold   ring-2 ring-white transition-transform hover:z-10 hover:scale-110"
                     >
                         <img
                             src={
@@ -51,7 +51,7 @@ export default function ParticipantStack({
                         <div
                             key={participant.id}
                             title={name}
-                            className="relative inline-block flex h-5 w-5 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-[10px] font-semibold shadow-sm ring-2 ring-white transition-transform hover:z-10 hover:scale-110"
+                            className="relative inline-block flex h-5 w-5 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-[10px] font-semibold   ring-2 ring-white transition-transform hover:z-10 hover:scale-110"
                         >
                             <img
                                 src={avatar}

@@ -57,7 +57,7 @@ export default function TemplatePreviewModal({
                     </button>
                     <button
                         onClick={handleApply}
-                        className="h-full! flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-xs font-semibold text-white shadow-sm shadow-primary/20 transition-all hover:bg-primary/90 active:scale-[0.98]"
+                        className="h-full! flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-xs font-semibold text-white   shadow-primary/20 transition-all hover:bg-primary/90 active:scale-[0.98]"
                     >
                         <Play className="h-3.5 w-3.5" />
                         Apply Template
@@ -79,7 +79,7 @@ export default function TemplatePreviewModal({
 
                 <div className="flex items-center justify-between rounded-xl bg-slate-50 p-2 pr-4 border border-border">
                     <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white  ">
                             <ListChecks className="h-5 w-5 text-primary" />
                         </div>
                         <div>

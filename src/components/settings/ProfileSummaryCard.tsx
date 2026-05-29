@@ -10,7 +10,7 @@ interface ProfileSummaryCardProps {
 
 export default function ProfileSummaryCard({ user, profile, onEdit, onLogout }: ProfileSummaryCardProps) {
   return (
-    <div className="overflow-hidden rounded-3xl border border-border bg-white shadow-sm transition-all hover:shadow-md">
+    <div className="overflow-hidden rounded-3xl border border-border bg-white   transition-all hover:shadow-md">
       <div className="h-24 bg-gradient-to-r from-primary/20 to-primary/5" />
       <div className="mt-[-40px] px-6 pb-6">
         <div className="relative mb-4">

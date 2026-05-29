@@ -62,7 +62,7 @@ export default function MeetingView({
         return (
             <Layout user={user} hideFooter onNavigate={onNavigate}>
                 <div className="flex min-h-[calc(100vh-56px)] items-center justify-center px-4">
-                    <div className="max-w-md rounded-3xl border border-border bg-white p-6 text-center shadow-sm">
+                    <div className="max-w-md rounded-3xl border border-border bg-white p-6 text-center  ">
                         <h1 className="text-xl font-bold text-secondary">
                             Meeting unavailable
                         </h1>

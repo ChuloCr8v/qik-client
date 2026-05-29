@@ -14,7 +14,7 @@ type Props = {
 
 const CustomCard = (props: Props) => {
     return (
-        <div className={`${props.className} rounded-2xl border border-border bg-white p-5 shadow-sm`}>
+        <div className={`${props.className} rounded-2xl border border-border bg-white p-5  `}>
             <div className="flex justify-between">
                 <div className="mb-3 flex items-center gap-2">
                     {props.icon && <props.icon className="h-3.5 w-3.5 text-primary" />}

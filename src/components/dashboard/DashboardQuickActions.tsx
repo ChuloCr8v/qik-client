@@ -1,28 +1,25 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { FilePlus2, UserPlus, FileBarChart2 } from "lucide-react";
-
-interface Props {
-    setOpenNewMeetingCard: Dispatch<SetStateAction<boolean>>;
-    openNewMeetingCard: boolean;
-}
+import NewMeetingCard from "./NewMeetingCard";
 
 interface ActionItem {
     title: string;
     icon: React.ElementType;
-    onOk: () => void;
     textColor: string;
     bgColor: string;
     iconBg: string;
 }
 
-const DashboardQuickActions = (props: Props) => {
+const DashboardQuickActions = () => {
+    const [openNewMeetingCard, setOpenNewMeetingCard] = useState(false);
+
     const actions: ActionItem[] = [
         {
             title: "New Agenda",
             icon: FilePlus2,
-            onOk: () => props.setOpenNewMeetingCard(true),
+            onOk: () => setOpenNewMeetingCard(true),
             textColor: "text-primary",
-            bgColor: "bg-primary/5 border-primary/10 hover:bg-primary/10",
+            bgColor: "hover:bg-primary/10",
             iconBg: "bg-primary/10 text-primary"
         },
         {
@@ -30,7 +27,7 @@ const DashboardQuickActions = (props: Props) => {
             icon: UserPlus,
             onOk: () => {},
             textColor: "text-blue-600",
-            bgColor: "bg-blue-600/5 border-blue-600/10 hover:bg-blue-600/10",
+            bgColor: "hover:bg-blue-600/10",
             iconBg: "bg-blue-600/10 text-blue-600"
         },
         {
@@ -38,33 +35,40 @@ const DashboardQuickActions = (props: Props) => {
             icon: FileBarChart2,
             onOk: () => {},
             textColor: "text-violet-600",
-            bgColor:
-                "bg-violet-600/5 border-violet-600/10 hover:bg-violet-600/10",
+            bgColor: "hover:bg-violet-600/10",
             iconBg: "bg-violet-600/10 text-violet-600"
         }
     ];
 
     return (
-        <div className="grid grid-cols-3 gap-2">
-            {actions.map(s => {
+        <div className="grid grid-cols-3">
+            {actions.map((s, i) => {
                 const Icon = s.icon;
                 return (
                     <button
                         key={s.title}
                         onClick={s.onOk}
-                        className={`border px-5! rounded-xl! overflow-hidden flex items-center gap-2 transition-colors ${s.bgColor} bg-white!`}
+                        className={`h-10! md:px-5! border-0! border-l! overflow-hidden flex items-center gap-2 transition-colors rounded-none! ${i === 0 && "border-l-0!"} ${s.bgColor}!`}
                     >
                         <div
                             className={`inline-flex items-center justify-center w-5 h-5 rounded-md flex-shrink-0 ${s.iconBg}`}
                         >
-                            <Icon className="w-2.5 h-2.5" />
+                            <Icon className="w-3 h-3" />
                         </div>
-                        <span className={`text-xs ${s.textColor}`}>
-                            {s.title}
-                        </span>
+                        <span className={`text-xs`}>{s.title}</span>
                     </button>
                 );
             })}
+
+            {openNewMeetingCard && (
+                <NewMeetingCard
+                    isOpen={openNewMeetingCard}
+                    onClose={() => {
+                        setOpenNewMeetingCard(false);
+                    }}
+                   
+                />
+            )}
         </div>
     );
 };

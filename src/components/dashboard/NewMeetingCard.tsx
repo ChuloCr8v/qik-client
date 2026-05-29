@@ -14,6 +14,9 @@ import CustomCard from "./CustomCard";
 import { getTemplateDuration, parseInvitees } from "./dashboardUtils";
 import GuideLineCard from "./GuideLineCard";
 import Modal from "../Modal";
+import { useNavigate } from "react-router-dom";
+import { useMeetings } from "../../features/meetings/MeetingsProvider";
+
 type CreateMeetingInput = {
     title: string;
     template?: MeetingTemplate;
@@ -22,28 +25,23 @@ type CreateMeetingInput = {
 };
 
 type Props = {
-    isCreatingMeeting: boolean;
-    onCreateMeeting: (input: CreateMeetingInput) => Promise<void>;
-    onBrowseTemplates: () => void;
     isOpen: boolean;
     onClose?: () => void;
 };
 
 type CreationMode = "details" | "templates";
 
-export default function NewMeetingCard({
-    isCreatingMeeting,
-    onCreateMeeting,
-    onBrowseTemplates,
-    isOpen,
-    onClose
-}: Props) {
+export default function NewMeetingCard({ isOpen, onClose }: Props) {
     const [mode, setMode] = useState<CreationMode>("details");
     const [title, setTitle] = useState("");
     const [scheduledAt, setScheduledAt] = useState("");
     const [invitees, setInvitees] = useState("");
     const [selectedTemplateForPreview, setSelectedTemplateForPreview] =
         useState<MeetingTemplate | null>(null);
+
+    const { meetings, isCreatingMeeting, createNewMeeting } = useMeetings();
+
+    const navigate = useNavigate();
 
     const featuredTemplates = useMemo(() => MEETING_TEMPLATES.slice(0, 3), []);
 
@@ -61,12 +59,15 @@ export default function NewMeetingCard({
         event?.preventDefault();
         if (!title.trim() && !template) return;
 
-        await onCreateMeeting({
+        const input = {
             title: title.trim() || template?.name || "Untitled Meeting",
             template,
             scheduledAt: templateStartTime || scheduledAt,
             invitees: parseInvitees(invitees)
-        });
+        };
+        const id = await createNewMeeting(input);
+        navigate(`/meetings/${id}`);
+
         resetForm();
     };
 
@@ -81,7 +82,7 @@ export default function NewMeetingCard({
                 >
                     {mode === "details" ? "Templates" : "Details"}
                 </button>
-                <div className="flex flex-col space-y-3 md:grid grid-cols-6 gap-3">
+                <div className="flex flex-col space-y-3 md:gid grid-cols-6 gap-3">
                     {mode === "details" ? (
                         <form
                             onSubmit={handleCreateMeeting}
@@ -186,7 +187,7 @@ export default function NewMeetingCard({
                                 ))}
 
                                 <button
-                                    onClick={onBrowseTemplates}
+                                    onClick={() => navigate("/templates")}
                                     className="group h-full! bg-primary text-white text-center rounded-xl p-3 transition-all hover:bg-primary/60"
                                 >
                                     More Templates

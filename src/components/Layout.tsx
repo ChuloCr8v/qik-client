@@ -43,9 +43,11 @@ export default function Layout({
                     onGoogleSignIn={onGoogleSignIn}
                 />
 
-                <main className="flex-1 overflow-y-auto custom-scrollbar">
-                    <div className="min-h-full flex flex-col">
-                        <div className="flex-1 bg-gray-50/10">{children}</div>
+                <main className="flex-1 w-full h-full overflow-y-auto custom-scrollbar">
+                    <div className="min-h-full overflow-y-scroll h-full w-full flex flex-col">
+                        <div className="flex-1 h-full overflow-y-scroll bg-gray-50/10">
+                            {children}
+                        </div>
                         {!hideFooter && (
                             <Footer variant={user ? "minimal" : "full"} />
                         )}

@@ -27,7 +27,7 @@ export default function AttendeesPanel({
             const name = participant.displayName || generateAnimeName(participant.uid);
 
             return (
-              <div key={participant.id} className="group flex items-center gap-2 rounded-xl border border-border bg-slate-50 p-1.5 transition-all hover:border-primary/20 hover:shadow-sm">
+              <div key={participant.id} className="group flex items-center gap-2 rounded-xl border border-border bg-slate-50 p-1.5 transition-all hover:border-primary/20 hover: ">
                 <div className="relative flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-slate-100">
                   <img src={avatar} alt={name} className="h-full w-full object-cover" />
                 <div className="absolute bottom-0 right-0 h-1.5 w-1.5 rounded-full border border-white bg-accent" />

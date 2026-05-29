@@ -12,7 +12,7 @@ export default function QuickActionsPanel() {
 
 function QuickAction({ icon, title, subtitle, variant }: { icon: ReactNode; title: string; subtitle: string; variant?: 'amber' }) {
   return (
-    <button className="group flex items-center gap-4 rounded-3xl border border-border bg-white p-5 shadow-sm transition-all hover:border-primary hover:shadow-md">
+    <button className="group flex items-center gap-4 rounded-3xl border border-border bg-white p-5   transition-all hover:border-primary hover:shadow-md">
       <div className={`flex h-10 w-10 items-center justify-center rounded-2xl transition-all group-hover:bg-primary group-hover:text-white ${variant === 'amber' ? 'bg-amber-50 text-amber-600' : 'bg-slate-50 text-secondary'}`}>
         {icon}
       </div>
