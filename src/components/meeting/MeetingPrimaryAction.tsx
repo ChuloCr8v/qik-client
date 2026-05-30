@@ -58,7 +58,7 @@ function getActionConfig(
         icon: <Play className="h-3 w-3 fill-current" />,
         onOk: onStartMeeting,
       };
-    case 'upcoming':
+    case 'scheduled':
     default:
       return {
         className: actionBtn('green'),

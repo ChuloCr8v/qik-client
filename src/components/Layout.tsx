@@ -24,7 +24,7 @@ export default function Layout({
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     return (
-        <div className="flex min-h-screen bg-gray-50 p-2">
+        <div className="flex overflow-y-hidden h-screen bg-gray-50">
             {/* Sidebar - Persistent on desktop, drawer on mobile */}
             {user && onNavigate && (
                 <Sidebar
@@ -43,14 +43,15 @@ export default function Layout({
                     onGoogleSignIn={onGoogleSignIn}
                 />
 
-                <main className="flex-1 w-full h-full overflow-y-auto custom-scrollbar">
-                    <div className="min-h-full overflow-y-scroll h-full w-full flex flex-col">
-                        <div className="flex-1 h-full overflow-y-scroll bg-gray-50/10">
+                <main className="flex-1 w-full h-full overflow-y-auto">
+                    <div className="w-full flex flex-col">
+                        <div className="bg-gray-50/10 pb-20 px-4">
                             {children}
+                            {!hideFooter && (
+                                <Footer variant={user ? "minimal" : "full"} />
+                            )}
                         </div>
-                        {!hideFooter && (
-                            <Footer variant={user ? "minimal" : "full"} />
-                        )}
+
                     </div>
                 </main>
             </div>

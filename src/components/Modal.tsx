@@ -67,7 +67,7 @@ export default function Modal({
                                     <X className="h-4 w-4" />
                                 </button>
                             </div>
-                            <div className="px-6 py-2 pb-4 text-[12px] flex-1">
+                            <div className="px-6 py-2 pb-4 text-sm flex-1">
                                 {children}
                             </div>
                             {footer && (

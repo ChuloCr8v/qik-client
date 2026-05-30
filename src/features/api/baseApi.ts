@@ -4,7 +4,7 @@ import { RootState } from '../../store/store';
 export const baseApi = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.API_URL || 'http://localhost:4000',
+    baseUrl: import.meta.env.VITE_API_URL || 'http://localhost:4000',
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.token;
       if (token) headers.set('authorization', `Bearer ${token}`);

@@ -68,7 +68,7 @@ export default function MeetingHeader({
         {/* Left */}
         <MeetingMeta
           meeting={meeting}
-          allParticipants={participants}
+          participants={participants}
           totalTime={totalTime}
           />
 

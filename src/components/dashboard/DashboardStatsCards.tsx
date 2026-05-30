@@ -1,14 +1,5 @@
-import React from "react";
-import { CalendarDays, CalendarCheck2, Users, Sparkles } from "lucide-react";
-
-interface StatItem {
-    label: string;
-    value: number | string;
-    icon: React.ElementType;
-    textColor: string;
-    bgColor: string;
-    iconBg: string;
-}
+import { CalendarCheck2, CalendarDays, Sparkles, Users } from "lucide-react";
+import SummaryCard from "../global/SummaryCards";
 
 interface Props {
     totalMeetings?: number;
@@ -17,72 +8,48 @@ interface Props {
     aiGenerations?: number | string;
 }
 
-const DashboardStatsCards = ({
-    totalMeetings = 50,
-    thisMonth = 40,
-    teamMembers = 8,
-    aiGenerations = 40
-}: Props) => {
-    const statsData: StatItem[] = [
+export default function DashboardStatsCards({
+    totalMeetings = 0,
+    thisMonth = 0,
+    teamMembers = 0,
+    aiGenerations = 0
+}: Props) {
+    const statsData = [
         {
             label: "Total Meetings",
             value: totalMeetings,
             icon: CalendarDays,
-            textColor: "text-primary",
-            bgColor: "bg-primary/5 border-primary/10",
-            iconBg: "bg-primary/10 text-primary"
+            color: "text-primary",
+            bg: "bg-primary/5"
         },
         {
             label: "This Month",
             value: thisMonth,
             icon: CalendarCheck2,
-            textColor: "text-green-600",
-            bgColor: "bg-green-600/5 border-green-600/10",
-            iconBg: "bg-green-600/10 text-green-600"
+            color: "text-green-600",
+            bg: "bg-green-600/5"
         },
         {
             label: "Team Members",
             value: teamMembers,
             icon: Users,
-            textColor: "text-blue-600",
-            bgColor: "bg-blue-600/5 border-blue-600/10",
-            iconBg: "bg-blue-600/10 text-blue-600"
+            color: "text-blue-600",
+            bg: "bg-blue-600/5"
         },
         {
             label: "AI Generations",
             value: aiGenerations,
             icon: Sparkles,
-            textColor: "text-yellow-600",
-            bgColor: "bg-yellow-600/5 border-yellow-600/10",
-            iconBg: "bg-yellow-600/10 text-yellow-600"
+            color: "text-amber-500",
+            bg: "bg-amber-500/5"
         }
     ];
 
     return (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-            {statsData.map(s => {
-                const Icon = s.icon;
-                return (
-                    <div
-                        key={s.label}
-                        className={`flex items-center gap-2 rounded-2xl border border-border bg-white p-3 transition-all hover:shadow-md sm:p-5`}
-                    >
-                        <div
-                            className={`inline-flex items-center justify-center w-8 h-8 rounded-lg ${s.iconBg}`}
-                        >
-                            <Icon className="w-4 h-4" />
-                        </div>
-                        <div className="flex flex-col items-start">
-                            <p className="text-xs text-gray-500">{s.label}</p>
-                            <p className={`font-semibold text- `}>
-                                {s.value}
-                            </p>
-                        </div>
-                    </div>
-                );
-            })}
+        <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
+            {statsData.map(stat => (
+                <SummaryCard key={stat.label} stat={stat} />
+            ))}
         </div>
     );
-};
-
-export default DashboardStatsCards;
+}

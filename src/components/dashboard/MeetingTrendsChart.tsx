@@ -8,24 +8,26 @@ import {
     ResponsiveContainer,
     CartesianGrid
 } from "recharts";
+import ContentCard from "../ContentCard";
+import MetricEmptyState from "./MetricEmptyState";
 
 interface Props {
     data?: { week: string; meetings: number }[];
 }
 
 const DEFAULT_DATA = [
-    { week: "Wk 1", meetings: 8 },
-    { week: "Wk 2", meetings: 14 },
-    { week: "Wk 3", meetings: 10 },
-    { week: "Wk 4", meetings: 21 }
+    { week: "Wk 1", meetings: 0 },
+    { week: "Wk 2", meetings: 0 },
+    { week: "Wk 3", meetings: 0 },
+    { week: "Wk 4", meetings: 0 }
 ];
 
 const CustomTooltip = ({ active, payload, label }: any) => {
     if (!active || !payload?.length) return null;
     return (
         <div className="bg-white border border-border rounded-lg px-3 py-2 shadow-md">
-            <p className="text-[11px] font-semibold text-secondary">{label}</p>
-            <p className="text-[11px] text-muted">
+            <p className="text-xs font-semibold text-secondary">{label}</p>
+            <p className="text-xs text-muted">
                 {payload[0].value} {payload[0].value === 1 ? "meeting" : "meetings"}
             </p>
         </div>
@@ -34,6 +36,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 export default function MeetingTrendChart({ data = DEFAULT_DATA }: Props) {
     const total = data.reduce((sum, d) => sum + d.meetings, 0);
+    const hasData = data.length > 0 && total > 0;
     const latest = data[data.length - 1];
     const previous = data[data.length - 2];
     const trend = latest && previous
@@ -42,14 +45,26 @@ export default function MeetingTrendChart({ data = DEFAULT_DATA }: Props) {
     const trendColor = trend?.startsWith("▲") ? "text-green-500" : "text-red-400";
 
     return (
-        <div className="space-y-3 bg-white rounded-xl border border-border">
-            <div className="flex items-center justify-between border-b border-border py-2 px-3">
-                <h1 className="font-semibold tracking-tight text-secondary">
-                    Last 4 Weeks
-                </h1>
-                <p className="font-bold text-secondary leading-tight">{total}</p>
-            </div>
-
+        <ContentCard
+            title="Last 4 Weeks"
+            headerRight={total}
+            footer={hasData ? (
+                <>
+                    <div className="flex items-center gap-1.5">
+                        <div className="w-2 h-2 rounded-full bg-primary" />
+                        <span className="text-xs text-muted">Meetings / week</span>
+                    </div>
+                    {trend && (
+                        <span className={`text-xs font-semibold ${trendColor}`}>
+                            {trend} this week
+                        </span>
+                    )}
+                </>
+            ) : undefined}
+        >
+            {!hasData ? (
+                <MetricEmptyState message="No meeting trends yet" />
+            ) : (
             <div className="h-36 px-3">
                 <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
@@ -96,18 +111,7 @@ export default function MeetingTrendChart({ data = DEFAULT_DATA }: Props) {
                     </AreaChart>
                 </ResponsiveContainer>
             </div>
-
-            <div className="flex items-center justify-between py-2 px-3 border-t border-border">
-                <div className="flex items-center gap-1.5">
-                    <div className="w-2 h-2 rounded-full bg-primary" />
-                    <span className="text-[10px] text-muted">Meetings / week</span>
-                </div>
-                {trend && (
-                    <span className={`text-[10px] font-semibold ${trendColor}`}>
-                        {trend} this week
-                    </span>
-                )}
-            </div>
-        </div>
+            )}
+        </ContentCard>
     );
 }

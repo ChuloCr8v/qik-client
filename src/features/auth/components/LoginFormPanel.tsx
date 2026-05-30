@@ -54,7 +54,7 @@ export function LoginFormPanel({
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-slate-200" />
           </div>
-          <span className="relative bg-slate-50 lg:bg-white px-4 text-xs text-slate-600">OR</span>
+          <span className="relative bg-slate-50 lg:bg-white px-4 text-sm text-slate-600">OR</span>
         </div>
 
         <EmailSignInForm

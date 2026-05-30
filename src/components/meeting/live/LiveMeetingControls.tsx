@@ -44,7 +44,7 @@ export default function LiveMeetingControls({
             onClick={onNext}
             className="group flex h-12 items-center justify-center gap-2 rounded-2xl bg-white pl-6 pr-4 font-bold text-slate-950 shadow-lg transition-all hover:bg-slate-100 active:scale-95 sm:h-14 sm:gap-3 sm:pl-8 sm:pr-6"
           >
-            <span className="text-xs sm:text-sm">{activeItemIndex === agendaLength - 1 ? 'Finish' : 'Next'}</span>
+            <span className="text-sm sm:text-sm">{activeItemIndex === agendaLength - 1 ? 'Finish' : 'Next'}</span>
             <SkipForward className="h-4 w-4 transition-transform group-hover:translate-x-1 sm:h-5 sm:w-5" />
           </button>
         </div>

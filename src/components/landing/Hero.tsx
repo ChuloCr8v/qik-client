@@ -22,14 +22,14 @@ export default function Hero({
 
       <div className="mx-auto max-w-5xl px-4 text-center sm:px-6">
         <motion.div
-          initial={ { opacity: 0, scale: 0.95 }}
-          animate={ { opacity: 1, scale: 1 }}
-          transition={ { duration: 0.5 }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
           className="space-y-6"
-          >
-          <div className="inline-flex items-center gap-2 rounded-full bg-amber-50 px-3 py-1 text-[10px] font-semibold text-primary border border-amber-100/50">
+        >
+          <div className="inline-flex items-center gap-2 rounded-full bg-amber-50 px-3 py-1 text-sm font-semibold text-primary border border-amber-100/50">
             <Sparkles className="h-3 w-3" />
-            <span className="uppercase tracking-wider">One Prompt, Full Meeting Agenda</span>
+            <span className="uppercase tracking-wider">One Prompt, Full Agenda</span>
           </div>
 
           <h1 className="mx-auto max-w-3xl text-4xl font-semibold tracking-tight text-secondary xl:text-6xl leading-[1.1]">
@@ -43,15 +43,15 @@ export default function Hero({
           <div className="max-w-[400px] w-full place-self-center flex md:grid grid-cols-2 flex-col items-center justify-center gap-3 sm:flex-row pt-4">
             <button
               onClick={onGetStarted}
-              className="flex h-10! w-full items-center justify-center gap-2.5 rounded-xl bg-secondary px-8 py-3.5 text-[12px] font-bold text-white shadow-lg transition-all hover:bg-slate-800 hover:-translate-y-0.5 active:scale-95 sm:w-auto"
-              >
+              className="flex h-10! w-full items-center justify-center gap-2.5 rounded-xl bg-secondary px-8 py-3.5 font-bold text-white shadow-lg transition-all hover:bg-slate-800 hover:-translate-y-0.5 active:scale-95 sm:w-auto"
+            >
               <span>Get Started Now</span>
               <ArrowRight className="h-4 w-4" />
             </button>
             <button
               onClick={onDemoSignIn}
-              className="group h-10! w-full flex items-center justify-center gap-1.5 px-6 py-3.5 text-[12px] font-semibold text-muted transition-colors hover:text-primary"
-              >
+              className="group h-10! w-full flex items-center justify-center gap-1.5 px-6 py-3.5 font-semibold text-muted transition-colors hover:text-primary"
+            >
               <span>Explore Guest Demo</span>
               <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
             </button>
@@ -59,11 +59,11 @@ export default function Hero({
         </motion.div>
 
         <motion.div
-          initial={ { opacity: 0, y: 30 }}
-          animate={ { opacity: 1, y: 0 }}
-          transition={ { duration: 0.6, delay: 0.3 }}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
           className="mt-12 overflow-hidden rounded-2xl border border-border bg-white shadow-[0_20px_50px_rgba(0,0,0,0.05)] p-1.5"
-          >
+        >
           <div className="aspect-[21/9] rounded-xl bg-slate-50 p-6 flex flex-col gap-4 border border-border/30">
             <div className="flex items-center gap-2 border-b border-border/50 pb-3">
               <div className="h-2 w-2 rounded-full bg-slate-200" />

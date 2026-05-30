@@ -26,8 +26,8 @@ export function LoginMeetingContext({ meetingId }: Props) {
   if (isError || !meeting) {
     return (
       <div className="rounded-2xl border border-amber-100 bg-amber-50 p-4">
-        <p className="text-xs font-semibold text-amber-900">Sign in to continue</p>
-        <p className="mt-1 text-[11px] leading-relaxed text-amber-800">
+        <p className="text-sm font-semibold text-amber-900">Sign in to continue</p>
+        <p className="mt-1 text-sm leading-relaxed text-amber-800">
           We could not load the meeting preview, but we will still try to open the invite after sign-in.
         </p>
       </div>
@@ -36,21 +36,21 @@ export function LoginMeetingContext({ meetingId }: Props) {
 
   return (
     <div className="rounded-2xl border border-primary/20 bg-primary/5 p-4 text-left">
-      <p className="text-[10px] font-bold uppercase tracking-widest text-primary">Meeting invite</p>
+      <p className="text-sm font-bold uppercase  text-primary">Meeting invite</p>
       <h3 className="mt-1 text-sm font-bold text-secondary">{meeting.title}</h3>
       <div className="mt-3 grid grid-cols-2 gap-2">
         <div className="flex items-center gap-2 rounded-xl bg-white px-3 py-2">
           <CalendarClock className="h-3.5 w-3.5 text-primary" />
-          <span className="truncate text-[10px] font-semibold text-secondary">
+          <span className="truncate text-sm font-semibold text-secondary">
             {meeting.scheduledAt ? formatDate(meeting.scheduledAt) : 'Not scheduled'}
           </span>
         </div>
         <div className="flex items-center gap-2 rounded-xl bg-white px-3 py-2">
           <FileText className="h-3.5 w-3.5 text-primary" />
-          <span className="text-[10px] font-semibold text-secondary">{meeting.agendaCount} agenda items</span>
+          <span className="text-sm font-semibold text-secondary">{meeting.agendaCount} agenda items</span>
         </div>
       </div>
-      <p className="mt-3 text-[11px] leading-relaxed text-muted">
+      <p className="mt-3 text-sm leading-relaxed text-muted">
         Sign in with your invited email and we will redirect you to this meeting.
       </p>
     </div>

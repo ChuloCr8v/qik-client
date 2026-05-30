@@ -35,7 +35,7 @@ export default function AgendaItemModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.title.trim()) return;
-    
+
     setLoading(true);
     try {
       await onSave(formData);
@@ -48,9 +48,9 @@ export default function AgendaItemModal({
   };
 
   return (
-    <Drawer 
-      isOpen={isOpen} 
-      onClose={onClose} 
+    <Drawer
+      isOpen={isOpen}
+      onClose={onClose}
       icon={<Type className="h-5 w-5 text-primary" />}
       title={title}
       footer={
@@ -58,7 +58,7 @@ export default function AgendaItemModal({
           <button
             type="button"
             onClick={onClose}
-            className="px-6 py-2.5 text-xs font-semibold text-muted hover:bg-slate-100 rounded-xl transition-all"
+            className="px-6 py-2.5 text-sm font-semibold text-muted hover:bg-slate-100 rounded-xl transition-all"
           >
             Cancel
           </button>
@@ -66,7 +66,7 @@ export default function AgendaItemModal({
             form="agenda-item-form"
             type="submit"
             disabled={loading || !formData.title.trim()}
-            className="flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-xs font-semibold text-white   shadow-primary/20 transition-all hover:bg-primary/90 active:scale-[0.98] disabled:opacity-50"
+            className="flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-white   shadow-primary/20 transition-all hover:bg-primary/90 active:scale-[0.98] disabled:opacity-50"
           >
             {loading && <Loader2 className="h-3 w-3 animate-spin" />}
             Save Changes
@@ -77,7 +77,7 @@ export default function AgendaItemModal({
       <form id="agenda-item-form" onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-4">
           <div className="space-y-1.5">
-            <label className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-wider text-muted">
+            <label className="flex items-center gap-2 text-sm font-semibold uppercase text-muted">
               <Type className="h-3 w-3" />
               Topic Title
             </label>
@@ -87,13 +87,13 @@ export default function AgendaItemModal({
               value={formData.title}
               onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
               placeholder="e.g., Marketing Update"
-              className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-3 text-xs font-semibold text-secondary focus:border-primary focus:bg-white focus:outline-none transition-all  "
+              className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-3 text-sm font-semibold text-secondary focus:border-primary focus:bg-white focus:outline-none transition-all  "
             />
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
-              <label className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-wider text-muted">
+              <label className="flex items-center gap-2 text-sm font-semibold uppercase text-muted">
                 <Clock className="h-3 w-3" />
                 Duration (min)
               </label>
@@ -103,13 +103,13 @@ export default function AgendaItemModal({
                 required
                 value={formData.duration}
                 onChange={(e) => setFormData(prev => ({ ...prev, duration: parseInt(e.target.value) || 0 }))}
-                className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-3 text-xs font-semibold text-secondary focus:border-primary focus:bg-white focus:outline-none transition-all  "
+                className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-3 text-sm font-semibold text-secondary focus:border-primary focus:bg-white focus:outline-none transition-all  "
               />
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <label className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-wider text-muted">
+            <label className="flex items-center gap-2 text-sm font-semibold uppercase text-muted">
               <AlignLeft className="h-3 w-3" />
               Description (optional)
             </label>
@@ -118,7 +118,7 @@ export default function AgendaItemModal({
               value={formData.description}
               onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
               placeholder="Details about this topic..."
-              className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-3 text-xs font-medium text-secondary focus:border-primary focus:bg-white focus:outline-none transition-all resize-none custom-scrollbar  "
+              className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-3 text-sm font-medium text-secondary focus:border-primary focus:bg-white focus:outline-none transition-all resize-none custom-scrollbar  "
             />
           </div>
         </div>

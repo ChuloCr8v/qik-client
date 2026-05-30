@@ -41,7 +41,7 @@ export default function MeetingInvitePrompt({ meetingId }: Props) {
           ) : (
             <div className="space-y-6">
               <div className="space-y-2">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-primary">
+                <p className="text-sm font-bold uppercase  text-primary">
                   {meeting.isPublic ? 'Public meeting link' : 'Meeting invitation'}
                 </p>
                 <h1 className="text-2xl font-bold tracking-tight text-secondary">{meeting.title}</h1>
@@ -58,7 +58,7 @@ export default function MeetingInvitePrompt({ meetingId }: Props) {
 
               <div className="rounded-2xl border border-dashed border-primary/30 bg-primary/5 p-4">
                 <p className="text-sm font-semibold text-secondary">Sign in to access this meeting</p>
-                <p className="mt-1 text-xs leading-relaxed text-muted">
+                <p className="mt-1 text-sm leading-relaxed text-muted">
                   {meeting.isPublic
                     ? 'Anyone with this link can join after signing in. We will take you straight to the meeting room.'
                     : 'Use the email address that received the invite. After sign-in, we will take you straight to the meeting room.'}
@@ -92,8 +92,8 @@ function InviteMeta({
   return (
     <div className="rounded-2xl bg-slate-50 p-3">
       <Icon className="mb-2 h-4 w-4 text-primary" />
-      <p className="text-[9px] font-bold uppercase tracking-widest text-muted">{label}</p>
-      <p className="mt-1 text-xs font-semibold text-secondary">{value}</p>
+      <p className="text-sm font-bold uppercase  text-muted">{label}</p>
+      <p className="mt-1 text-sm font-semibold text-secondary">{value}</p>
     </div>
   );
 }

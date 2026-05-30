@@ -61,14 +61,14 @@ export default function AgendaList({
                     <div className="flex items-center gap-2">
                         <button
                             onClick={onToggleTemplates}
-                            className="flex p-3 py-2 items-center gap-1.5 text-[11px] font-semibold text-muted transition-colors hover:text-primary"
+                            className="flex p-3 py-2 items-center gap-1.5 text-sm font-semibold text-muted transition-colors hover:text-primary"
                         >
                             <Library className="h-3.5 w-3.5" />
                             <span>Templates</span>
                         </button>
                         <button
                             onClick={onOpenAddTopic}
-                            className="flex p-3 py-2 items-center gap-1.5 text-[11px] font-semibold text-primary hover:underline"
+                            className="flex p-3 py-2 items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
                         >
                             <Plus className="h-3.5 w-3.5" />
                             <span>Add Topic</span>
@@ -90,7 +90,7 @@ export default function AgendaList({
                         <div className="mb-4 rounded-full bg-slate-50 p-4">
                             <FileText className="h-8 w-8 text-slate-200" />
                         </div>
-                        <p className="mb-6 max-w-[200px] text-xs font-medium text-muted">
+                        <p className="mb-6 max-w-[200px] text-sm font-medium text-muted">
                             No items yet. Use the generator or pick a template
                             to start.
                         </p>
@@ -99,7 +99,7 @@ export default function AgendaList({
                                 <button
                                     key={template.name}
                                     onClick={() => onSelectTemplate(template)}
-                                    className="flex items-center gap-1.5 rounded-lg border border-border bg-white px-3 py-1.5 text-[10px] font-semibold text-secondary   transition-all hover:border-primary hover:bg-slate-50"
+                                    className="flex items-center gap-1.5 rounded-lg border border-border bg-white px-3 py-1.5 text-sm font-semibold text-secondary   transition-all hover:border-primary hover:bg-slate-50"
                                 >
                                     <Plus className="h-3 w-3" />
                                     {template.name} Template

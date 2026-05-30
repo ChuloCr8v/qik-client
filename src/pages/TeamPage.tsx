@@ -1,52 +1,19 @@
-import React, { useState } from "react";
-import PageHeader from "../components/PageHeader";
-import Table, { TableRow, TableCell } from "../components/Table";
 import {
-    UserPlus,
-    Shield,
-    MoreHorizontal,
-    Loader2,
-    Users,
-    Zap,
     CheckCircle2,
+    Loader2,
+    MoreHorizontal,
     Search,
-    Filter
+    Shield,
+    UserPlus,
+    Users,
+    Zap
 } from "lucide-react";
-import { User } from "../types";
+import { useState } from "react";
+import SummaryCard from "../components/global/SummaryCards";
+import PageHeader from "../components/PageHeader";
+import Table, { TableCell, TableRow } from "../components/Table";
 import TeamInviteModal from "../components/TeamInviteModal";
 import { useListUsersQuery } from "../features/users/usersApi";
-import SummaryCard from "../components/global/SummaryCards";
-
-const DEMO_MEMBERS: User[] = [
-    {
-        uid: "d1",
-        displayName: "John Doe",
-        email: "john@example.com",
-        role: "Owner",
-        status: "Active"
-    },
-    {
-        uid: "d2",
-        displayName: "Jane Smith",
-        email: "jane@example.com",
-        role: "Admin",
-        status: "Active"
-    },
-    {
-        uid: "d3",
-        displayName: "Mike Ross",
-        email: "mike@example.com",
-        role: "Member",
-        status: "Away"
-    },
-    {
-        uid: "d4",
-        displayName: "Harvey Specter",
-        email: "harvey@example.com",
-        role: "Member",
-        status: "Active"
-    }
-];
 
 export default function TeamPage() {
     const { data: membersData = [], isLoading: loading } = useListUsersQuery();
@@ -56,7 +23,7 @@ export default function TeamPage() {
         "All"
     );
 
-    const members = membersData.length > 0 ? membersData : DEMO_MEMBERS;
+    const members = membersData;
 
     const filteredMembers = members.filter(m => {
         const matchesSearch =
@@ -76,7 +43,7 @@ export default function TeamPage() {
     }
 
     return (
-        <div className="space-y-4 mx-auto max-w-6xl px-4 py-8 sm:px-6">
+        <div className="space-y-3 mx-auto max-w-6xl py-4">
             <PageHeader
                 title="Team Members"
                 // description="Invite and manage roles for your team collaborators."
@@ -86,13 +53,13 @@ export default function TeamPage() {
                         className="button-primary flex items-center gap-2"
                     >
                         <UserPlus className="h-4 w-4" />
-                        <span>Invite Member</span>
+                        <span className="hidden md:block">Invite Member</span>
                     </button>
                 }
             />
 
-            <div className="grid gap-6">
-                <div className="grid grid-cols-3 gap-2 sm:gap-6">
+            <div className="grid gap-3">
+                <div className="grid grid-cols-3 gap-2">
                     {[
                         {
                             label: "Members",
@@ -130,7 +97,7 @@ export default function TeamPage() {
                             placeholder="Search members..."
                             value={search}
                             onChange={e => setSearch(e.target.value)}
-                            className="w-full rounded-xl border border-border bg-slate-50/50 py-2 pl-9! pr-4 text-xs font-medium focus:border-primary focus:bg-white focus:outline-none transition-all"
+                            className="w-full rounded-xl border border-border bg-slate-50/50 py-2 pl-9! pr-4 text-sm font-medium focus:border-primary focus:bg-white focus:outline-none transition-all"
                         />
                     </div>
                     <div className="relative">
@@ -139,7 +106,7 @@ export default function TeamPage() {
                             onChange={e =>
                                 setStatusFilter(e.target.value as any)
                             }
-                            className="appearance-none h-9! flex items-center gap-2 rounded-lg border border-border bg-white px-3 py-2 text-xs font-semibold text-muted hover:border-primary hover:text-primary transition-colors cursor-pointer outline-none"
+                            className="appearance-none h-9! flex items-center gap-2 rounded-lg border border-border bg-white px-3 py-2 text-sm font-semibold text-muted hover:border-primary hover:text-primary transition-colors cursor-pointer outline-none"
                         >
                             <option value="All">All Status</option>
                             <option value="Active">Active</option>
@@ -168,13 +135,6 @@ export default function TeamPage() {
                                                 {member.displayName[0]}
                                             </span>
                                         )}
-                                        {member.uid.startsWith("d") && (
-                                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                                                <span className="text-[6px] text-white font-semibold uppercase">
-                                                    Demo
-                                                </span>
-                                            </div>
-                                        )}
                                     </div>
                                     <div className="flex flex-col">
                                         <span className="font-semibold text-secondary">
@@ -187,8 +147,8 @@ export default function TeamPage() {
                                     </div>
                                 </TableCell>
                                 <TableCell>
-                                    <div className="flex items-center gap-1.5 text-xs font-medium text-muted">
-                                        <Shield className="h-3 w-3" />
+                                    <div className="flex items-center gap-1.5 text-sm font-medium text-muted">
+                                        {/* <Shield className="h-3 w-3" /> */}
                                         {member.role || "Member"}
                                     </div>
                                 </TableCell>
@@ -197,7 +157,7 @@ export default function TeamPage() {
                                         <div
                                             className={`h-1.5 w-1.5 rounded-full ${member.status === "Away" ? "bg-amber-400" : "bg-accent"}`}
                                         />
-                                        <span className="text-[10px] font-semibold text-secondary uppercase tracking-widest">
+                                        <span className="text-xs font-semibold text-secondary uppercase ">
                                             {member.status || "Active"}
                                         </span>
                                     </div>

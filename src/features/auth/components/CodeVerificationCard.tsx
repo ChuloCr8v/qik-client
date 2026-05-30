@@ -33,7 +33,7 @@ export function CodeVerificationCard({
       </div>
       {devCode && (
         <div className="rounded-2xl bg-slate-50 p-4 text-left">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-muted">Local dev code</p>
+          <p className="text-sm font-bold uppercase  text-muted">Local dev code</p>
           <p className="mt-1 font-mono text-2xl font-bold text-secondary">{devCode}</p>
         </div>
       )}
@@ -58,7 +58,7 @@ export function CodeVerificationCard({
       </form>
       <button
         onClick={onUseDifferentEmail}
-        className="text-[10px] font-bold uppercase tracking-widest text-primary hover:underline"
+        className="text-sm font-bold uppercase  text-primary hover:underline"
       >
         Use a different email
       </button>

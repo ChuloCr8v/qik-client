@@ -1,8 +1,8 @@
-import { useState } from 'react';
 import { CreditCard, Lock } from 'lucide-react';
 import Modal from '../Modal';
-import PricingDrawer from '../PricingDrawer';
+import PricingModal from '../PricingModal';
 import type { PlanName } from '../../config/plans';
+import { usePopup } from '../../context/PopupContext';
 
 interface UpgradePromptProps {
   isOpen: boolean;
@@ -17,10 +17,10 @@ export default function UpgradePrompt({
   currentPlan,
   missingFeature,
 }: UpgradePromptProps) {
-  const [isPricingOpen, setIsPricingOpen] = useState(false);
+  const { openModal } = usePopup();
 
   return (
-    <>
+    
       <Modal
         isOpen={isOpen}
         onClose={onClose}
@@ -28,15 +28,15 @@ export default function UpgradePrompt({
         title="Upgrade required"
         footer={
           <div className="flex justify-end gap-3">
-            <button onClick={onClose} className="rounded-xl px-4 py-2 text-xs font-semibold text-muted hover:bg-slate-100">
+            <button onClick={onClose} className="rounded-xl px-4 py-2 text-sm font-semibold text-muted hover:bg-slate-100">
               Cancel
             </button>
             <button
               onClick={() => {
                 onClose();
-                setIsPricingOpen(true);
+                openModal(<PricingModal />);
               }}
-              className="flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-xs font-semibold text-white"
+              className="flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white"
             >
               <CreditCard className="h-3.5 w-3.5" />
               View plans
@@ -45,15 +45,14 @@ export default function UpgradePrompt({
         }
       >
         <div className="space-y-3">
-          <p className="text-xs font-semibold text-secondary">
+          <p className="text-sm font-semibold text-secondary">
             Current plan: {currentPlan}
           </p>
-          <p className="text-xs leading-relaxed text-muted">
+          <p className="text-sm leading-relaxed text-muted">
             {missingFeature}
           </p>
         </div>
       </Modal>
-      <PricingDrawer isOpen={isPricingOpen} onClose={() => setIsPricingOpen(false)} />
-    </>
+    
   );
 }

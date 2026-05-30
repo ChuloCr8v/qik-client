@@ -8,6 +8,8 @@ import {
     ResponsiveContainer,
     Cell
 } from "recharts";
+import ContentCard from "../ContentCard";
+import MetricEmptyState from "./MetricEmptyState";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -32,8 +34,8 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     if (!active || !payload?.length) return null;
     return (
         <div className="bg-white border border-border rounded-lg px-3 py-2 shadow-md">
-            <p className="text-[11px] font-semibold text-secondary">{label}</p>
-            <p className="text-[11px] text-muted">
+            <p className="text-xs font-semibold text-secondary">{label}</p>
+            <p className="text-xs text-muted">
                 {payload[0].value}{" "}
                 {payload[0].value === 1 ? "meeting" : "meetings"}
             </p>
@@ -51,20 +53,13 @@ const getTodayIndex = () => {
 
 const DEFAULT_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-const DEFAULT_DATA = [
-    { day: "Mon", meetings: 3 },
-    { day: "Tue", meetings: 5 },
-    { day: "Wed", meetings: 2 },
-    { day: "Thu", meetings: 4 },
-    { day: "Fri", meetings: 6 },
-    { day: "Sat", meetings: 1 },
-    { day: "Sun", meetings: 0 }
-];
+const DEFAULT_DATA = DEFAULT_DAYS.map(day => ({ day, meetings: 0 }));
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function ScheduleChart({ data = DEFAULT_DATA }: Props) {
     const todayIndex = getTodayIndex();
+    const hasData = data.length > 0 && data.some(d => d.meetings > 0);
 
     const chartData: WeeklyData[] = useMemo(
         () =>
@@ -86,18 +81,40 @@ export default function ScheduleChart({ data = DEFAULT_DATA }: Props) {
     };
 
     return (
-        <div className="space-y-3 bg-white rounded-xl border border-border col-span-2">
-            {/* Header */}
-            <div className="flex bg--50 overflow-hidden items-center justify-between border-b border-border py-2 px-3">
-                <h1 className="font-semibold tracking-tight text-secondary">
-                    This Week's Activities
-                </h1>
-                <p className="font-bold text-secondary leading-tight">
-                    {totalThisWeek}
-                </p>
-            </div>
-
-            {/* Bar Chart */}
+        <ContentCard
+            title="This Week's Activities"
+            headerRight={totalThisWeek}
+            className="col-span-2"
+            footer={hasData ? (
+                <>
+                    <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-1.5">
+                            <div className="w-2 h-2 rounded-full bg-primary" />
+                            <span className="text-xs text-muted">Today</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                            <div className="w-2 h-2 rounded-full bg-slate-300" />
+                            <span className="text-xs text-muted">Past</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                            <div className="w-2 h-2 rounded-full bg-slate-200" />
+                            <span className="text-xs text-muted">Upcoming</span>
+                        </div>
+                    </div>
+                    {peakDay && (
+                        <span className="text-xs text-muted">
+                            Peak:{" "}
+                            <span className="font-semibold text-secondary">
+                                {peakDay.day}
+                            </span>
+                        </span>
+                    )}
+                </>
+            ) : undefined}
+        >
+            {!hasData ? (
+                <MetricEmptyState message="No activity this week" />
+            ) : (
             <div className="h-36 p-3">
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart
@@ -137,32 +154,7 @@ export default function ScheduleChart({ data = DEFAULT_DATA }: Props) {
                     </BarChart>
                 </ResponsiveContainer>
             </div>
-
-            {/* Footer legend */}
-            <div className="flex items-center justify-between py-2 px-3 border-t border-border">
-                <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-1.5">
-                        <div className="w-2 h-2 rounded-full bg-primary" />
-                        <span className="text-[10px] text-muted">Today</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                        <div className="w-2 h-2 rounded-full bg-slate-300" />
-                        <span className="text-[10px] text-muted">Past</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                        <div className="w-2 h-2 rounded-full bg-slate-200" />
-                        <span className="text-[10px] text-muted">Upcoming</span>
-                    </div>
-                </div>
-                {peakDay && (
-                    <span className="text-[10px] text-muted">
-                        Peak:{" "}
-                        <span className="font-semibold text-secondary">
-                            {peakDay.day}
-                        </span>
-                    </span>
-                )}
-            </div>
-        </div>
+            )}
+        </ContentCard>
     );
 }

@@ -25,7 +25,7 @@ declare global {
 
 const googleIdentityScriptSrc = 'https://accounts.google.com/gsi/client';
 
-export const googleClientId = process.env.GOOGLE_CLIENT_ID;
+export const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 export function isGoogleSignInConfigured() {
   return !!googleClientId && googleClientId !== 'YOUR_GOOGLE_OAUTH_CLIENT_ID';

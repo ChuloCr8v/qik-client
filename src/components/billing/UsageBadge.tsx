@@ -15,7 +15,7 @@ export default function UsageBadge() {
 
   return (
     <div className={cn(
-      'inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-[10px] font-bold uppercase tracking-widest',
+      'inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-xs font-bold uppercase ',
       ratio >= 1
         ? 'border-rose-200 bg-rose-50 text-rose-600'
         : ratio > 0.8

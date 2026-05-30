@@ -32,7 +32,7 @@ export function EmailSignInForm({
           placeholder="name@company.com"
           value={email}
           onChange={(event) => onEmailChange(event.target.value)}
-          className="w-full h-10! rounded-xl border border-border bg-slate-50/50 py-3 pl-10! pr-4 text-xs font-semibold text-secondary focus:border-primary focus:bg-white focus:outline-none transition-all"
+          className="w-full h-10! rounded-xl border border-border bg-slate-50/50 py-3 pl-10! pr-4 text-sm font-semibold text-secondary focus:border-primary focus:bg-white focus:outline-none transition-all"
           />
       </div>
     </div>

@@ -17,7 +17,7 @@ export default function InviteesPanel({
     <div className=" rounded-xl border border-border bg-white px-3 py-2">
       <SectionHeading title="Invitees" action={ <button
         onClick={onInvite}
-        className="flex items-center gap-1 rounded-lg p-0! border-none text-[9px] font-bold text-primary hover:text-primary/20"
+        className="flex items-center gap-1 rounded-lg p-0! border-none text-sm font-bold text-primary hover:text-primary/20"
         >
         <Plus className="h-3 w-3" />
         Add
@@ -31,10 +31,10 @@ export default function InviteesPanel({
                 <Mail className="h-3.5 w-3.5" />
               </div>
               <div className="min-w-0">
-                <p className="truncate text-[11px] font-semibold text-secondary">
+                <p className="truncate text-sm font-semibold text-secondary">
                   {email}
                 </p>
-                <p className="text-[8px] text-muted">
+                <p className="text-xs text-muted">
                   Invited
                 </p>
               </div>
@@ -42,7 +42,7 @@ export default function InviteesPanel({
           ))}
         </div>
       ): (
-        <p className="py-2 text-center text-[10px] italic text-muted">
+        <p className="py-2 text-center text-sm italic text-muted">
           No invitees yet.
         </p>
       )}

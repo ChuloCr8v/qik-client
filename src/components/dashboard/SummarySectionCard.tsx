@@ -1,5 +1,8 @@
-import { ChevronRight, FileText, ArrowRight, Clock, Users } from "lucide-react";
+import type { Key } from "react";
+import { ChevronRight, FileText, ArrowRight, Clock } from "lucide-react";
 import { Meeting } from "../../types";
+import ContentCard from "../ContentCard";
+import { formatDate } from "../../lib/utils";
 import {
     getMeetingStatusClassName,
     getMeetingStatusDotClassName,
@@ -9,12 +12,16 @@ import {
 // ─── Meeting Item Card ───────────────────────────────────────────────────────
 
 interface MeetingItemCardProps {
+    key?: Key;
     meeting: Meeting;
     index: number;
     onClick: () => void;
+    subtitleMode?: "status" | "schedule";
 }
 
-function MeetingItemCard({ meeting, index, onClick }: MeetingItemCardProps) {
+function MeetingItemCard({ meeting, index, onClick, subtitleMode = "status" }: MeetingItemCardProps) {
+    const scheduledText = meeting.scheduledAt ? formatDate(meeting.scheduledAt) : "Not scheduled";
+
     return (
         <button
             onClick={onClick}
@@ -22,27 +29,34 @@ function MeetingItemCard({ meeting, index, onClick }: MeetingItemCardProps) {
         >
             {/* Index badge */}
             {/**<div className="flex-shrink-0 w-6 h-6 rounded-lg bg-primary/5 rounded-full flex items-center justify-center">
-                <span className="text-[10px] font-bold text-muted">
+                <span className="text-sm font-bold text-muted">
                     {index + 1}
                 </span>
             </div>**/}
 
             {/* Meeting info */}
             <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold text-secondary truncate leading-tight">
+                <p className="text-sm font-semibold text-secondary truncate leading-tight">
                     {meeting.title}
                 </p>
                 <div className="flex items-center gap-2 mt-0.5">
-                    <div className="flex items-center gap-1">
-                        <div
-                            className={`h-1.5 w-1.5 rounded-full ${getMeetingStatusDotClassName(meeting.status)}`}
-                        />
-                        <span
-                            className={`text-[10px] font-bold ${getMeetingStatusClassName(meeting.status)}`}
-                        >
-                            {getMeetingStatusLabel(meeting.status)}
-                        </span>
-                    </div>
+                    {subtitleMode === "schedule" ? (
+                        <div className="flex items-center gap-1.5 text-xs font-semibold text-muted">
+                            <Clock className="h-3 w-3 text-slate-400" />
+                            <span>{scheduledText}</span>
+                        </div>
+                    ) : (
+                        <div className="flex items-center gap-1">
+                            <div
+                                className={`h-1.5 w-1.5 rounded-full ${getMeetingStatusDotClassName(meeting.status)}`}
+                            />
+                            <span
+                                className={`text-xs font-bold ${getMeetingStatusClassName(meeting.status)}`}
+                            >
+                                {getMeetingStatusLabel(meeting.status)}
+                            </span>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -61,10 +75,10 @@ function MeetingsEmptyState() {
         <div className="rounded-3xl border-2 border-dashed border-slate-100 bg-slate-50/30 py-12 text-center">
             <FileText className="mx-auto h-12 w-12 text-slate-200" />
             <div className="mt-4 space-y-1">
-                <p className="text-[12px] font-semibold text-secondary">
+                <p className="text-sm font-semibold text-secondary">
                     No upcoming meetings
                 </p>
-                <p className="text-[11px] text-muted">
+                <p className="text-sm text-muted">
                     Create your first meeting to start collaborating.
                 </p>
             </div>
@@ -77,46 +91,48 @@ function MeetingsEmptyState() {
 type Props = {
     meetings: Meeting[];
     onOk?: () => void;
+    onShowAll?: () => void;
     okText?: string;
     title?: string;
     onOpenMeeting: (meetingId: string) => void;
     limit?: number;
+    subtitleMode?: "status" | "schedule";
 };
 
 export default function SummarySectionCard({
     meetings,
     okText,
     onOk,
+    onShowAll,
     onOpenMeeting,
     limit = 4,
-    title
+    title,
+    subtitleMode = "status"
 }: Props) {
     const visible = meetings?.slice(0, limit) ?? [];
+    const handleHeaderAction = onOk || onShowAll;
 
     return (
-        <div className="bg-white overflow-hidden rounded-xl border border-border">
-            {/* Header */}
-            <div className="bg-gy-50 min-w-0 flex items-center justify-between border-b border-border p-3 py-2">
-                <h1 className="font-semibold tracking-tight text-secondary">
-                    {title}
-                </h1>
+        <ContentCard
+            title={title}
+            headerRight={
                 <button
-                    onClick={onOk}
-                    className="border-0! p-0! h-0! flex items-center gap-2 text-xs text-primary"
+                    onClick={handleHeaderAction}
+                    className="border-0! p-0! h-auto! flex items-center gap-2 text-sm text-primary"
                 >
                     <span>{okText}</span>
                     <ChevronRight className="h-4 w-4 -mt-0.5" />
                 </button>
-            </div>
-
-            {/* Meeting list or empty state */}
+            }
+        >
             {visible.length > 0 ? (
-                <div className="h-50 overflow-y-scroll">
+                <div className="h-50 overflow-y-auto">
                     {visible.map((meeting, index) => (
                         <MeetingItemCard
                             key={meeting.id}
                             meeting={meeting}
                             index={index}
+                            subtitleMode={subtitleMode}
                             onClick={() => onOpenMeeting(meeting.id)}
                         />
                     ))}
@@ -124,6 +140,6 @@ export default function SummarySectionCard({
             ) : (
                 <MeetingsEmptyState />
             )}
-        </div>
+        </ContentCard>
     );
 }

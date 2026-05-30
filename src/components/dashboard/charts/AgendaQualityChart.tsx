@@ -6,6 +6,8 @@ import {
     Tooltip,
     ResponsiveContainer
 } from "recharts";
+import ContentCard from "../../ContentCard";
+import MetricEmptyState from "../MetricEmptyState";
 
 interface Props {
     completed?: number;
@@ -16,8 +18,8 @@ const CustomTooltip = ({ active, payload }: any) => {
     if (!active || !payload?.length) return null;
     return (
         <div className="bg-white border border-border rounded-lg px-3 py-2 shadow-md">
-            <p className="text-[11px] font-semibold text-secondary">{payload[0].name}</p>
-            <p className="text-[11px] text-muted">
+            <p className="text-xs font-semibold text-secondary">{payload[0].name}</p>
+            <p className="text-xs text-muted">
                 {payload[0].value} {payload[0].value === 1 ? "item" : "items"}
             </p>
         </div>
@@ -25,11 +27,12 @@ const CustomTooltip = ({ active, payload }: any) => {
 };
 
 export default function AgendaQualityChart({
-    completed = 74,
-    skipped = 18
+    completed = 0,
+    skipped = 0
 }: Props) {
     const total = completed + skipped;
     const rate = total > 0 ? Math.round((completed / total) * 100) : 0;
+    const hasData = total > 0;
 
     const data = useMemo(() => [
         { name: "Completed", value: completed, color: "#22c55e" },
@@ -37,14 +40,28 @@ export default function AgendaQualityChart({
     ], [completed, skipped]);
 
     return (
-        <div className="space-y-3 bg-white rounded-xl border border-border">
-            <div className="flex items-center justify-between border-b border-border py-2 px-3">
-                <h1 className="font-semibold tracking-tight text-secondary">
-                    Agenda Quality
-                </h1>
-                <p className="font-bold text-secondary leading-tight">{rate}%</p>
-            </div>
-
+        <ContentCard
+            title="Agenda Quality"
+            headerRight={`${rate}%`}
+            footer={hasData ? (
+                <>
+                    <div className="flex items-center gap-3">
+                        {data.map(d => (
+                            <div key={d.name} className="flex items-center gap-1.5">
+                                <div className="w-2 h-2 rounded-full" style={{ background: d.color }} />
+                                <span className="text-xs text-muted">{d.name}</span>
+                            </div>
+                        ))}
+                    </div>
+                    <span className="text-xs text-muted">
+                        Total: <span className="font-semibold text-secondary">{total} items</span>
+                    </span>
+                </>
+            ) : undefined}
+        >
+            {!hasData ? (
+                <MetricEmptyState message="No agenda quality data" />
+            ) : (
             <div className="h-36 px-3">
                 <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
@@ -87,20 +104,7 @@ export default function AgendaQualityChart({
                     </PieChart>
                 </ResponsiveContainer>
             </div>
-
-            <div className="flex items-center justify-between py-2 px-3 border-t border-border">
-                <div className="flex items-center gap-3">
-                    {data.map(d => (
-                        <div key={d.name} className="flex items-center gap-1.5">
-                            <div className="w-2 h-2 rounded-full" style={{ background: d.color }} />
-                            <span className="text-[10px] text-muted">{d.name}</span>
-                        </div>
-                    ))}
-                </div>
-                <span className="text-[10px] text-muted">
-                    Total: <span className="font-semibold text-secondary">{total} items</span>
-                </span>
-            </div>
-        </div>
+            )}
+        </ContentCard>
     );
 }

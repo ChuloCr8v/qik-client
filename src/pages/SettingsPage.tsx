@@ -4,7 +4,7 @@ import {
 } from 'react';
 import toast from 'react-hot-toast';
 import PageHeader from '../components/PageHeader';
-import PricingDrawer from '../components/PricingDrawer';
+import PricingModal from '../components/PricingModal';
 import ProfileEditModal from '../components/ProfileEditModal';
 import PersonalInfoPanel from '../components/settings/PersonalInfoPanel';
 import PlanCard from '../components/settings/PlanCard';
@@ -21,14 +21,14 @@ import {
   useGetCurrentUserQuery,
   useUpdateCurrentUserMutation
 } from '../features/users/usersApi';
+import { usePopup } from '../context/PopupContext';
 
 export default function SettingsPage() {
   const [isProfileModalOpen,
     setIsProfileModalOpen] = useState(false);
-  const [isPricingOpen,
-    setIsPricingOpen] = useState(false);
   const [profile,
-    setProfile] = useState < User | null > (null);
+    setProfile] = useState<User | null>(null);
+  const { openModal } = usePopup();
   const {
     user,
     signOut
@@ -37,8 +37,8 @@ export default function SettingsPage() {
     data: profileData,
     refetch
   } = useGetCurrentUserQuery(undefined, {
-      skip: !user
-    });
+    skip: !user
+  });
   const [updateUserProfile] = useUpdateCurrentUserMutation();
 
   useEffect(() => {
@@ -54,7 +54,7 @@ export default function SettingsPage() {
     signOut();
   };
 
-  const handleToggleNotification = async (key: keyof NonNullable < User['notifications'] >) => {
+  const handleToggleNotification = async (key: keyof NonNullable<User['notifications']>) => {
     if (!profile) return;
 
     const currentNotifications = profile.notifications || {
@@ -68,12 +68,12 @@ export default function SettingsPage() {
     };
 
     try {
-      await updateUserProfile( {
+      await updateUserProfile({
         notifications: newNotifications
       }).unwrap();
       setProfile(prev => prev ? {
         ...prev, notifications: newNotifications
-      }: null);
+      } : null);
       toast.success('Preferences updated');
     } catch (error) {
       toast.error('Failed to update preferences');
@@ -86,25 +86,25 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="space-y-4 mx-auto max-w-6xl px-4 py-8 sm:px-6">
+    <div className="space-y-4 mx-auto max-w-6xl py-4">
       <PageHeader
         title="Account Settings"
+        description='Manage your account and billing information'
+      />
 
-        />
-
-      <div className="grid gap-8 lg:grid-cols-12">
-        <div className="space-y-6 lg:col-span-4">
+      <div className="grid gap-3 lg:grid-cols-12">
+        <div className="space-y-3 lg:col-span-4">
           <ProfileSummaryCard
             user={user}
             profile={profile}
             onEdit={() => setIsProfileModalOpen(true)}
             onLogout={handleLogout}
-            />
-          <PlanCard profile={profile} onOpenPricing={() => setIsPricingOpen(true)} />
+          />
+          <PlanCard profile={profile} onOpenPricing={() => openModal(<PricingModal />)} />
         </div>
 
         <div className="space-y-6 lg:col-span-8">
-          <div className="grid gap-6">
+          <div className="grid gap-3">
             <PersonalInfoPanel user={user} profile={profile} onEdit={() => setIsProfileModalOpen(true)} />
             <PreferencesPanel profile={profile} onToggle={handleToggleNotification} />
             <QuickActionsPanel />
@@ -118,10 +118,8 @@ export default function SettingsPage() {
           onClose={() => setIsProfileModalOpen(false)}
           user={user}
           onSuccess={handleProfileSuccess}
-          />
+        />
       )}
-
-      <PricingDrawer isOpen={isPricingOpen} onClose={() => setIsPricingOpen(false)} />
     </div>
   );
 }

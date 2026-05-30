@@ -26,8 +26,8 @@ export default function LiveStickyBar({ meeting, agenda, isOverlayOpen, onOpen }
                 <div className="h-2 w-2 rounded-full bg-emerald-500" />
               </div>
               <div className="flex flex-col">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-white">Meeting is Live</span>
-                <span className="max-w-[120px] truncate text-[11px] font-medium text-white/60">
+                <span className="text-xs font-bold uppercase  text-white">Meeting is Live</span>
+                <span className="max-w-[120px] truncate text-xs font-medium text-white/60">
                   {agenda[meeting.activeItemIndex || 0]?.title || 'Current Topic'}
                 </span>
               </div>
@@ -35,7 +35,7 @@ export default function LiveStickyBar({ meeting, agenda, isOverlayOpen, onOpen }
 
             <button
               onClick={onOpen}
-              className="flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-xs font-bold text-white shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 active:scale-95"
+              className="flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 active:scale-95"
             >
               <Play className="h-3 w-3 fill-current" />
               Enter Room

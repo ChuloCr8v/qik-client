@@ -80,7 +80,7 @@ export default function Dropdown({
       <button
         onClick={onClick}
         className={cn(
-          "group border-none flex w-full items-center rounded-lg px-3 py-2 text-xs font-medium transition-colors",
+          "group border-none flex w-full items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors",
           variant === 'default' ? "text-secondary hover:bg-slate-50 hover:text-primary": "text-red-600 hover:bg-red-50",
           className
         )}

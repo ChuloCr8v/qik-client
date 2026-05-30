@@ -112,7 +112,7 @@ export default function AgendaItemRow({
             </button>
           </div>
 
-          <p className="line-clamp-3 text-[11px] leading-relaxed text-slate-500">
+          <p className="line-clamp-3 text-sm leading-relaxed text-slate-500">
             {item.description || 'No additional details provided.'}
           </p>
 

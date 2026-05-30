@@ -8,6 +8,7 @@ interface ActionItem {
     textColor: string;
     bgColor: string;
     iconBg: string;
+    onOk: () => void;
 }
 
 const DashboardQuickActions = () => {
@@ -25,7 +26,7 @@ const DashboardQuickActions = () => {
         {
             title: "Add Team",
             icon: UserPlus,
-            onOk: () => {},
+            onOk: () => { },
             textColor: "text-blue-600",
             bgColor: "hover:bg-blue-600/10",
             iconBg: "bg-blue-600/10 text-blue-600"
@@ -33,7 +34,7 @@ const DashboardQuickActions = () => {
         {
             title: "Report",
             icon: FileBarChart2,
-            onOk: () => {},
+            onOk: () => { },
             textColor: "text-violet-600",
             bgColor: "hover:bg-violet-600/10",
             iconBg: "bg-violet-600/10 text-violet-600"
@@ -48,14 +49,14 @@ const DashboardQuickActions = () => {
                     <button
                         key={s.title}
                         onClick={s.onOk}
-                        className={`h-10! md:px-5! border-0! border-l! overflow-hidden flex items-center gap-2 transition-colors rounded-none! ${i === 0 && "border-l-0!"} ${s.bgColor}!`}
+                        className={`hover:bg-gray-50 h-10! md:px-5! border-0! border-l! overflow-hidden flex items-center gap-2 transition-colors rounded-none! ${i === 0 && "border-l-0!"} ${s.bgColor}!`}
                     >
                         <div
-                            className={`inline-flex items-center justify-center w-5 h-5 rounded-md flex-shrink-0 ${s.iconBg}`}
+                            className={`inline-flex items-center justify-center w-5 h-5 md:w-6 md:h-6 rounded-md flex-shrink-0 ${s.iconBg}`}
                         >
-                            <Icon className="w-3 h-3" />
+                            <Icon className="w-3 h-3 md:w-4 md:h-4" />
                         </div>
-                        <span className={`text-xs`}>{s.title}</span>
+                        <span className={`text-xs md:text-sm`}>{s.title}</span>
                     </button>
                 );
             })}
@@ -66,7 +67,7 @@ const DashboardQuickActions = () => {
                     onClose={() => {
                         setOpenNewMeetingCard(false);
                     }}
-                   
+
                 />
             )}
         </div>

@@ -22,15 +22,15 @@ export default function LiveMeetingHeader({ meetingTitle, participants, onClose 
             />
           ))}
           {participants.length > 3 && (
-            <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-slate-950 bg-slate-800 text-[10px] font-bold ring-1 ring-white/10">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-slate-950 bg-slate-800 text-sm font-bold ring-1 ring-white/10">
               +{participants.length - 3}
             </div>
           )}
         </div>
         <div className="flex h-5 w-px bg-white/10" />
         <div>
-          <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-amber-500">Live Meeting</h2>
-          <p className="max-w-[200px] truncate text-xs font-medium text-white/60 sm:max-w-md">{meetingTitle}</p>
+          <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-amber-500">Live Meeting</h2>
+          <p className="max-w-[200px] truncate text-sm font-medium text-white/60 sm:max-w-md">{meetingTitle}</p>
         </div>
       </div>
 

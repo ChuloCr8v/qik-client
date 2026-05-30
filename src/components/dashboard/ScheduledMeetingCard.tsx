@@ -1,30 +1,21 @@
-import { ArrowLeft, ChevronRight, FileText } from "lucide-react";
-import SectionHeading from "../SectionHeading";
-import Table, { TableCell, TableRow } from "../Table";
-import { Meeting } from "../../types";
-import {
-    getMeetingStatusClassName,
-    getMeetingStatusDotClassName,
-    getMeetingStatusLabel
-} from "./dashboardUtils";
-import SummarySectionCard from "./SummarySectionCard";
-import { useMeetings } from "../../features/meetings/MeetingsProvider";
 import { useNavigate } from "react-router-dom";
+import { useMeetings } from "../../features/meetings/MeetingsProvider";
+import SummarySectionCard from "./SummarySectionCard";
 
 export default function ScheduledMeetingCard() {
-    const { meetings, isCreatingMeeting, createNewMeeting } = useMeetings();
-
+    const { meetings } = useMeetings();
     const navigate = useNavigate();
 
+    const scheduledMeetings = meetings.filter(meeting => meeting.status === "scheduled");
+
     return (
-        <div className="">
-            <SummarySectionCard
-                title="Scheduled Meetings"
-                okText="Show All"
-                meetings={meetings}
-                onShowAll={() => navigate("/meetings")}
-                onOpenMeeting={meetingId => navigate(`/meetings/${meetingId}`)}
-            />
-        </div>
+        <SummarySectionCard
+            title="Scheduled Meetings"
+            okText="Show All"
+            meetings={scheduledMeetings}
+            subtitleMode="schedule"
+            onShowAll={() => navigate("/meetings")}
+            onOpenMeeting={meetingId => navigate(`/meetings/${meetingId}`)}
+        />
     );
 }

@@ -8,6 +8,10 @@ export const meetingsApi = baseApi.injectEndpoints({
       query: () => '/meetings',
       providesTags: ['Meeting'],
     }),
+    getDashboardStats: builder.query<any, void>({
+      query: () => '/meetings/dashboard/stats',
+      providesTags: ['Meeting', 'Billing', 'User'],
+    }),
     createMeeting: builder.mutation<Meeting, { title?: string; description?: string; template?: MeetingTemplate; scheduledAt?: string; invitees?: string[]; isPublic?: boolean }>({
       query: body => ({ url: '/meetings', method: 'POST', body }),
       invalidatesTags: ['Meeting', 'Notification'],
@@ -63,6 +67,10 @@ export const meetingsApi = baseApi.injectEndpoints({
       query: body => ({ url: '/ai/agenda', method: 'POST', body }),
       invalidatesTags: ['Billing'],
     }),
+    analyzeAgenda: builder.mutation<{ analysis: string }, { meetingTitle: string; agendaItems: AgendaItem[] }>({
+      query: body => ({ url: '/ai/agenda/analyze', method: 'POST', body }),
+      invalidatesTags: ['Billing'],
+    }),
     sendMeetingReminders: builder.mutation<{ ok: boolean; sent: number }, string>({
       query: id => ({ url: `/meetings/${id}/reminders`, method: 'POST' }),
     }),
@@ -87,6 +95,7 @@ export const meetingsApi = baseApi.injectEndpoints({
 
 export const {
   useGetMeetingsQuery,
+  useGetDashboardStatsQuery,
   useCreateMeetingMutation,
   useGetMeetingQuery,
   useGetPublicMeetingSummaryQuery,
@@ -101,6 +110,7 @@ export const {
   useStopMeetingMutation,
   useSendMeetingInviteMutation,
   useGenerateAgendaMutation,
+  useAnalyzeAgendaMutation,
   useSendMeetingRemindersMutation,
   useUpdateMeetingProgressMutation,
   useUpdatePresenceMutation,

@@ -22,7 +22,7 @@ const CustomCard = (props: Props) => {
                 </div>
                 {props.headerAction &&
                     <button
-                        className='flex h-6 items-center justify-center rounded border px-2 text-[10px] font-bold text-primary hover:bg-primary/10'
+                        className='flex h-6 items-center justify-center rounded border px-2 text-sm font-bold text-primary hover:bg-primary/10'
                         onClick={props.headerAction}
                     >
                         {props.headerActionText ?? <ChevronRight size={16} />}

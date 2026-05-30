@@ -33,14 +33,14 @@ export default function AttendeesPanel({
                 <div className="absolute bottom-0 right-0 h-1.5 w-1.5 rounded-full border border-white bg-accent" />
               </div>
               <div className="flex min-w-0 flex-col">
-                <span className="truncate text-[11px] font-semibold text-secondary">{name}</span>
-                <span className="text-[8px] text-muted">Active now</span>
+                <span className="truncate text-sm font-semibold text-secondary">{name}</span>
+                <span className="text-xs text-muted">Active now</span>
               </div>
             </div>
           );
           })
       ): (
-        <p className="py-4 text-center text-[10px] italic text-muted">
+        <p className="py-4 text-center text-sm italic text-muted">
           Waiting for others to join...
         </p>
       )}

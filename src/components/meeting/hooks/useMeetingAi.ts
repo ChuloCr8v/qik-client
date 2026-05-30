@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { useAddAgendaItemMutation, useGenerateAgendaMutation } from '../../../features/meetings/meetingsApi';
+import { useAddAgendaItemMutation, useAnalyzeAgendaMutation, useGenerateAgendaMutation } from '../../../features/meetings/meetingsApi';
 import { useSendNotificationMutation } from '../../../features/notifications/notificationsApi';
 import { useGetBillingUsageQuery } from '../../../features/billing/billingApi';
-import { analyzeAgenda } from '../../../services/groqService';
 import { AgendaItem, Meeting, User } from '../../../types';
 
 export function useMeetingAi(meetingId: string, meeting: Meeting | null, agenda: AgendaItem[], user: User | null) {
@@ -14,6 +13,7 @@ export function useMeetingAi(meetingId: string, meeting: Meeting | null, agenda:
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [addAgendaItem] = useAddAgendaItemMutation();
   const [generateAgenda] = useGenerateAgendaMutation();
+  const [analyzeAgenda] = useAnalyzeAgendaMutation();
   const [sendNotification] = useSendNotificationMutation();
   const { data: billingUsage } = useGetBillingUsageQuery(undefined, { skip: !user });
 
@@ -67,7 +67,11 @@ export function useMeetingAi(meetingId: string, meeting: Meeting | null, agenda:
     if (!meeting || agenda.length === 0) return;
     setIsAnalyzing(true);
     try {
-      setAnalysisResult(await analyzeAgenda(meeting.title, agenda));
+      const result = await analyzeAgenda({
+        meetingTitle: meeting.title,
+        agendaItems: agenda,
+      }).unwrap();
+      setAnalysisResult(result.analysis);
     } catch (error) {
       console.error(error);
       toast.error('Failed to analyze agenda.');

@@ -1,26 +1,71 @@
-import { ChevronRight, Shield, TrendingUp } from 'lucide-react';
-import { ReactNode } from 'react';
+import { Button } from "antd";
+import { CreditCard, TrendingUp } from "lucide-react";
+import type { ReactNode } from "react";
+import { usePopup } from "../../context/PopupContext";
+import PricingModal from "../PricingModal";
+import UsageStatsDrawer from "./UsageStatsDrawer";
 
 export default function QuickActionsPanel() {
+  const { openDrawer, openModal } = usePopup();
+
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-      <QuickAction icon={<TrendingUp className="h-5 w-5" />} title="View Usage Stats" subtitle="Analytics" variant="amber" />
-      <QuickAction icon={<Shield className="h-5 w-5" />} title="Security Log" subtitle="Privacy" />
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <QuickAction
+        icon={<TrendingUp className="h-5 w-5" />}
+        title="View Usage Stats"
+        subtitle="Plan usage and activity"
+        actionText="Open stats"
+        variant="amber"
+        onClick={() => openDrawer(<UsageStatsDrawer />)}
+      />
+      <QuickAction
+        icon={<CreditCard className="h-5 w-5" />}
+        title="Manage Subscription"
+        subtitle="Plans, billing, and renewal"
+        actionText="Manage plan"
+        onClick={() => openModal(<PricingModal />)}
+      />
     </div>
   );
 }
 
-function QuickAction({ icon, title, subtitle, variant }: { icon: ReactNode; title: string; subtitle: string; variant?: 'amber' }) {
+function QuickAction({
+  icon,
+  title,
+  subtitle,
+  actionText,
+  variant,
+  onClick,
+}: {
+  icon: ReactNode;
+  title: string;
+  subtitle: string;
+  actionText: string;
+  variant?: "amber";
+  onClick: () => void;
+}) {
   return (
-    <button className="group flex items-center gap-4 rounded-3xl border border-border bg-white p-5   transition-all hover:border-primary hover:shadow-md">
-      <div className={`flex h-10 w-10 items-center justify-center rounded-2xl transition-all group-hover:bg-primary group-hover:text-white ${variant === 'amber' ? 'bg-amber-50 text-amber-600' : 'bg-slate-50 text-secondary'}`}>
-        {icon}
+    <div className="rounded-2xl border border-border bg-white p-4 transition-all hover:border-primary/30 hover:shadow-md">
+      <div className="flex items-start gap-3">
+        <div
+          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${variant === "amber" ? "bg-amber-50 text-amber-600" : "bg-primary/10 text-primary"
+            }`}
+        >
+          {icon}
+        </div>
+        <div className="min-w-0 flex-1">
+          <h4 className="font-bold text-secondary">{title}</h4>
+          <p className="mt-1 text-xs text-muted">{subtitle}</p>
+        </div>
       </div>
-      <div className="text-left">
-        <h4 className="text-[11px] font-bold text-secondary">{title}</h4>
-        <p className="text-[9px] font-bold uppercase tracking-widest text-muted">{subtitle}</p>
-      </div>
-      <ChevronRight className="ml-auto h-4 w-4 text-muted transition-all group-hover:text-primary" />
-    </button>
+      <Button
+        type={variant === "amber" ? "primary" : "default"}
+        block
+        onClick={onClick}
+        className="mt-3!"
+      >
+        {actionText}
+      </Button>
+    </div>
   );
 }

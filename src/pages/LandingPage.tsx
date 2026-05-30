@@ -17,7 +17,7 @@ export default function LandingPage({ onGetStarted, onDemoSignIn, authError }: L
       <Hero onGetStarted={onGetStarted} onDemoSignIn={onDemoSignIn} />
 
       {authError && (
-        <div className="mx-auto max-w-sm rounded-lg border border-red-100 bg-red-50 p-3 text-[11px] font-medium text-red-500 mb-8">
+        <div className="mx-auto max-w-sm rounded-lg border border-red-100 bg-red-50 p-3 text-sm font-medium text-red-500 mb-8">
           {authError}
         </div>
       )}

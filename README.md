@@ -14,7 +14,9 @@ View your app in AI Studio: https://ai.studio/apps/cac7c4b1-d84a-4410-b30d-59a15
 
 
 1. Install dependencies:
-   `npm install`
-2. Set the `GROQ_API_KEY` in [.env.local](.env.local) to your Groq API key
-3. Run the app:
-   `npm run dev`
+   `pnpm install`
+2. Set public client values in `.env`:
+   `VITE_API_URL` and `VITE_GOOGLE_CLIENT_ID`
+3. Put server secrets such as `GROQ_API_KEY` in the server `.env`, never in the client.
+4. Run the app:
+   `pnpm dev`

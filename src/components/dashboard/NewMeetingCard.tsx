@@ -72,7 +72,7 @@ export default function NewMeetingCard({ isOpen, onClose }: Props) {
     };
 
     return (
-        <Modal title="Create Meeting" onClose={onClose} isOpen={isOpen}>
+        <Modal title="Create Meeting" onClose={onClose} isOpen={isOpen} className="max-w-xl min-w-[400px]">
             <div className="flex flex-col gap-3">
                 <button
                     className="place-self-end border-0! p-0! text-primary h-0! mb-3"
@@ -144,10 +144,10 @@ export default function NewMeetingCard({ isOpen, onClose }: Props) {
                                         <LayoutTemplate className="h-4 w-4" />
                                     </div>
                                     <div>
-                                        <p className="text-xs font-semibold text-secondary">
+                                        <p className="text-sm font-semibold text-secondary">
                                             Start structured
                                         </p>
-                                        <p className="mt-0.5 text-[11px] leading-relaxed text-muted">
+                                        <p className="mt-0.5 text-sm leading-relaxed text-muted">
                                             Pick a framework, preview the
                                             agenda, then launch with the same
                                             meeting details.
@@ -169,10 +169,10 @@ export default function NewMeetingCard({ isOpen, onClose }: Props) {
                                         className="group flex h-full! items-center justify-between rounded-xl border border-border p-3 text-left transition-all hover:border-primary hover:bg-slate-50"
                                     >
                                         <div className="min-w-0">
-                                            <span className="block truncate text-[11px] font-semibold text-secondary group-hover:text-primary">
+                                            <span className="block truncate text-sm font-semibold text-secondary group-hover:text-primary">
                                                 {template.name}
                                             </span>
-                                            <span className="mt-0.5 flex items-center gap-1.5 text-[10px] text-muted">
+                                            <span className="mt-0.5 flex items-center gap-1.5 text-sm text-muted">
                                                 <FileText className="h-3 w-3" />
                                                 {template.items.length} sections
                                                 <CalendarClock className="ml-1 h-3 w-3" />

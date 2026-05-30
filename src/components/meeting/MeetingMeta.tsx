@@ -13,11 +13,9 @@ interface MeetingMetaProps {
 
 export default function MeetingMeta({
     meeting,
-    allParticipants,
+    participants,
     totalTime
 }: MeetingMetaProps) {
-    const participants = allParticipants
-
     return (
         <div className="flex items-center gap-3 overflow-hidden">
             <div className="flex min-w-0 flex-col text-left">
@@ -27,7 +25,7 @@ export default function MeetingMeta({
                     </h2>
                     <span
                         className={cn(
-                            "text-[10px]! flex items-center gap-1 font-bold",
+                            "text-xs! flex items-center gap-1 font-bold",
                             meeting.isPublic ? "text-primary" : "text-slate-500"
                         )}
                     >
@@ -39,7 +37,7 @@ export default function MeetingMeta({
                     </span>
                 </div>
 
-                <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] font-medium text-muted">
+                <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-medium text-muted">
                     <ParticipantStack
                         meeting={meeting}
                         participants={participants}

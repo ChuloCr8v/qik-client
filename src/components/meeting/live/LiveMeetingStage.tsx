@@ -41,7 +41,7 @@ export default function LiveMeetingStage({
                 className="space-y-6 sm:space-y-10"
               >
                 <div className="space-y-2 sm:space-y-4">
-                  <span className="rounded-full border border-amber-500/20 bg-amber-500/10 px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-widest text-amber-500 sm:text-[10px]">
+                  <span className="rounded-full border border-amber-500/20 bg-amber-500/10 px-2.5 py-0.5 text-xs font-bold uppercase  text-amber-500">
                     Step {activeItemIndex + 1}
                   </span>
                   <h1 className="text-3xl font-bold leading-[1.2] tracking-tight text-white sm:text-4xl sm:leading-[1.1] md:text-5xl lg:text-6xl">
@@ -59,7 +59,7 @@ export default function LiveMeetingStage({
                     </div>
                     <div className="mt-4 flex items-center gap-2 px-2">
                       <Clock className="h-3 w-3 text-amber-500 sm:h-4 sm:w-4" />
-                      <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500 sm:text-[10px]">
+                      <span className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500">
                         {timerMode === 'left' ? 'Time Remaining' : 'Time Elapsed'} - Toggle
                       </span>
                     </div>
@@ -67,7 +67,7 @@ export default function LiveMeetingStage({
 
                   {isPaused && (
                     <div className="absolute inset-0 flex items-center justify-center rounded-3xl bg-slate-950/20 backdrop-blur-[2px]">
-                      <div className="flex animate-pulse items-center gap-3 rounded-2xl bg-amber-500 px-6 py-3 text-sm font-black uppercase tracking-widest text-slate-950 shadow-2xl">
+                      <div className="flex animate-pulse items-center gap-3 rounded-2xl bg-amber-500 px-6 py-3 text-sm font-black uppercase  text-slate-950 shadow-2xl">
                         <Pause className="h-5 w-5 fill-current" />
                         Paused
                       </div>
@@ -82,9 +82,8 @@ export default function LiveMeetingStage({
                         initial={{ width: 0 }}
                         animate={{ width: `${progress}%` }}
                         transition={{ type: 'spring', bounce: 0, duration: 1 }}
-                        className={`relative h-full transition-colors duration-700 ${
-                          isTimeUp ? 'bg-red-500 shadow-[0_0_30px_rgba(239,68,68,0.4)]' : 'bg-amber-500 shadow-[0_0_30px_rgba(217,119,6,0.3)]'
-                        }`}
+                        className={`relative h-full transition-colors duration-700 ${isTimeUp ? 'bg-red-500 shadow-[0_0_30px_rgba(239,68,68,0.4)]' : 'bg-amber-500 shadow-[0_0_30px_rgba(217,119,6,0.3)]'
+                          }`}
                       >
                         <motion.div
                           className="absolute inset-0 opacity-40"
@@ -97,8 +96,8 @@ export default function LiveMeetingStage({
                     </AnimatePresence>
                   </div>
                   <div className="mt-3 flex justify-between px-1">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">0% Complete</span>
-                    <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-amber-500/50">{currentItem?.duration}m Agenda Target</span>
+                    <span className="text-xs font-bold uppercase  text-slate-500">0% Complete</span>
+                    <span className="font-mono text-xs font-bold uppercase  text-amber-500/50">{currentItem?.duration}m Agenda Target</span>
                   </div>
                 </div>
               </motion.div>

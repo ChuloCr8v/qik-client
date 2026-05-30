@@ -44,7 +44,7 @@ export function usePasswordlessLogin(options: UsePasswordlessLoginOptions = {}) 
 
   const handleGoogleSignIn = async () => {
     if (!isGoogleSignInConfigured()) {
-      toast.error('Google sign-in needs GOOGLE_CLIENT_ID in the client env.');
+      toast.error('Google sign-in needs VITE_GOOGLE_CLIENT_ID in the client env.');
       return;
     }
 
