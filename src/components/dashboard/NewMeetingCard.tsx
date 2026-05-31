@@ -1,49 +1,29 @@
-import type { FormEvent, ReactNode } from "react";
-import React, { useMemo, useState } from "react";
-import {
-    CalendarClock,
-    FileText,
-    LayoutTemplate,
-    Loader2,
-    Plus,
-    Sparkles
-} from "lucide-react";
-import TemplatePreviewModal from "../TemplatePreviewModal";
-import { MEETING_TEMPLATES, MeetingTemplate } from "../../constants/templates";
-import CustomCard from "./CustomCard";
-import { getTemplateDuration, parseInvitees } from "./dashboardUtils";
-import GuideLineCard from "./GuideLineCard";
-import Modal from "../Modal";
+import type { FormEvent } from "react";
+import React, { useState } from "react";
+import { Tabs } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useMeetings } from "../../features/meetings/MeetingsProvider";
+import { usePopup } from "../../context/PopupContext";
+import CustomModal from "../CustomModal.tsx";
+import TemplatesTab from "../TemplatesTab";
+import { MeetingTemplate } from "../../constants/templates";
+import { parseInvitees } from "./dashboardUtils";
 
-type CreateMeetingInput = {
-    title: string;
-    template?: MeetingTemplate;
-    scheduledAt?: string;
-    invitees: string[];
-};
-
-type Props = {
+type NewMeetingCardProps = {
     isOpen: boolean;
-    onClose?: () => void;
 };
 
-type CreationMode = "details" | "templates";
+const NewMeetingCard: React.FC<NewMeetingCardProps> = ({ isOpen }) => {
+    const [activeTab, setActiveTab] = useState<"details" | "templates">(
+        "details"
+    );
+    const [title, setTitle] = useState<string>("");
+    const [scheduledAt, setScheduledAt] = useState<string>("");
+    const [invitees, setInvitees] = useState<string>("");
 
-export default function NewMeetingCard({ isOpen, onClose }: Props) {
-    const [mode, setMode] = useState<CreationMode>("details");
-    const [title, setTitle] = useState("");
-    const [scheduledAt, setScheduledAt] = useState("");
-    const [invitees, setInvitees] = useState("");
-    const [selectedTemplateForPreview, setSelectedTemplateForPreview] =
-        useState<MeetingTemplate | null>(null);
-
-    const { meetings, isCreatingMeeting, createNewMeeting } = useMeetings();
-
+    const { isCreatingMeeting, createNewMeeting } = useMeetings();
+    const { closeModal, closeDrawer } = usePopup();
     const navigate = useNavigate();
-
-    const featuredTemplates = useMemo(() => MEETING_TEMPLATES.slice(0, 3), []);
 
     const resetForm = () => {
         setTitle("");
@@ -52,168 +32,122 @@ export default function NewMeetingCard({ isOpen, onClose }: Props) {
     };
 
     const handleCreateMeeting = async (
-        event?: FormEvent,
+        event?: FormEvent<HTMLFormElement>,
         template?: MeetingTemplate,
         templateStartTime?: string
     ) => {
-        event?.preventDefault();
-        if (!title.trim() && !template) return;
+        try {
+            event?.preventDefault();
+            if (!title.trim() && !template) return;
 
-        const input = {
-            title: title.trim() || template?.name || "Untitled Meeting",
-            template,
-            scheduledAt: templateStartTime || scheduledAt,
-            invitees: parseInvitees(invitees)
-        };
-        const id = await createNewMeeting(input);
-        navigate(`/meetings/${id}`);
+            const input = {
+                title: title.trim() || template?.name || "Untitled Meeting",
+                template,
+                scheduledAt: templateStartTime || scheduledAt,
+                invitees: parseInvitees(invitees)
+            };
 
-        resetForm();
+            const id = await createNewMeeting(input);
+
+            navigate(`/meetings/${id}`);
+            resetForm();
+            closeModal();
+            closeDrawer();
+        } catch (e) {
+            console.log(e);
+        }
     };
 
-    return (
-        <Modal title="Create Meeting" onClose={onClose} isOpen={isOpen} className="max-w-xl min-w-[400px]">
-            <div className="flex flex-col gap-3">
-                <button
-                    className="place-self-end border-0! p-0! text-primary h-0! mb-3"
-                    onClick={() =>
-                        setMode(mode === "details" ? "templates" : "details")
-                    }
-                >
-                    {mode === "details" ? "Templates" : "Details"}
-                </button>
-                <div className="flex flex-col space-y-3 md:gid grid-cols-6 gap-3">
-                    {mode === "details" ? (
-                        <form
-                            onSubmit={handleCreateMeeting}
-                            className="space-y-3"
-                        >
-                            <div className="space-y-1.5">
-                                <label>Meeting Name</label>
-                                <input
-                                    required
-                                    type="text"
-                                    placeholder="e.g. Design Sync"
-                                    value={title}
-                                    onChange={event =>
-                                        setTitle(event.target.value)
-                                    }
-                                    className="input-field"
-                                />
-                            </div>
-                            <div className="space-y-1.5">
-                                <label>Schedule Date & Time (Optional)</label>
-                                <input
-                                    type="datetime-local"
-                                    value={scheduledAt}
-                                    onChange={event =>
-                                        setScheduledAt(event.target.value)
-                                    }
-                                    className="input-field"
-                                />
-                            </div>
-                            <div className="space-y-1.5">
-                                <label>Invite People (Optional)</label>
-                                <input
-                                    type="text"
-                                    placeholder="Emails separated by commas"
-                                    value={invitees}
-                                    onChange={event =>
-                                        setInvitees(event.target.value)
-                                    }
-                                    className="input-field"
-                                />
-                            </div>
-                            <button
-                                disabled={isCreatingMeeting}
-                                className="button-primary flex w-full items-center justify-center gap-2"
-                            >
-                                {isCreatingMeeting ? (
-                                    <Loader2 className="h-3 w-3 animate-spin" />
-                                ) : (
-                                    <Plus className="h-3 w-3" />
-                                )}
-                                <span>Create Meeting</span>
-                            </button>
-                        </form>
-                    ) : (
-                        <div className="space-y-3">
-                            <div className="rounded-xl border border-dashed border-primary/30 bg-primary/5 p-3">
-                                <div className="flex items-start gap-3">
-                                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-primary shadow-xs">
-                                        <LayoutTemplate className="h-4 w-4" />
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-semibold text-secondary">
-                                            Start structured
-                                        </p>
-                                        <p className="mt-0.5 text-sm leading-relaxed text-muted">
-                                            Pick a framework, preview the
-                                            agenda, then launch with the same
-                                            meeting details.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
+    const handleApplyTemplate = async (
+        template: MeetingTemplate,
+        startTime?: string
+    ) => {
+        await handleCreateMeeting(undefined, template, startTime);
+        closeDrawer();
+    };
 
-                            <div className="grid grid-cols-1 gap-2">
-                                {featuredTemplates.map(template => (
-                                    <button
-                                        key={template.name}
-                                        disabled={isCreatingMeeting}
-                                        onClick={() =>
-                                            setSelectedTemplateForPreview(
-                                                template
-                                            )
-                                        }
-                                        className="group flex h-full! items-center justify-between rounded-xl border border-border p-3 text-left transition-all hover:border-primary hover:bg-slate-50"
-                                    >
-                                        <div className="min-w-0">
-                                            <span className="block truncate text-sm font-semibold text-secondary group-hover:text-primary">
-                                                {template.name}
-                                            </span>
-                                            <span className="mt-0.5 flex items-center gap-1.5 text-sm text-muted">
-                                                <FileText className="h-3 w-3" />
-                                                {template.items.length} sections
-                                                <CalendarClock className="ml-1 h-3 w-3" />
-                                                {getTemplateDuration(
-                                                    template.items
-                                                )}
-                                                m
-                                            </span>
-                                        </div>
-                                        <Plus className="h-3.5 w-3.5 shrink-0 text-border group-hover:text-primary" />
-                                    </button>
-                                ))}
+    const handleOk = () => {
+        if (activeTab === "templates") {
+            closeModal();
+            navigate("/templates");
+        } else {
+            handleCreateMeeting();
+        }
+    };
 
-                                <button
-                                    onClick={() => navigate("/templates")}
-                                    className="group h-full! bg-primary text-white text-center rounded-xl p-3 transition-all hover:bg-primary/60"
-                                >
-                                    More Templates
-                                </button>
-                            </div>
-                        </div>
-                    )}
-                    <div className="border-t border-gray-300"></div>
-                    <GuideLineCard />
-                </div>
+    const DetailsTab = (
+        <form className="space-y-3 mt-3" onSubmit={handleCreateMeeting}>
+            <div className="space-y-1.5">
+                <label>Meeting Name</label>
+                <input
+                    required
+                    type="text"
+                    placeholder="e.g. Design Sync"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className="input-field"
+                />
             </div>
-
-            <TemplatePreviewModal
-                isOpen={!!selectedTemplateForPreview}
-                onClose={() => setSelectedTemplateForPreview(null)}
-                template={selectedTemplateForPreview}
-                onApply={async startTime => {
-                    if (!selectedTemplateForPreview) return;
-                    await handleCreateMeeting(
-                        undefined,
-                        selectedTemplateForPreview,
-                        startTime
-                    );
-                    setSelectedTemplateForPreview(null);
-                }}
-            />
-        </Modal>
+            <div className="space-y-1.5">
+                <label>Schedule Date & Time (Optional)</label>
+                <input
+                    type="datetime-local"
+                    value={scheduledAt}
+                    onChange={(e) => setScheduledAt(e.target.value)}
+                    className="input-field"
+                />
+            </div>
+            <div className="space-y-1.5">
+                <label>Invite People (Optional)</label>
+                <input
+                    type="text"
+                    placeholder="Emails separated by commas"
+                    value={invitees}
+                    onChange={(e) => setInvitees(e.target.value)}
+                    className="input-field"
+                />
+            </div>
+        </form>
     );
-}
+
+    const tabItems = [
+        { key: "details", label: "Details", children: DetailsTab },
+        {
+            key: "templates",
+            label: "Templates",
+            children: (
+                <TemplatesTab
+                    onApplyTemplate={handleApplyTemplate}
+                    isCreatingMeeting={isCreatingMeeting}
+                />
+            )
+        }
+    ];
+
+    return (
+        <CustomModal
+            title="Create Meeting"
+            modalSubtitle="Start from scratch or use an existing template"
+            onClose={closeModal}
+            className="max-w-xl min-w-[400px]"
+            onOk={handleOk}
+            okText={activeTab === "details" ? "Create Meeting" : "More Templates"}
+            loading={isCreatingMeeting}
+        >
+            <div className="flex flex-col">
+                <Tabs
+                    centered
+                    activeKey={activeTab}
+                    onChange={(key) =>
+                        setActiveTab(key as "details" | "templates")
+                    }
+                    items={tabItems}
+                    size="small"
+                    className="w-full"
+                />
+            </div>
+        </CustomModal>
+    );
+};
+
+export default NewMeetingCard;

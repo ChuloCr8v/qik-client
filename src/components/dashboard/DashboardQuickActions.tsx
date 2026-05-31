@@ -1,6 +1,7 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { FilePlus2, UserPlus, FileBarChart2 } from "lucide-react";
 import NewMeetingCard from "./NewMeetingCard";
+import {usePopup} from "../../context/PopupContext";
 
 interface ActionItem {
     title: string;
@@ -12,13 +13,12 @@ interface ActionItem {
 }
 
 const DashboardQuickActions = () => {
-    const [openNewMeetingCard, setOpenNewMeetingCard] = useState(false);
-
+    const { openModal } = usePopup();
     const actions: ActionItem[] = [
         {
             title: "New Agenda",
             icon: FilePlus2,
-            onOk: () => setOpenNewMeetingCard(true),
+            onOk: () => openModal(<NewMeetingCard />),
             textColor: "text-primary",
             bgColor: "hover:bg-primary/10",
             iconBg: "bg-primary/10 text-primary"
@@ -26,7 +26,7 @@ const DashboardQuickActions = () => {
         {
             title: "Add Team",
             icon: UserPlus,
-            onOk: () => { },
+            onOk: () => {},
             textColor: "text-blue-600",
             bgColor: "hover:bg-blue-600/10",
             iconBg: "bg-blue-600/10 text-blue-600"
@@ -34,7 +34,7 @@ const DashboardQuickActions = () => {
         {
             title: "Report",
             icon: FileBarChart2,
-            onOk: () => { },
+            onOk: () => {},
             textColor: "text-violet-600",
             bgColor: "hover:bg-violet-600/10",
             iconBg: "bg-violet-600/10 text-violet-600"
@@ -60,16 +60,6 @@ const DashboardQuickActions = () => {
                     </button>
                 );
             })}
-
-            {openNewMeetingCard && (
-                <NewMeetingCard
-                    isOpen={openNewMeetingCard}
-                    onClose={() => {
-                        setOpenNewMeetingCard(false);
-                    }}
-
-                />
-            )}
         </div>
     );
 };

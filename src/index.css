@@ -5,7 +5,7 @@
   --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Outfit", ui-sans-serif, system-ui, sans-serif;
   
-  --color-primary: #D97706;
+  --color-primary: #18c58a;
   --color-secondary: #0F172A;
   --color-accent: #10B981;
   --color-border: #E2E8F0;
@@ -14,15 +14,13 @@
   --radius-subtle: 8px;
 }
 
-
-
 @layer base {
   body{
     @apply font-sans! text-sm! leading-relaxed tracking-normal text-secondary bg-slate-50;
   }
 
   p {
-    @apply mb-0!;
+    @apply mb-auto!;
   }
   
 
@@ -31,7 +29,7 @@
   }
 
   label {
-    @apply  text-slate-500 mb-1.5 block;
+    @apply  text-xs text-slate-500 mb-1.5 block;
   }
 }
 
@@ -44,7 +42,7 @@ button, input {
 }
 
  button {
-  @apply cursor-pointer!
+  @apply cursor-pointer! font-[500]! text-[12px]!
 }
 
 .button-primary {

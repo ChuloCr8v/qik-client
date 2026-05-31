@@ -129,7 +129,7 @@ export default function MeetingView({
                 onTogglePublic={actions.handleTogglePublic}
             />
 
-            <div className="relative mx-auto grid max-w-6xl items-start gap-6 px-4 py-4 sm:px-6 lg:grid-cols-4 lg:py-8">
+            <div className="relative mx-auto grid max-w-6xl items-start gap-4 px-4 py-4 sm:px-6 lg:grid-cols-4 lg:py-8">
                 <div className="order-2 space-y-6 lg:sticky lg:top-24 lg:order-1 lg:col-span-1 lg:h-fit lg:self-start">
                     <AiCoachPanel
                         aiContext={ai.aiContext}

@@ -23,7 +23,7 @@ export default function DashboardPage() {
     }
 
     return (
-        <main className="mx-auto space-y-2 max-w-6xl w-full pt-2 sm:px-6 pt-3">
+        <main className="mx-auto space-y-2 max-w-6xl w-full pt-2 px-4! pt-3">
             {/* <UsageBadge /> */}
             <GreetingCard
                 streak={stats?.greeting?.streak}

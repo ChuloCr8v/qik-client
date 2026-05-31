@@ -1,60 +1,90 @@
-import {
-  ChevronRight,
-  Library
-} from 'lucide-react';
-import {
-  MEETING_TEMPLATES,
-  MeetingTemplate
-} from '../../constants/templates';
+import React from "react";
+import { Button } from "antd";
+import { ChevronRight, Library } from "lucide-react";
+import { MEETING_TEMPLATES, MeetingTemplate } from "../../constants/templates";
+import { usePopup } from "../../context/PopupContext";
+import TemplateAgendaList from "../TemplateAgendaList";
 
 interface TemplatePickerProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onNavigateTemplates?: () => void;
-  onSelectTemplate: (template: MeetingTemplate) => void;
+    isOpen: boolean;
+    onClose: () => void;
+    onNavigateTemplates?: () => void;
+    onSelectTemplate: (template: MeetingTemplate) => void;
 }
 
 export default function TemplatePicker({
-  isOpen, onClose, onNavigateTemplates, onSelectTemplate
+    isOpen,
+    onClose,
+    onNavigateTemplates,
+    onSelectTemplate
 }: TemplatePickerProps) {
-  if (!isOpen) return null;
+    if (!isOpen) return null;
 
-  return (
-    <div className="animate-in fade-in slide-in-from-top-4 rounded-xl border border-primary/10 bg-primary/5 p-3">
-      <div className="mb-3 flex items-center justify-between">
-        <h3 className="font-semibold text-secondary">Choose a Template</h3>
-        <button
-          onClick={onNavigateTemplates}
-          className="ml-auto mr-4 flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
-          >
-          More <ChevronRight className="h-2 w-2" />
-        </button>
-        <button onClick={onClose} className="text-sm font-semibold text-muted hover:text-primary">X</button>
-      </div>
-      <div className="grid gap-2.5 sm:grid-cols-3">
-        {MEETING_TEMPLATES.slice(0, 3).map(template => (
-          <button
-            key={template.name}
-            onClick={() => onSelectTemplate(template)}
-            className="group h-full! flex flex-col items-start gap-1.5 rounded-xl border border-border bg-white p-2 text-left transition-all hover:border-primary hover:shadow-md"
-            >
-            <div className="flex items-center gap-2">
-              <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-slate-50 transition-colors group-hover:bg-primary/10">
-                <Library className="h-3 w-3 text-muted group-hover:text-primary" />
-              </div>
-              <p className="text-sm font-semibold text-secondary">
-                {template.name}
-              </p>
+    const { openDrawer } = usePopup();
+
+    return (
+        <div className="animate-in fade-in slide-in-from-top-4 rounded-xl border border-primary/10 bg-white p-4">
+            {/* Header */}
+            <div className="mb-3 flex items-center justify-between">
+                <h3 className="font-semibold text-secondary text-base">
+                    Choose a Template
+                </h3>
+                <Button
+                    danger
+                    type="text"
+                    size="small"
+                    onClick={onClose}
+                    className="text-muted hover:text-primary"
+                >
+                    X
+                </Button>
             </div>
 
-            <div>
-              <p className="text-sm text-muted">
-                {template.items.length} Agenda items
-              </p>
+            {/* Templates Grid */}
+            <div className="grid gap-3 sm:grid-cols-3">
+                {MEETING_TEMPLATES.slice(0, 3).map(template => (
+                    <Button
+                        key={template.name}
+                        onClick={() =>
+                            openDrawer(
+                                <TemplateAgendaList
+                                template={template}
+                                    onOk={onSelectTemplate(template)}
+                                />
+                            )
+                        }
+                        type="default"
+                        block
+                        className="group bg-linear-to-b! from-primary/5 to-transparent flex items-center! justify-start! h-14! text-left transition-all hover:border-primary! hover:shadow-md!"
+                    >
+                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 transition-colors group-hover:bg-primary/10">
+                            <Library className="h-4 w-4 text-muted group-hover:text-primary" />
+                        </div>
+                        <div className="flex flex-col items-start">
+                            <p className="md:text-sm font-semibold text-secondary truncate">
+                                {template.name}
+                            </p>
+                            <p className="text-xs text-muted">
+                                {template.items.length} Agenda items
+                            </p>
+                        </div>
+                    </Button>
+                ))}
             </div>
-          </button>
-        ))}
-      </div>
-    </div>
-  );
+
+            {/* More Templates Button */}
+            {onNavigateTemplates && (
+                <div className="mt-3 flex justify-end">
+                    <Button
+                        type="link"
+                        size="small"
+                        onClick={onNavigateTemplates}
+                        className="flex items-center gap-1 font-semibold text-primary hover:underline"
+                    >
+                        More <ChevronRight className="h-3 w-3" />
+                    </Button>
+                </div>
+            )}
+        </div>
+    );
 }

@@ -14,6 +14,7 @@ import PageHeader from "../components/PageHeader";
 import Table, { TableCell, TableRow } from "../components/Table";
 import TeamInviteModal from "../components/TeamInviteModal";
 import { useListUsersQuery } from "../features/users/usersApi";
+import { Input, Button } from "antd";
 
 export default function TeamPage() {
     const { data: membersData = [], isLoading: loading } = useListUsersQuery();
@@ -43,7 +44,7 @@ export default function TeamPage() {
     }
 
     return (
-        <div className="space-y-3 mx-auto max-w-6xl py-4">
+        <div className="space-y-3 mx-auto max-w-6xl p-4">
             <PageHeader
                 title="Team Members"
                 // description="Invite and manage roles for your team collaborators."
@@ -92,12 +93,12 @@ export default function TeamPage() {
                 <div className="flex items-center gap-2">
                     <div className="relative flex-1">
                         <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted" />
-                        <input
+                        <Input
+                            className="h-8! text-xs!"
                             type="text"
                             placeholder="Search members..."
                             value={search}
                             onChange={e => setSearch(e.target.value)}
-                            className="w-full rounded-xl border border-border bg-slate-50/50 py-2 pl-9! pr-4 text-sm font-medium focus:border-primary focus:bg-white focus:outline-none transition-all"
                         />
                     </div>
                     <div className="relative">
@@ -106,7 +107,7 @@ export default function TeamPage() {
                             onChange={e =>
                                 setStatusFilter(e.target.value as any)
                             }
-                            className="appearance-none h-9! flex items-center gap-2 rounded-lg border border-border bg-white px-3 py-2 text-sm font-semibold text-muted hover:border-primary hover:text-primary transition-colors cursor-pointer outline-none"
+                            className="appearance-none h-8! flex items-center gap-2 rounded-lg border border-border bg-white px-3 text-muted text-xs hover:border-primary hover:text-primary transition-colors cursor-pointer outline-none"
                         >
                             <option value="All">All Status</option>
                             <option value="Active">Active</option>
@@ -119,11 +120,11 @@ export default function TeamPage() {
                     {filteredMembers.length > 0 ? (
                         filteredMembers.map((member, index) => (
                             <TableRow key={member.uid}>
-                                <TableCell className="w-8 text-muted font-semibold">
+                                <TableCell className="w-8 text-muted">
                                     {index + 1}
                                 </TableCell>
                                 <TableCell className="flex items-center gap-3">
-                                    <div className="relative h-8 w-8 shrink-0 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden border border-border">
+                                    <div className="relative h-7 w-7 shrink-0 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden border border-border">
                                         {member.photoURL ? (
                                             <img
                                                 src={member.photoURL}
@@ -131,7 +132,7 @@ export default function TeamPage() {
                                                 className="h-full w-full object-cover"
                                             />
                                         ) : (
-                                            <span className="text-sm font-semibold text-secondary">
+                                            <span className="text-xs md:text-sm font-semibold text-secondary">
                                                 {member.displayName[0]}
                                             </span>
                                         )}
@@ -147,7 +148,7 @@ export default function TeamPage() {
                                     </div>
                                 </TableCell>
                                 <TableCell>
-                                    <div className="flex items-center gap-1.5 text-sm font-medium text-muted">
+                                    <div className="flex items-center gap-1.5 text-xs  md:text-sm font-medium text-muted">
                                         {/* <Shield className="h-3 w-3" /> */}
                                         {member.role || "Member"}
                                     </div>
@@ -163,9 +164,9 @@ export default function TeamPage() {
                                     </div>
                                 </TableCell>
                                 <TableCell className="text-right">
-                                    <button className="p-1 text-muted hover:text-primary transition-colors">
+                                    <Button size="small">
                                         <MoreHorizontal className="h-4 w-4" />
-                                    </button>
+                                    </Button>
                                 </TableCell>
                             </TableRow>
                         ))

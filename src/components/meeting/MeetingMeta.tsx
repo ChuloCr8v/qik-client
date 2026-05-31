@@ -19,8 +19,8 @@ export default function MeetingMeta({
     return (
         <div className="flex items-center gap-3 overflow-hidden">
             <div className="flex min-w-0 flex-col text-left">
-                <div className="flex items-center gap-2">
-                    <h2 className="truncate text-sm font-bold tracking-tight text-secondary">
+                <div className="flex items-center gap-3">
+                    <h2 className="truncate text-xl font-bold tracking-tight text-secondary">
                         {meeting.title}
                     </h2>
                     <span

@@ -19,8 +19,15 @@ interface MeetingItemCardProps {
     subtitleMode?: "status" | "schedule";
 }
 
-function MeetingItemCard({ meeting, index, onClick, subtitleMode = "status" }: MeetingItemCardProps) {
-    const scheduledText = meeting.scheduledAt ? formatDate(meeting.scheduledAt) : "Not scheduled";
+function MeetingItemCard({
+    meeting,
+    index,
+    onClick,
+    subtitleMode = "status"
+}: MeetingItemCardProps) {
+    const scheduledText = meeting.scheduledAt
+        ? formatDate(meeting.scheduledAt)
+        : "Not scheduled";
 
     return (
         <button
@@ -36,13 +43,13 @@ function MeetingItemCard({ meeting, index, onClick, subtitleMode = "status" }: M
 
             {/* Meeting info */}
             <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-secondary truncate leading-tight">
+                <p className="text-xs md:text-sm font-semibold text-secondary truncate leading-tight">
                     {meeting.title}
                 </p>
                 <div className="flex items-center gap-2 mt-0.5">
                     {subtitleMode === "schedule" ? (
-                        <div className="flex items-center gap-1.5 text-xs font-semibold text-muted">
-                            <Clock className="h-3 w-3 text-slate-400" />
+                        <div className="flex items-center gap-1.5 text-[10px]! md:text-xs text-muted">
+                            <Clock className="h-2.5 w-2.5 md:h-3 md:w-3 text-slate-400" />
                             <span>{scheduledText}</span>
                         </div>
                     ) : (
@@ -51,7 +58,7 @@ function MeetingItemCard({ meeting, index, onClick, subtitleMode = "status" }: M
                                 className={`h-1.5 w-1.5 rounded-full ${getMeetingStatusDotClassName(meeting.status)}`}
                             />
                             <span
-                                className={`text-xs font-bold ${getMeetingStatusClassName(meeting.status)}`}
+                                className={`text-[10px] md:text-xs ${getMeetingStatusClassName(meeting.status)}`}
                             >
                                 {getMeetingStatusLabel(meeting.status)}
                             </span>
@@ -126,7 +133,7 @@ export default function SummarySectionCard({
             }
         >
             {visible.length > 0 ? (
-                <div className="h-50 overflow-y-auto">
+                <div className="h-fit md:h-50 overflow-y-auto">
                     {visible.map((meeting, index) => (
                         <MeetingItemCard
                             key={meeting.id}

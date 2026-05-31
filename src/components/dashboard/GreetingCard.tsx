@@ -100,7 +100,7 @@ const GreetingCard = ({
                             </p>
                         ) : (
                             <p className="text-xs text-muted">
-                                No more meetings today
+                                Clear schedule!
                             </p>
                         )}
                     </div>

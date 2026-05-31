@@ -50,7 +50,7 @@ export function LoginFormPanel({
       <div className="space-y-4">
         <GoogleSignInButton isLoading={isGoogleLoading} onClick={onGoogleSignIn} />
 
-        <div className="relative flex items-center justify-center py-2">
+        <div className="mt-4 relative flex items-center justify-center py-2">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-slate-200" />
           </div>

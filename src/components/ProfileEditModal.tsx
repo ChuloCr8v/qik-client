@@ -105,7 +105,7 @@ export default function ProfileEditModal({
                 />
                 <div className="invisible group-hover:visible absolute inset-0 flex flex-col items-center justify-center bg-black/40 transition-opacity">
                   <Camera className="h-4 w-4 text-white" />
-                  <span className="text-xs font-bold text-white uppercase tracking-wider">Change</span>
+                  <span className="text-xs font-bold text-white uppercase ">Change</span>
                 </div>
               </div>
             </div>

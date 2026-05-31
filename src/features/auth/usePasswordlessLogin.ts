@@ -98,6 +98,7 @@ export function usePasswordlessLogin(options: UsePasswordlessLoginOptions = {}) 
       }).unwrap();
       setIsCodeStep(true);
       setDevCode(result.devCode || '');
+      
       if (result.devCode) {
         setCode(result.devCode);
       }

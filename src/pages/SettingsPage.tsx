@@ -86,7 +86,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="space-y-4 mx-auto max-w-6xl py-4">
+    <div className="space-y-4 mx-auto max-w-6xl p-4">
       <PageHeader
         title="Account Settings"
         description='Manage your account and billing information'
