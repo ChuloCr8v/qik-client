@@ -1,8 +1,10 @@
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
 import { AgendaItem, Meeting, Participant } from '../types';
 
-export function exportAgendaToPDF(meeting: Meeting | null, agenda: AgendaItem[], participants: Participant[]) {
+export async function exportAgendaToPDF(meeting: Meeting | null, agenda: AgendaItem[], participants: Participant[]) {
+  const [{ default: jsPDF }, { default: autoTable }] = await Promise.all([
+    import('jspdf'),
+    import('jspdf-autotable'),
+  ]);
   const doc = new jsPDF();
 
   doc.setFontSize(22);

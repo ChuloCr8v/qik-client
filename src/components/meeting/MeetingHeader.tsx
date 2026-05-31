@@ -17,6 +17,7 @@ interface MeetingHeaderProps {
   isOwner: boolean;
   isHeaderVisible: boolean;
   isCopying: boolean;
+  mailAvailable?: boolean;
   onStartMeeting: () => void;
   onStopMeeting: () => void;
   onOpenOverlay: () => void;
@@ -37,6 +38,7 @@ export default function MeetingHeader({
   isOwner,
   isHeaderVisible,
   isCopying,
+  mailAvailable = true,
   onStartMeeting,
   onStopMeeting,
   onOpenOverlay,
@@ -87,6 +89,7 @@ export default function MeetingHeader({
             isOwner={isOwner}
             isCopying={isCopying}
             hasInvitees={hasInvitees}
+            mailAvailable={mailAvailable}
             onCopyLink={onCopyLink}
             onSendReminders={onSendReminders}
             onInvite={onInvite}

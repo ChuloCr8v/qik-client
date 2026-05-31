@@ -8,6 +8,8 @@ import { ModalTheme } from "./CustomModal";
 interface Props {
     title: string;
     children: ReactNode;
+    isOpen?: boolean;
+    onClose?: () => void;
     okText?: string;
     onCancel?: () => void;
     onOk?: () => void;
@@ -31,8 +33,10 @@ interface Props {
 
 export default function CustomDrawer({
     children,
+    isOpen,
     loading,
     icon,
+    onClose,
     onCancel,
     modalSubtitle,
     okText,
@@ -49,7 +53,7 @@ export default function CustomDrawer({
     maxHeight = false,
     actionItem,
     hideCancelButton = false,
-    headerActions,
+    headerActions
 }: Props) {
     const [stepButtons, setStepButtons] = useState(step ?? false);
     const [isConfirmed, setIsConfirmed] = useState(false);
@@ -63,28 +67,34 @@ export default function CustomDrawer({
     const header = (
         <div
             className={twMerge(
-                "flex w-full items-center justify-between bg-linear-to-r from-primary/10 via-amber-50 to-emerald-50 px-4 py-4",
+                "flex w-full items-center justify-between bg-linear-to-r from-primary/10 via-amber-50 to-emerald-50 px-4 py-3",
                 warning && "from-red-50 via-red-50 to-red-100"
             )}
         >
-            <div className="flex min-w-0 items-start gap-3">
+            <div className="flex w-full items-center gap-3">
                 <div
                     className={twMerge(
                         "flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-primary shadow-xs",
-                        warning && "text-red-600"
+                        warning && "text-red-600",
+                        !modalSubtitle && "h-8 w-8"
                     )}
                 >
-                    {icon ?? (warning ? <AlertTriangle className="h-5 w-5" /> : <Activity className="h-5 w-5" />)}
+                    {icon ??
+                        (warning ? (
+                            <AlertTriangle className="h-5 w-5" />
+                        ) : (
+                            <Activity className="h-5 w-5" />
+                        ))}
                 </div>
                 <div className="min-w-0">
-                    <p className="truncate text-base font-semibold capitalize text-secondary">
+                    <p
+                        className={twMerge(
+                            "truncate text-xs md:text-base font-semibold capitalize text-secondary",
+                            !modalSubtitle && "text-sm"
+                        )}
+                    >
                         {title}
                     </p>
-                    {modalSubtitle && (
-                        <p className="mt-0.5 text-sm leading-5 text-muted">
-                            {modalSubtitle}
-                        </p>
-                    )}
                 </div>
             </div>
             {headerActions ? (
@@ -97,31 +107,48 @@ export default function CustomDrawer({
 
     return (
         <Drawer
-            open={isDrawerOpen}
-            onClose={onCancel ?? closeDrawer}
-            closable={closable}
+            open={isOpen ?? isDrawerOpen}
+            onClose={onCancel ?? onClose ?? closeDrawer}
+            closable={false}
             width={width}
             maskClosable={false}
-            classNames={{ header: "!p-0", body: "!p-0" }}
+            classNames={{ header: "!p-0", body: "!p-0", footer: "p-0!" }}
             title={header}
             placement="right"
             footer={
                 !stepButtons && !hideFooter ? (
-                    <div className="flex justify-end gap-3 px-4 py-3">
-                        {!hideCancelButton && (
-                            <Button onClick={onCancel ?? closeDrawer}>
-                                Cancel
+                    <div className="flex justify-end gap-3 px-4 py-2 bg-muted/5">
+                        {!onOk ? (
+                            <Button
+                                className="px-8!"
+                                onClick={onCancel ?? onClose ?? closeDrawer}
+                            >
+                                Close
                             </Button>
+                        ) : (
+                            <>
+                                {!hideCancelButton && (
+                                    <Button
+                                        className="px-8!"
+                                        onClick={onCancel ?? onClose ?? closeDrawer}
+                                    >
+                                        Cancel
+                                    </Button>
+                                )}
+                                <Button
+                                    onClick={onOk}
+                                    loading={loading}
+                                    type="primary"
+                                    danger={warning}
+                                    className="px-8!"
+                                    disabled={
+                                        showConfirmation ? !isConfirmed : disabled
+                                    }
+                                >
+                                    {okText ?? "Submit"}
+                                </Button>
+                            </>
                         )}
-                        <Button
-                            onClick={onOk}
-                            loading={loading}
-                            type="primary"
-                            danger={warning}
-                            disabled={showConfirmation ? !isConfirmed : disabled}
-                        >
-                            {okText ?? "Submit"}
-                        </Button>
                     </div>
                 ) : null
             }
@@ -142,7 +169,9 @@ export default function CustomDrawer({
             </div>
             {showConfirmation && !loading && (
                 <div className="w-full px-4 pb-4">
-                    <Checkbox onChange={event => setIsConfirmed(event.target.checked)}>
+                    <Checkbox
+                        onChange={event => setIsConfirmed(event.target.checked)}
+                    >
                         <span className="text-sm text-muted">
                             {confirmationText ?? "I confirm this action"}
                         </span>

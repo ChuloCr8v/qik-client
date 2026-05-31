@@ -1,5 +1,6 @@
 import { ChevronRight } from 'lucide-react';
 import React from 'react'
+import { Button } from 'antd';
 
 type Props = {
     okText?: string;
@@ -21,12 +22,14 @@ const CustomCard = (props: Props) => {
                     <h3 className="font-semibold text-secondary">{props.title}</h3>
                 </div>
                 {props.headerAction &&
-                    <button
-                        className='flex h-6 items-center justify-center rounded border px-2 text-sm font-bold text-primary hover:bg-primary/10'
+                    <Button
+                        type="text"
+                        size="small"
+                        className="text-primary!"
                         onClick={props.headerAction}
                     >
                         {props.headerActionText ?? <ChevronRight size={16} />}
-                    </button>}
+                    </Button>}
             </div>
 
             <div className="text-sm mb-4 text-muted-foreground">
@@ -34,12 +37,12 @@ const CustomCard = (props: Props) => {
             </div>
             {props.onOk && props.okText &&
                 <div className="grid grid-cols-1 gap-2">
-                    <button
+                    <Button
                         onClick={props.onOk}
-                        className="mt-2 w-full rounded-xl border border-dashed border-border py-2.5  transition-all hover:border-primary hover:text-primary"
+                        className="mt-2 w-full border-dashed!"
                     >
                         {props.okText}
-                    </button>
+                    </Button>
                 </div>}
         </div>
 

@@ -1,15 +1,27 @@
 import { Briefcase, Camera, LogOut } from 'lucide-react';
-import { User } from '../../types';
-import { Button } from 'antd';
+import { Button, Modal } from 'antd';
+import { useAuth } from '../../features/auth/AuthProvider';
+import { useGetCurrentUserQuery } from '../../features/users/usersApi';
 
 interface ProfileSummaryCardProps {
-  user: User | null;
-  profile: User | null;
   onEdit: () => void;
-  onLogout: () => void;
 }
 
-export default function ProfileSummaryCard({ user, profile, onEdit, onLogout }: ProfileSummaryCardProps) {
+export default function ProfileSummaryCard({ onEdit }: ProfileSummaryCardProps) {
+  const { user, signOut } = useAuth();
+  const { data: profile } = useGetCurrentUserQuery(undefined, {
+    skip: !user
+  });
+
+  const handleLogout = () => {
+    Modal.confirm({
+      title: 'Log out?',
+      content: 'You will need to sign in again to access your workspace.',
+      okText: 'Log out',
+      onOk: signOut,
+    });
+  };
+
   return (
     <div className="overflow-hidden rounded-3xl border border-border bg-white   transition-all">
       <div className="h-24 md:h-16 bg-gradient-to-r from-primary/20 to-primary/5" />
@@ -51,7 +63,7 @@ export default function ProfileSummaryCard({ user, profile, onEdit, onLogout }: 
           <Button type="primary" onClick={onEdit} className="w-full capitalize">
             Edit Profile
           </Button>
-          <Button onClick={onLogout} className="w-[35%]">
+          <Button onClick={handleLogout} className="w-[35%]">
             <LogOut className="h-4 w-4" />
           </Button>
         </div>

@@ -18,7 +18,7 @@ export default function Footer({ variant = 'full' }: FooterProps) {
   }
 
   return (
-    <footer className="mt-auto border-t border-border bg-slate-50 py-12 pb-4">
+    <footer className="mt-auto w-full border-t border-border bg-slate-50 py-12 pb-4">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 flex flex-col justify-center items-center">
         <div className="grid gap-8 sm:flex w-full">
           <div className="space-y-4 -mt-1.5 basis-1/2">

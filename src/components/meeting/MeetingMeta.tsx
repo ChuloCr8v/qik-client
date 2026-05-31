@@ -20,7 +20,7 @@ export default function MeetingMeta({
         <div className="flex items-center gap-3 overflow-hidden">
             <div className="flex min-w-0 flex-col text-left">
                 <div className="flex items-center gap-2">
-                    <h2 className="truncate text-sm font-bold tracking-tight text-secondary">
+                    <h2 className="truncate text-xl font-bold tracking-tight text-secondary">
                         {meeting.title}
                     </h2>
                     <span
@@ -32,7 +32,7 @@ export default function MeetingMeta({
                         {meeting.isPublic ? (
                             <Eye className="h-4 w-4" />
                         ) : (
-                            <EyeOff className="h-4 w-4 -m-0.5" />
+                            <EyeOff className="h-4 w-4 " />
                         )}
                     </span>
                 </div>
@@ -44,8 +44,8 @@ export default function MeetingMeta({
                         max={3}
                     />
                     <span className="text-slate-300">-</span>
-                    <span className="flex items-center gap-1">
-                        <Clock className="h-2.5 w-2.5" />
+                    <span className="flex items-center gap-1 ">
+                        <Clock className="h-2.5 w-2.5 md:h-3 md:w-3" />
                         {totalTime}m
                     </span>
                     {meeting.scheduledAt && (

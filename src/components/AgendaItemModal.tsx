@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Drawer from './Drawer';
-import { Clock, AlignLeft, Type, Loader2 } from 'lucide-react';
+import { Input, InputNumber } from 'antd';
+import CustomDrawer from './CustomDrawer';
+import { Clock, AlignLeft, Type } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 interface AgendaItemModalProps {
   isOpen: boolean;
@@ -39,40 +41,26 @@ export default function AgendaItemModal({
     setLoading(true);
     try {
       await onSave(formData);
+      toast.success(initialData ? 'Agenda topic updated.' : 'Agenda topic added.');
       onClose();
     } catch (error) {
       console.error(error);
+      toast.error(initialData ? 'Unable to update agenda topic.' : 'Unable to add agenda topic.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Drawer
+    <CustomDrawer
       isOpen={isOpen}
       onClose={onClose}
       icon={<Type className="h-5 w-5 text-primary" />}
       title={title}
-      footer={
-        <div className="flex flex-row justify-end gap-3">
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-6 py-2.5 text-sm font-semibold text-muted hover:bg-slate-100 rounded-xl transition-all"
-          >
-            Cancel
-          </button>
-          <button
-            form="agenda-item-form"
-            type="submit"
-            disabled={loading || !formData.title.trim()}
-            className="flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-white   shadow-primary/20 transition-all hover:bg-primary/90 active:scale-[0.98] disabled:opacity-50"
-          >
-            {loading && <Loader2 className="h-3 w-3 animate-spin" />}
-            Save Changes
-          </button>
-        </div>
-      }
+      onOk={() => (document.getElementById('agenda-item-form') as HTMLFormElement | null)?.requestSubmit()}
+      okText="Save Changes"
+      loading={loading}
+      disabled={!formData.title.trim()}
     >
       <form id="agenda-item-form" onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-4">
@@ -81,13 +69,13 @@ export default function AgendaItemModal({
               <Type className="h-3 w-3" />
               Topic Title
             </label>
-            <input
+            <Input
               autoFocus
               required
               value={formData.title}
               onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
               placeholder="e.g., Marketing Update"
-              className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-3 text-sm font-semibold text-secondary focus:border-primary focus:bg-white focus:outline-none transition-all  "
+              className="h-10! rounded-xl!"
             />
           </div>
 
@@ -97,13 +85,12 @@ export default function AgendaItemModal({
                 <Clock className="h-3 w-3" />
                 Duration (min)
               </label>
-              <input
-                type="number"
-                min="1"
+              <InputNumber
+                min={1}
                 required
                 value={formData.duration}
-                onChange={(e) => setFormData(prev => ({ ...prev, duration: parseInt(e.target.value) || 0 }))}
-                className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-3 text-sm font-semibold text-secondary focus:border-primary focus:bg-white focus:outline-none transition-all  "
+                onChange={(value) => setFormData(prev => ({ ...prev, duration: Number(value) || 0 }))}
+                className="h-10! w-full rounded-xl!"
               />
             </div>
           </div>
@@ -113,16 +100,16 @@ export default function AgendaItemModal({
               <AlignLeft className="h-3 w-3" />
               Description (optional)
             </label>
-            <textarea
+            <Input.TextArea
               rows={6}
               value={formData.description}
               onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
               placeholder="Details about this topic..."
-              className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-3 text-sm font-medium text-secondary focus:border-primary focus:bg-white focus:outline-none transition-all resize-none custom-scrollbar  "
+              className="rounded-xl!"
             />
           </div>
         </div>
       </form>
-    </Drawer>
+    </CustomDrawer>
   );
 }

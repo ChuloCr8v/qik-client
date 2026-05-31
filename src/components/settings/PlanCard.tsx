@@ -1,15 +1,18 @@
 import { CheckCircle2, Star, Zap } from 'lucide-react';
-import { User } from '../../types';
 import { PLAN_LIMITS, type PlanName } from '../../config/plans';
 import { cn } from '../../lib/utils';
 import { Button } from 'antd';
+import { useAuth } from '../../features/auth/AuthProvider';
+import { useGetCurrentUserQuery } from '../../features/users/usersApi';
+import { usePopup } from '../../context/PopupContext';
+import PricingModal from '../PricingModal';
 
-interface PlanCardProps {
-  profile: User | null;
-  onOpenPricing: () => void;
-}
-
-export default function PlanCard({ profile, onOpenPricing }: PlanCardProps) {
+export default function PlanCard() {
+  const { user } = useAuth();
+  const { openModal } = usePopup();
+  const { data: profile } = useGetCurrentUserQuery(undefined, {
+    skip: !user
+  });
   const planName = (profile?.plan || 'Free') as PlanName;
   const limits = PLAN_LIMITS[planName];
 
@@ -29,7 +32,7 @@ export default function PlanCard({ profile, onOpenPricing }: PlanCardProps) {
             </h4>
           </div>
           <div className={cn(
-            'rounded-full border px-2.5 py-1 text-xs font-bold uppercase tracking-wider',
+            'rounded-full border px-2.5 py-1 text-xs font-bold uppercase ',
             profile?.subscriptionStatus === 'active'
               ? 'border-emerald-100 bg-emerald-50 text-emerald-600'
               : 'border-amber-100 bg-amber-50 text-amber-600'
@@ -54,7 +57,7 @@ export default function PlanCard({ profile, onOpenPricing }: PlanCardProps) {
           <div className="space-y-3">
             <Button
               className="w-full"
-              onClick={onOpenPricing}
+              onClick={() => openModal(<PricingModal />)}
               type='primary'>
               {planName === 'Free' ? 'Upgrade' : 'Manage Subscription'}
             </Button>

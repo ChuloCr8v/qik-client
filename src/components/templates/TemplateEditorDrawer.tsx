@@ -1,10 +1,11 @@
 import React from 'react';
+import { Button, Input, InputNumber } from 'antd';
 import {
   Clock,
   Plus,
   Trash2
 } from 'lucide-react';
-import Drawer from '../Drawer';
+import CustomDrawer from '../CustomDrawer';
 import {
   AgendaItem
 } from '../../types';
@@ -40,39 +41,32 @@ export default function TemplateEditorDrawer({
   onUpdateItem
 }: TemplateEditorDrawerProps) {
   return (
-    <Drawer
+    <CustomDrawer
       isOpen={isOpen}
       onClose={onClose}
       title={isEditing ? 'Edit Template' : 'Create Template'}
-      footer={
-        <div className="grid grid-cols-2  gap-3">
-          <button form="template-form" type="submit" className="rounded-lg bg-secondary px-8 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:bg-slate-800 active:scale-95">
-            Save Template
-          </button>
-          <button type="button" onClick={onClose} className="rounded-lg px-6 py-3 text-sm text-muted transition-colors hover:bg-slate-50">
-            Cancel
-          </button>
-        </div>
-      }
+      onOk={() => (document.getElementById('template-form') as HTMLFormElement | null)?.requestSubmit()}
+      okText="Save Template"
     >
       <form id="template-form" onSubmit={onSubmit} className="space-y-6">
         <div className="space-y-4">
           <div>
             <label className="mb-2 block text-muted">Template Name</label>
-            <input
+            <Input
               required
               value={name}
               onChange={(e) => onNameChange(e.target.value)}
-              className="w-full rounded-lg border border-border px-4 py-3 text-sm   outline-none transition-all focus:border-primary"
+              className="h-10! rounded-xl!"
               placeholder="e.g. Weekly Strategy Sync"
             />
           </div>
           <div>
             <label className="mb-2 block text-muted">Description</label>
-            <textarea
+            <Input.TextArea
               value={description}
               onChange={(e) => onDescriptionChange(e.target.value)}
-              className="h-24 w-full resize-none rounded-lg border border-border px-4 py-3 text-sm font-medium   outline-none transition-all focus:border-primary"
+              rows={4}
+              className="rounded-xl!"
               placeholder="Describe what this meeting is for..."
             />
           </div>
@@ -81,9 +75,9 @@ export default function TemplateEditorDrawer({
         <div className="space-y-4 pt-4">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-semibold  text-secondary">Agenda Items</h3>
-            <button type="button" onClick={onAddItem} className="flex items-center gap-1.5 text-sm font-semibold text-primary transition-opacity hover:opacity-80">
-              <Plus className="h-3 w-3" /> Add Item
-            </button>
+            <Button type="link" onClick={onAddItem} icon={<Plus className="h-3 w-3" />}>
+              Add Item
+            </Button>
           </div>
 
           <div className="space-y-3">
@@ -91,35 +85,32 @@ export default function TemplateEditorDrawer({
               <div key={index} className="w-full group relative rounded-lg border border-border bg-slate-50/50 p-4 transition-all hover:bg-white hover:shadow-md">
                 <div className="grid w-full">
                   <div className="col-span-8 space-y-3">
-                    <input
+                    <Input
                       value={item.title}
                       onChange={(e) => onUpdateItem(index, 'title', e.target.value)}
-                      className="w-full bg-transparent text-sm font-semibold text-secondary   rounded-lg p-2 outline-none placeholder:text-slate-300"
+                      className="rounded-lg!"
                       placeholder="Item Title"
                     />
-                    <textarea
+                    <Input.TextArea
                       value={item.description || ''}
                       onChange={(e) => onUpdateItem(index, 'description', e.target.value)}
-                      className="w-full bg-transparent text-sm text-muted outline-none   rounded-md p-2 placeholder:text-slate-200"
+                      className="rounded-lg!"
                       placeholder="Add description..."
                     />
                   </div>
                   <div className="col-span-3 w-full flex items-center gap-2">
                     <div className="flex items-center gap-1.5 rounded-lg   p-2 w-full">
                       <Clock className="h-3 w-3 text-muted" />
-                      <input
-                        type="number"
+                      <InputNumber
                         value={item.duration}
-                        onChange={(e) => onUpdateItem(index, 'duration', parseInt(e.target.value) || 0)}
-                        className="w-full bg-transparent text-sm font-semibold outline-none"
+                        onChange={(value) => onUpdateItem(index, 'duration', Number(value) || 0)}
+                        className="w-full"
                       />
                       <span className="text-sm text-muted">m</span>
                     </div>
                   </div>
                   <div className="col-span-1 flex items-center justify-end">
-                    <button type="button" onClick={() => onRemoveItem(index)} className="p-1 text-muted opacity-0 transition-all hover:text-red-500 group-hover:opacity-100">
-                      <Trash2 className="h-4 w-4" />
-                    </button>
+                    <Button type="text" danger onClick={() => onRemoveItem(index)} icon={<Trash2 className="h-4 w-4" />} />
                   </div>
                 </div>
               </div>
@@ -127,6 +118,6 @@ export default function TemplateEditorDrawer({
           </div>
         </div>
       </form>
-    </Drawer>
+    </CustomDrawer>
   );
 }

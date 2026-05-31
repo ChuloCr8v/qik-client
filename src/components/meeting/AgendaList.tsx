@@ -10,6 +10,7 @@ import { AgendaItem, Meeting } from "../../types";
 import { MEETING_TEMPLATES, MeetingTemplate } from "../../constants/templates";
 import AgendaItemRow from "./AgendaItemRow";
 import TemplatePicker from "./TemplatePicker";
+import { Button } from "antd";
 
 const DraggableAny = Draggable as any;
 const DroppableAny = Droppable as any;
@@ -54,25 +55,29 @@ export default function AgendaList({
             <div className="flex items-center justify-between gap-4 mb-4">
                 <div className="space-y-1 text-left">
                     <h2 className="text-base font-semibold tracking-tight text-secondary">
-                        Meeting Agenda
+                        Agendas
                     </h2>
                 </div>
                 {isOwner && (
                     <div className="flex items-center gap-2">
-                        <button
+                        <Button
+                            // size="small"
+                            // type="text"
+                            className="h-7!"
                             onClick={onToggleTemplates}
-                            className="flex p-3 py-2 items-center gap-1.5 text-sm font-semibold text-muted transition-colors hover:text-primary"
                         >
                             <Library className="h-3.5 w-3.5" />
                             <span>Templates</span>
-                        </button>
-                        <button
+                        </Button>
+                        <Button
+                            // size="small"
+                            // type="text"
+                            className="h-7!"
                             onClick={onOpenAddTopic}
-                            className="flex p-3 py-2 items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
                         >
                             <Plus className="h-3.5 w-3.5" />
                             <span>Add Topic</span>
-                        </button>
+                        </Button>
                     </div>
                 )}
             </div>
@@ -94,18 +99,7 @@ export default function AgendaList({
                             No items yet. Use the generator or pick a template
                             to start.
                         </p>
-                        <div className="flex flex-wrap justify-center gap-2 px-6">
-                            {MEETING_TEMPLATES.map(template => (
-                                <button
-                                    key={template.name}
-                                    onClick={() => onSelectTemplate(template)}
-                                    className="flex items-center gap-1.5 rounded-lg border border-border bg-white px-3 py-1.5 text-sm font-semibold text-secondary   transition-all hover:border-primary hover:bg-slate-50"
-                                >
-                                    <Plus className="h-3 w-3" />
-                                    {template.name} Template
-                                </button>
-                            ))}
-                        </div>
+                     
                     </div>
                 )}
 

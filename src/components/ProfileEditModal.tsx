@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import Drawer from './Drawer';
-import { Loader2, Camera, User as UserIcon, Building, FileText } from 'lucide-react';
+import { Input, Spin } from 'antd';
+import CustomDrawer from './CustomDrawer';
+import { Camera, User as UserIcon, Building, FileText } from 'lucide-react';
 import { getAnimeAvatar } from '../lib/userUtils';
-import { User } from '../types';
+import { useAuth } from '../features/auth/AuthProvider';
 import { useGetCurrentUserQuery, useUpdateCurrentUserMutation } from '../features/users/usersApi';
+import toast from 'react-hot-toast';
 
 interface ProfileEditModalProps {
   isOpen: boolean;
   onClose: () => void;
-  user: User | null;
   onSuccess: () => void;
 }
 
 export default function ProfileEditModal({
   isOpen,
   onClose,
-  user,
   onSuccess
 }: ProfileEditModalProps) {
+  const { user } = useAuth();
   const [displayName, setDisplayName] = useState(user?.displayName || '');
   const [photoURL, setPhotoURL] = useState(user?.photoURL || '');
   const [bio, setBio] = useState('');
@@ -57,42 +58,27 @@ export default function ProfileEditModal({
       onClose();
     } catch (err: any) {
       setError(err.message || 'Failed to update profile');
+      toast.error(err.message || 'Failed to update profile.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Drawer
+    <CustomDrawer
       isOpen={isOpen}
       onClose={onClose}
       title="Edit Your Profile"
       icon={<UserIcon className="h-5 w-5 text-primary" />}
-      footer={
-        <div className="flex flex-row justify-end gap-3">
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-6 py-2.5 text-sm font-semibold text-muted hover:bg-slate-100 rounded-xl transition-all"
-          >
-            Cancel
-          </button>
-          <button
-            form="profile-form"
-            type="submit"
-            disabled={loading || initialLoading}
-            className="flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-white   shadow-primary/20 transition-all hover:bg-primary/90 active:scale-[0.98] disabled:opacity-50"
-          >
-            {loading && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-            Save Changes
-          </button>
-        </div>
-      }
+      onOk={() => (document.getElementById('profile-form') as HTMLFormElement | null)?.requestSubmit()}
+      okText="Save Changes"
+      loading={loading}
+      disabled={initialLoading}
     >
       <form id="profile-form" onSubmit={handleSubmit} className="space-y-6">
         {initialLoading ? (
           <div className="flex justify-center py-12">
-            <Loader2 className="h-6 w-6 animate-spin text-primary/50" />
+            <Spin />
           </div>
         ) : (
           <>
@@ -105,7 +91,7 @@ export default function ProfileEditModal({
                 />
                 <div className="invisible group-hover:visible absolute inset-0 flex flex-col items-center justify-center bg-black/40 transition-opacity">
                   <Camera className="h-4 w-4 text-white" />
-                  <span className="text-xs font-bold text-white uppercase tracking-wider">Change</span>
+                  <span className="text-xs font-bold text-white uppercase ">Change</span>
                 </div>
               </div>
             </div>
@@ -116,13 +102,12 @@ export default function ProfileEditModal({
                   <UserIcon className="h-3 w-3" />
                   Display Name
                 </label>
-                <input
-                  type="text"
+                <Input
                   required
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
                   placeholder="e.g. Alex Rivera"
-                  className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-2.5 text-sm font-semibold focus:border-primary focus:bg-white focus:outline-none transition-all  "
+                  className="h-10! rounded-xl!"
                 />
               </div>
 
@@ -131,12 +116,11 @@ export default function ProfileEditModal({
                   <Building className="h-3 w-3" />
                   Job Title
                 </label>
-                <input
-                  type="text"
+                <Input
                   value={jobTitle}
                   onChange={(e) => setJobTitle(e.target.value)}
                   placeholder="e.g. Senior Product Designer"
-                  className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-2.5 text-sm font-semibold focus:border-primary focus:bg-white focus:outline-none transition-all  "
+                  className="h-10! rounded-xl!"
                 />
               </div>
 
@@ -145,12 +129,12 @@ export default function ProfileEditModal({
                   <FileText className="h-3 w-3" />
                   Short Bio
                 </label>
-                <textarea
+                <Input.TextArea
                   rows={3}
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
                   placeholder="Tell us a little about yourself..."
-                  className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-2.5 text-sm font-medium focus:border-primary focus:bg-white focus:outline-none transition-all resize-none  "
+                  className="rounded-xl!"
                 />
               </div>
 
@@ -159,12 +143,11 @@ export default function ProfileEditModal({
                   <Camera className="h-3 w-3" />
                   Avatar URL
                 </label>
-                <input
-                  type="text"
+                <Input
                   value={photoURL}
                   onChange={(e) => setPhotoURL(e.target.value)}
                   placeholder="https://images.unsplash.com/photo..."
-                  className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-2.5 text-sm font-semibold focus:border-primary focus:bg-white focus:outline-none transition-all  "
+                  className="h-10! rounded-xl!"
                 />
                 <p className="text-sm text-muted leading-tight">Use a direct link to an image (Unsplash, Google Photos, etc.)</p>
               </div>
@@ -178,6 +161,6 @@ export default function ProfileEditModal({
           </>
         )}
       </form>
-    </Drawer>
+    </CustomDrawer>
   );
 }

@@ -5,10 +5,8 @@ import {
     Users,
     Layout,
     HelpCircle,
-    Menu,
     X,
     CreditCard,
-    Zap
 } from "lucide-react";
 import { cn } from "../lib/utils";
 import PricingModal from "./PricingModal";
@@ -18,10 +16,13 @@ import { useGetCurrentUserQuery } from "../features/users/usersApi";
 import { useGetBillingUsageQuery } from "../features/billing/billingApi";
 import { usePopup } from "../context/PopupContext";
 import { Button } from "antd";
+import { hasTeamEntitlement } from "../lib/entitlements";
 
 interface SidebarProps {
     isOpen: boolean;
+    isDesktopOpen?: boolean;
     onClose: () => void;
+    onCloseDesktop?: () => void;
     activePath?: string;
     onNavigate: (path: string) => void;
 }
@@ -36,7 +37,9 @@ const navItems = [
 
 export default function Sidebar({
     isOpen,
+    isDesktopOpen = true,
     onClose,
+    onCloseDesktop,
     activePath = "/",
     onNavigate
 }: SidebarProps) {
@@ -52,10 +55,18 @@ export default function Sidebar({
     const planName = (profile?.plan || "Free") as PlanName;
     const aiLimit = usage?.aiGenerationsLimit ?? PLAN_LIMITS[planName]?.aiGenerations ?? 0;
     const { percentage, label } = getUsageStatus(usage?.aiGenerationsUsed || 0, aiLimit);
+    const visibleNavItems = navItems.filter(
+        item => item.path !== "/team" || hasTeamEntitlement(usage, planName)
+    );
 
     const handleNavigate = (path: string) => {
         onNavigate(path);
         onClose();
+    };
+
+    const handleClose = () => {
+        onClose();
+        onCloseDesktop?.();
     };
 
     return (
@@ -72,28 +83,36 @@ export default function Sidebar({
             <aside
                 className={cn(
                     "fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-border transition-transform duration-300 lg:static lg:translate-x-0",
-                    isOpen ? "translate-x-0" : "-translate-x-full"
+                    isOpen ? "translate-x-0" : "-translate-x-full",
+                    isDesktopOpen ? "lg:flex" : "lg:hidden"
                 )}
             >
-                <div className="flex flex-col h-full">
+                <div className="flex flex-col h-full w-full">
                     {/* Logo Section */}
-                    <div className="flex py-3.5 items-center px-6 border-b border-border">
+                    <div className="flex py-3.5 items-center justify-between px-6 border-b border-border">
                         <div className="flex items-center gap-2">
                             <Calendar className="h-4 w-4 text-primary" />
                             <span className="text-base font-semibold tracking-tight text-secondary">
                                 QikAgenda
                             </span>
                         </div>
+                        {/* <Button
+                            type="text"
+                            size="small"
+                            icon={<X className="h-4 w-4" />}
+                            onClick={handleClose}
+                            title="Close sidebar"
+                        /> */}
                     </div>
 
                     <div className="flex-1 px-4 py-4 space-y-6">
                         <nav className="space-y-1">
-                            {navItems.map(item => (
+                            {visibleNavItems.map(item => (
                                 <button
                                     key={item.name}
                                     onClick={() => handleNavigate(item.path)}
                                     className={cn(
-                                        "flex w-full  border-none! h-full! items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all group",
+                                        "flex w-full border-none! h-full! items-center gap-3 px-3 py-2.5 rounded-xl md:text-sm! font-semibold transition-all group",
                                         activePath === item.path
                                             ? "bg-primary/5 text-primary"
                                             : "text-muted hover:bg-slate-50 hover:text-secondary"

@@ -1,4 +1,5 @@
 import { X } from 'lucide-react';
+import { Button } from 'antd';
 import { Participant } from '../../../types';
 import { getAnimeAvatar } from '../../../lib/userUtils';
 
@@ -34,12 +35,12 @@ export default function LiveMeetingHeader({ meetingTitle, participants, onClose 
         </div>
       </div>
 
-      <button
+      <Button
+        type="text"
         onClick={onClose}
-        className="group flex h-10 w-10 items-center justify-center rounded-xl bg-white/5 transition-all hover:bg-red-500/10 hover:text-red-500"
-      >
-        <X className="h-5 w-5 transition-transform group-hover:rotate-90" />
-      </button>
+        className="text-white! hover:bg-red-500/10! hover:text-red-500!"
+        icon={<X className="h-5 w-5" />}
+      />
     </div>
   );
 }

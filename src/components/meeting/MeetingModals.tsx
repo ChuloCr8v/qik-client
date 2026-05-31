@@ -1,4 +1,4 @@
-import ConfirmModal from '../ConfirmModal';
+import CustomModal, { ModalTheme } from '../CustomModal';
 import AgendaItemModal from '../AgendaItemModal';
 import InviteModal from '../InviteModal';
 import TemplatePreviewModal from '../TemplatePreviewModal';
@@ -23,6 +23,7 @@ interface MeetingModalsProps {
   onUpdateItem: (data: { title: string; description: string; duration: number }) => Promise<void>;
   onApplyTemplate: (startTime?: string) => void;
   onAddInvitee: (email: string) => Promise<void>;
+  mailAvailable?: boolean;
 }
 
 export default function MeetingModals({
@@ -42,7 +43,8 @@ export default function MeetingModals({
   onAddItem,
   onUpdateItem,
   onApplyTemplate,
-  onAddInvitee
+  onAddInvitee,
+  mailAvailable = true
 }: MeetingModalsProps) {
   return (
     <>
@@ -52,17 +54,24 @@ export default function MeetingModals({
         meetingTitle={meeting.title}
         invitees={meeting.invitees || []}
         onAddInvitee={onAddInvitee}
+        mailAvailable={mailAvailable}
       />
 
-      <ConfirmModal
+      <CustomModal
         isOpen={isDeleteOpen}
         onClose={onCloseDelete}
-        onConfirm={onConfirmDelete}
+        onCancel={onCloseDelete}
+        onOk={onConfirmDelete}
         title="Delete Meeting"
-        message={<>Are you sure you want to delete <span className="font-semibold text-secondary">"{meeting.title}"</span>? This action is permanent and cannot be reversed.</>}
-        isLoading={isDeleting}
-        confirmText="Delete Permanently"
-      />
+        modalTheme={ModalTheme.WARNING}
+        isDanger
+        loading={isDeleting}
+        okText="Delete Permanently"
+      >
+        <p className="text-sm text-muted leading-relaxed">
+          Are you sure you want to delete <span className="font-semibold text-secondary">"{meeting.title}"</span>? This action is permanent and cannot be reversed.
+        </p>
+      </CustomModal>
 
       <AgendaItemModal
         isOpen={isAddOpen}
@@ -86,7 +95,7 @@ export default function MeetingModals({
       <TemplatePreviewModal
         isOpen={!!selectedTemplate}
         onClose={onCloseTemplate}
-        onApply={onApplyTemplate}
+        onApply={(_template, startTime) => onApplyTemplate(startTime)}
         template={selectedTemplate}
       />
     </>

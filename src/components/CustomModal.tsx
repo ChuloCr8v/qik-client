@@ -12,7 +12,9 @@ export enum ModalTheme {
 interface Props {
     title: string;
     children: ReactNode;
+    isOpen?: boolean;
     okText?: string;
+    onClose?: () => void;
     onCancel?: () => void;
     onOk?: () => void;
     modalSubtitle?: string;
@@ -30,12 +32,15 @@ interface Props {
     maxHeight?: boolean;
     hideCancelButton?: boolean;
     footer?: ReactNode;
+    className?: string;
 }
 
 export default function CustomModal({
     children,
+    isOpen,
     loading,
     icon,
+    onClose,
     onCancel,
     modalSubtitle,
     okText,
@@ -52,7 +57,8 @@ export default function CustomModal({
     hideFooter = false,
     maxHeight = true,
     hideCancelButton = false,
-    footer
+    footer,
+    className
 }: Props) {
     const [stepButtons, setStepButtons] = useState(step ?? false);
     const [isConfirmed, setIsConfirmed] = useState(false);
@@ -65,28 +71,29 @@ export default function CustomModal({
 
     return (
         <Modal
-            open={isModalOpen}
-            onCancel={onCancel ?? closeModal}
+            open={isOpen ?? isModalOpen}
+            onCancel={onCancel ?? onClose ?? closeModal}
             footer={false}
             maskClosable={false}
             closable={closable ?? true}
             confirmLoading={loading}
             width={width}
-            centered
-            className="qa-custom-modal"
+            centered={false}
+            className={twMerge("qa-custom-modal", className)}
             styles={{ container: { padding: 0 } }}
         >
-            <div className="flex max-h-[calc(100vh-48px)] flex-col overflow-hidden rounded-xl">
+            <div className="flex flex-col overflow-hidden">
                 <div
                     className={twMerge(
-                        "flex w-full items-center gap-3 bg-linear-to-r from-primary/10 via-amber-50 to-emerald-50 px-4 py-4",
+                        "flex w-full items-center gap-3 bg-linear-to-r from-primary/10 via-amber-50 to-emerald-50 px-4 py-3",
                         warning && "from-red-50 via-red-50 to-red-100"
                     )}
                 >
                     <div
                         className={twMerge(
-                            "flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-primary shadow-xs",
-                            warning && "text-red-600"
+                            "flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-primary shadow-xs",
+                            warning && "text-red-600",
+                            !modalSubtitle && "h-8 w-8"
                         )}
                     >
                         {icon ?? (warning ? <AlertTriangle className="h-5 w-5" /> : <Activity className="h-5 w-5" />)}
@@ -97,7 +104,7 @@ export default function CustomModal({
                             {title}
                         </p>
                         {modalSubtitle && (
-                            <p className="mt-0.5 text-xs leading-tight text-muted">
+                            <p className="mt-1! text-[12px]! md:text-xs leading-tight text-muted">
                                 {modalSubtitle}
                             </p>
                         )}
@@ -129,17 +136,18 @@ export default function CustomModal({
                     </div>
                 )}
 
-                {footer ? <div className="px-6 py-4 pt-0">
+                {footer ? <div className="px-6 py-3 pt-0">
                     {footer}
                 </div> : !stepButtons && !hideFooter && (
-                    <div className="w-full border-t border-border px-6 py-4">
+                    <div className="w-full border-t border-border px-6 py-3">
                         <div className="flex items-center justify-end gap-3">
                             {!hideCancelButton && (
-                                <Button onClick={onCancel ?? closeModal}>
+                                <Button className="px-8!" onClick={onCancel ?? onClose ?? closeModal}>
                                     Cancel
                                 </Button>
                             )}
                             <Button
+                                className="px-8!"
                                 onClick={onOk}
                                 loading={loading}
                                 type="primary"

@@ -1,27 +1,32 @@
 import {
   Mail,
   Plus,
-  UserRoundCheck
 } from 'lucide-react';
+import { Button, Empty } from 'antd';
 import SectionHeading from "../SectionHeading"
 
 interface InviteesPanelProps {
   invitees: string[];
   onInvite: () => void;
+  mailAvailable?: boolean;
 }
 
 export default function InviteesPanel({
-  invitees, onInvite
+  invitees, onInvite, mailAvailable = true
 }: InviteesPanelProps) {
   return (
     <div className=" rounded-xl border border-border bg-white px-3 py-2">
-      <SectionHeading title="Invitees" action={ <button
+      <SectionHeading title="Invitees" action={ <Button
+        type="text"
+        size="small"
+        icon={<Plus className="h-3 w-3" />}
+        disabled={!mailAvailable}
         onClick={onInvite}
-        className="flex items-center gap-1 rounded-lg p-0! border-none text-sm font-bold text-primary hover:text-primary/20"
+        title={mailAvailable ? "Add invitee" : "Email is not configured"}
+        className="text-primary!"
         >
-        <Plus className="h-3 w-3" />
         Add
-      </button>} />
+      </Button>} />
 
       {invitees.length > 0 ? (
         <div className="custom-scrollbar max-h-[180px] space-y-1.5 overflow-y-auto pr-1 -mt-4">
@@ -42,9 +47,11 @@ export default function InviteesPanel({
           ))}
         </div>
       ): (
-        <p className="py-2 text-center text-sm italic text-muted">
-          No invitees yet.
-        </p>
+        <Empty
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          description="No invitees yet"
+          className="py-2"
+        />
       )}
     </div>
   );

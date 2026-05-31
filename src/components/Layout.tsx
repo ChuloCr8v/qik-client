@@ -22,6 +22,17 @@ export default function Layout({
     onGoogleSignIn
 }: LayoutProps) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isSidebarDesktopOpen, setIsSidebarDesktopOpen] = useState(true);
+
+    const handleOpenSidebar = () => {
+        if (isSidebarDesktopOpen || isSidebarOpen) {
+            setIsSidebarDesktopOpen(false);
+            setIsSidebarOpen(false);
+        } else {
+            setIsSidebarOpen(true);
+            setIsSidebarDesktopOpen(true);
+        }
+    };
 
     return (
         <div className="flex overflow-y-hidden h-screen bg-gray-50">
@@ -29,7 +40,9 @@ export default function Layout({
             {user && onNavigate && (
                 <Sidebar
                     isOpen={isSidebarOpen}
+                    isDesktopOpen={isSidebarDesktopOpen}
                     onClose={() => setIsSidebarOpen(false)}
+                    onCloseDesktop={() => setIsSidebarDesktopOpen(false)}
                     activePath={activePath}
                     onNavigate={onNavigate}
                 />
@@ -38,14 +51,14 @@ export default function Layout({
             <div className="flex flex-1 flex-col h-screen overflow-hidden">
                 <Header
                     user={user}
-                    onMenuClick={() => setIsSidebarOpen(true)}
+                    onMenuClick={handleOpenSidebar}
                     onNavigate={onNavigate}
                     onGoogleSignIn={onGoogleSignIn}
                 />
 
                 <main className="flex-1 w-full h-full overflow-y-auto">
                     <div className="w-full flex flex-col">
-                        <div className="bg-gray-50/10 pb-20 px-4">
+                        <div className="bg-gray-50/10 pb-20">
                             {children}
                             {!hideFooter && (
                                 <Footer variant={user ? "minimal" : "full"} />

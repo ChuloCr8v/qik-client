@@ -3,7 +3,10 @@ import Layout from "./Layout.tsx";
 import AiCoachPanel from "./meeting/AiCoachPanel.tsx";
 import { Loader2 } from "lucide-react";
 import { AnimatePresence } from "motion/react";
+import { useNavigate, useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 import { useAuth } from "../features/auth/AuthProvider";
+import { useMeetings } from "../features/meetings/MeetingsProvider";
 import {
     exportAgendaToMarkdown,
     exportAgendaToPDF
@@ -19,39 +22,40 @@ import UpgradePrompt from "./billing/UpgradePrompt";
 import { useMeetingActions } from "./meeting/hooks/useMeetingActions";
 import { useMeetingRealtime } from "./meeting/hooks/useMeetingRealtime";
 import { useMeetingUiState } from "./meeting/hooks/useMeetingUiState";
+import { isIntegrationConfigured, useGetHealthQuery } from "../features/system/systemApi";
 
-interface MeetingViewProps {
-    meetingId: string;
-    onBack: () => void;
-    onDeleteMeeting: (id: string) => void;
-    onNavigate?: (path: string) => void;
-}
-
-export default function MeetingView({
-    meetingId,
-    onBack,
-    onDeleteMeeting,
-    onNavigate
-}: MeetingViewProps) {
+export default function MeetingView() {
+    const { meetingId } = useParams();
+    const activeMeetingId = meetingId ?? "";
+    const navigate = useNavigate();
     const { user } = useAuth();
-    const realtime = useMeetingRealtime(meetingId);
+    const { deleteMeetingById, refreshMeetings } = useMeetings();
+    const { data: health } = useGetHealthQuery();
+    const realtime = useMeetingRealtime(activeMeetingId);
     const ui = useMeetingUiState();
-    const ai = useMeetingAi(meetingId, realtime.meeting, realtime.agenda, user);
+    const ai = useMeetingAi(activeMeetingId, realtime.meeting, realtime.agenda, user);
     const actions = useMeetingActions({
-        meetingId,
+        meetingId: activeMeetingId,
         meeting: realtime.meeting,
         agenda: realtime.agenda,
         setAgenda: realtime.setAgenda,
         setIsCopying: ui.setIsCopying
     });
 
+    if (!meetingId) {
+        return null;
+    }
+
     const handleDeleteMeeting = async () => {
         ui.setIsDeleting(true);
         try {
-            await onDeleteMeeting(meetingId);
-            onBack();
+            await deleteMeetingById(meetingId);
+            await refreshMeetings();
+            toast.success("Meeting deleted.");
+            navigate("/meetings");
         } catch (error) {
             console.error(error);
+            toast.error("Unable to delete meeting.");
         } finally {
             ui.setIsDeleting(false);
             ui.setIsDeleteModalOpen(false);
@@ -60,7 +64,7 @@ export default function MeetingView({
 
     if (!realtime.meeting && realtime.meetingError) {
         return (
-            <Layout user={user} hideFooter onNavigate={onNavigate}>
+            <Layout user={user} hideFooter onNavigate={navigate}>
                 <div className="flex min-h-[calc(100vh-56px)] items-center justify-center px-4">
                     <div className="max-w-md rounded-3xl border border-border bg-white p-6 text-center  ">
                         <h1 className="text-xl font-bold text-secondary">
@@ -71,7 +75,10 @@ export default function MeetingView({
                             may not be on the invite list.
                         </p>
                         <button
-                            onClick={onBack}
+                            onClick={async () => {
+                                await refreshMeetings();
+                                navigate("/meetings");
+                            }}
                             className="button-primary mt-5"
                         >
                             Back to meetings
@@ -98,9 +105,31 @@ export default function MeetingView({
         .filter(item => item.completed)
         .reduce((acc, item) => acc + item.duration, 0);
     const progress = totalTime > 0 ? (completedTime / totalTime) * 100 : 0;
+    const aiAvailable = isIntegrationConfigured(health, "ai");
+    const mailAvailable = isIntegrationConfigured(health, "mail");
+
+    const handleExportPDF = async () => {
+        try {
+            await exportAgendaToPDF(meeting, agenda, realtime.participants);
+            toast.success("PDF exported.");
+        } catch (error) {
+            console.error(error);
+            toast.error("Unable to export PDF.");
+        }
+    };
+
+    const handleExportMarkdown = () => {
+        try {
+            exportAgendaToMarkdown(meeting, agenda, realtime.participants);
+            toast.success("Markdown exported.");
+        } catch (error) {
+            console.error(error);
+            toast.error("Unable to export Markdown.");
+        }
+    };
 
     return (
-        <Layout user={user} hideFooter onNavigate={onNavigate}>
+        <Layout user={user} hideFooter onNavigate={navigate}>
             <MeetingHeader
                 meeting={meeting}
                 participants={realtime.participants}
@@ -109,27 +138,20 @@ export default function MeetingView({
                 isOwner={isOwner}
                 isHeaderVisible={realtime.isHeaderVisible}
                 isCopying={ui.isCopying}
+                mailAvailable={mailAvailable}
                 onStartMeeting={actions.handleStartMeeting}
                 onStopMeeting={actions.handleStopMeeting}
                 onOpenOverlay={() => realtime.setIsOverlayOpen(true)}
                 onCopyLink={actions.handleCopyLink}
                 onSendReminders={actions.handleSendReminders}
                 onInvite={() => ui.setIsInviteModalOpen(true)}
-                onExportPDF={() =>
-                    exportAgendaToPDF(meeting, agenda, realtime.participants)
-                }
-                onExportMarkdown={() =>
-                    exportAgendaToMarkdown(
-                        meeting,
-                        agenda,
-                        realtime.participants
-                    )
-                }
+                onExportPDF={handleExportPDF}
+                onExportMarkdown={handleExportMarkdown}
                 onDelete={() => ui.setIsDeleteModalOpen(true)}
                 onTogglePublic={actions.handleTogglePublic}
             />
 
-            <div className="relative mx-auto grid max-w-6xl items-start gap-6 px-4 py-4 sm:px-6 lg:grid-cols-4 lg:py-8">
+            <div className="relative mx-auto grid max-w-6xl items-start gap-4 px-4 py-4 sm:px-6 lg:grid-cols-4">
                 <div className="order-2 space-y-6 lg:sticky lg:top-24 lg:order-1 lg:col-span-1 lg:h-fit lg:self-start">
                     <AiCoachPanel
                         aiContext={ai.aiContext}
@@ -141,38 +163,49 @@ export default function MeetingView({
                         onGenerate={ai.handleGenerateAI}
                         onAnalyze={ai.handleAnalyzeAgenda}
                         onDismissAnalysis={ai.dismissAnalysis}
+                        aiAvailable={aiAvailable}
                     />
                     <AttendeesPanel participants={realtime.participants} />
                     <InviteesPanel
                         invitees={meeting.invitees || []}
                         onInvite={() => ui.setIsInviteModalOpen(true)}
+                        mailAvailable={mailAvailable}
                     />
                 </div>
 
-                <AgendaList
-                    meeting={meeting}
-                    meetingId={meetingId}
-                    agenda={agenda}
-                    isOwner={isOwner}
-                    isGenerating={ai.isGenerating}
-                    currentProgress={realtime.currentProgress}
-                    isTemplateListOpen={ui.isTemplateListOpen}
-                    agendaEndRef={realtime.agendaEndRef}
-                    onToggleTemplates={() =>
-                        ui.setIsTemplateListOpen(!ui.isTemplateListOpen)
-                    }
-                    onCloseTemplates={() => ui.setIsTemplateListOpen(false)}
-                    onOpenAddTopic={() => ui.setIsAddAgendaModalOpen(true)}
-                    onEditItem={item => {
-                        if (isOwner) {
-                            ui.setEditingItem(item);
-                            ui.setIsAddAgendaModalOpen(true);
+                <div className="lg:col-span-3">
+                    <div className="mb-4">
+                        <p className="text-sm font-semibold text-secondary mb-2">Description</p>
+                        <p className="text-sm text-muted">{meeting.description}</p>
+                    </div>
+                    <AgendaList
+                        meeting={meeting}
+                        meetingId={meetingId}
+                        agenda={agenda}
+                        isOwner={isOwner}
+                        isGenerating={ai.isGenerating}
+                        currentProgress={realtime.currentProgress}
+                        isTemplateListOpen={ui.isTemplateListOpen}
+                        agendaEndRef={realtime.agendaEndRef}
+                        onToggleTemplates={() =>
+                            ui.setIsTemplateListOpen(!ui.isTemplateListOpen)
                         }
-                    }}
-                    onDragEnd={actions.handleOnDragEnd}
-                    onSelectTemplate={ui.setSelectedTemplateForPreview}
-                    onNavigateTemplates={() => onNavigate?.("/templates")}
-                />
+                        onCloseTemplates={() => ui.setIsTemplateListOpen(false)}
+                        onOpenAddTopic={() => ui.setIsAddAgendaModalOpen(true)}
+                        onEditItem={item => {
+                            if (isOwner) {
+                                ui.setEditingItem(item);
+                                ui.setIsAddAgendaModalOpen(true);
+                            }
+                        }}
+                        onDragEnd={actions.handleOnDragEnd}
+                        onSelectTemplate={async template => {
+                            await actions.applyTemplate(template);
+                            ui.setIsTemplateListOpen(false);
+                        }}
+                        onNavigateTemplates={() => navigate("/templates")}
+                    />
+                </div>
 
                 <MeetingModals
                     meeting={meeting}
@@ -204,6 +237,7 @@ export default function MeetingView({
                         ui.setIsTemplateListOpen(false);
                     }}
                     onAddInvitee={actions.handleAddInvitee}
+                    mailAvailable={mailAvailable}
                 />
 
                 <UpgradePrompt

@@ -1,6 +1,11 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React from "react";
 import { FilePlus2, UserPlus, FileBarChart2 } from "lucide-react";
 import NewMeetingCard from "./NewMeetingCard";
+import { usePopup } from "../../context/PopupContext";
+import { Button } from "antd";
+import { useNavigate } from "react-router-dom";
+import { useGetBillingUsageQuery } from "../../features/billing/billingApi";
+import { hasTeamEntitlement } from "../../lib/entitlements";
 
 interface ActionItem {
     title: string;
@@ -12,29 +17,38 @@ interface ActionItem {
 }
 
 const DashboardQuickActions = () => {
-    const [openNewMeetingCard, setOpenNewMeetingCard] = useState(false);
+    const { openModal } = usePopup();
+    const navigate = useNavigate();
+    const { data: usage } = useGetBillingUsageQuery();
+    const teamEnabled = hasTeamEntitlement(usage, usage?.plan);
+
+    const scrollToReports = () => {
+        document
+            .getElementById("dashboard-reports")
+            ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
 
     const actions: ActionItem[] = [
         {
             title: "New Agenda",
             icon: FilePlus2,
-            onOk: () => setOpenNewMeetingCard(true),
+            onOk: () => openModal(<NewMeetingCard />),
             textColor: "text-primary",
             bgColor: "hover:bg-primary/10",
             iconBg: "bg-primary/10 text-primary"
         },
-        {
+        ...(teamEnabled ? [{
             title: "Add Team",
             icon: UserPlus,
-            onOk: () => { },
+            onOk: () => navigate("/team"),
             textColor: "text-blue-600",
             bgColor: "hover:bg-blue-600/10",
             iconBg: "bg-blue-600/10 text-blue-600"
-        },
+        }] : []),
         {
             title: "Report",
             icon: FileBarChart2,
-            onOk: () => { },
+            onOk: scrollToReports,
             textColor: "text-violet-600",
             bgColor: "hover:bg-violet-600/10",
             iconBg: "bg-violet-600/10 text-violet-600"
@@ -42,34 +56,24 @@ const DashboardQuickActions = () => {
     ];
 
     return (
-        <div className="grid grid-cols-3">
+        <div className={`grid ${teamEnabled ? "grid-cols-3" : "grid-cols-2"}`}>
             {actions.map((s, i) => {
                 const Icon = s.icon;
                 return (
-                    <button
+                    <Button
                         key={s.title}
                         onClick={s.onOk}
-                        className={`hover:bg-gray-50 h-10! md:px-5! border-0! border-l! overflow-hidden flex items-center gap-2 transition-colors rounded-none! ${i === 0 && "border-l-0!"} ${s.bgColor}!`}
+                        className={`hover:bg-gray-50 h-10! md:px-5! border-0! border-l! overflow-hidden flex items-center justify-start! gap-2 transition-colors rounded-none! ${i === 0 && "border-l-0!"} ${s.bgColor}!`}
                     >
                         <div
                             className={`inline-flex items-center justify-center w-5 h-5 md:w-6 md:h-6 rounded-md flex-shrink-0 ${s.iconBg}`}
                         >
                             <Icon className="w-3 h-3 md:w-4 md:h-4" />
                         </div>
-                        <span className={`text-xs md:text-sm`}>{s.title}</span>
-                    </button>
+                        <span className={`text-xs! md:text-sm!`}>{s.title}</span>
+                    </Button>
                 );
             })}
-
-            {openNewMeetingCard && (
-                <NewMeetingCard
-                    isOpen={openNewMeetingCard}
-                    onClose={() => {
-                        setOpenNewMeetingCard(false);
-                    }}
-
-                />
-            )}
         </div>
     );
 };
