@@ -1,18 +1,9 @@
-import { ArrowLeft, ChevronRight, FileText } from "lucide-react";
-import SectionHeading from "../SectionHeading";
-import Table, { TableCell, TableRow } from "../Table";
-import { Meeting } from "../../types";
-import {
-    getMeetingStatusClassName,
-    getMeetingStatusDotClassName,
-    getMeetingStatusLabel
-} from "./dashboardUtils";
 import SummarySectionCard from "./SummarySectionCard";
 import { useMeetings } from "../../features/meetings/MeetingsProvider";
 import { useNavigate } from "react-router-dom";
 
 export default function RecentMeetingsCard() {
-    const { meetings, isCreatingMeeting, createNewMeeting } = useMeetings();
+    const { meetings } = useMeetings();
     const navigate = useNavigate();
 
     return (

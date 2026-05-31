@@ -1,4 +1,4 @@
-import { Button, Tag } from "antd";
+import { Alert, Button, Tag } from "antd";
 import { useState } from "react";
 import type { ElementType } from "react";
 import {
@@ -24,6 +24,7 @@ import {
     useGetBillingUsageQuery,
     useResumeSubscriptionMutation
 } from "../features/billing/billingApi";
+import { isIntegrationConfigured, useGetHealthQuery } from "../features/system/systemApi";
 import { PLAN_LIMITS, type PlanName } from "../config/plans";
 import { cn } from "../lib/utils";
 
@@ -135,6 +136,7 @@ export default function PricingModal() {
     const [activeAction, setActiveAction] = useState<PlanName | "portal" | null>(null);
     const { closeModal } = usePopup();
     const { data: usage } = useGetBillingUsageQuery();
+    const { data: health } = useGetHealthQuery();
     const [changePlan] = useChangePlanMutation();
     const [cancelSubscription] = useCancelSubscriptionMutation();
     const [resumeSubscription] = useResumeSubscriptionMutation();
@@ -142,9 +144,14 @@ export default function PricingModal() {
 
     const currentPlan = usage?.plan || "Free";
     const hasPaidPlan = currentPlan !== "Free";
+    const stripeReady = isIntegrationConfigured(health, "stripe");
 
     const handlePlanAction = async (planName: PlanName) => {
         if (planName === "Free") return;
+        if (!stripeReady) {
+            toast.error("Billing is not configured yet. Please contact support.");
+            return;
+        }
         setActiveAction(planName);
         try {
             const result = await changePlan({ planType: planName as PaidPlanName }).unwrap();
@@ -168,6 +175,10 @@ export default function PricingModal() {
     };
 
     const handleCancel = async () => {
+        if (!stripeReady) {
+            toast.error("Billing is not configured yet. Please contact support.");
+            return;
+        }
         setActiveAction("Free");
         try {
             const result = await cancelSubscription().unwrap();
@@ -181,6 +192,10 @@ export default function PricingModal() {
     };
 
     const handleResume = async () => {
+        if (!stripeReady) {
+            toast.error("Billing is not configured yet. Please contact support.");
+            return;
+        }
         setActiveAction(currentPlan);
         try {
             const result = await resumeSubscription().unwrap();
@@ -194,6 +209,10 @@ export default function PricingModal() {
     };
 
     const handlePortal = async () => {
+        if (!stripeReady) {
+            toast.error("Billing is not configured yet. Please contact support.");
+            return;
+        }
         setActiveAction("portal");
         try {
             const result = await createPortalSession().unwrap();
@@ -243,6 +262,14 @@ export default function PricingModal() {
             </div>}
         >
             <div className="space-y-4">
+                {!stripeReady && (
+                    <Alert
+                        type="warning"
+                        showIcon
+                        message="Billing is not available yet"
+                        description="Paid plans are temporarily unavailable because Stripe is not fully configured. You can still contact sales for custom needs."
+                    />
+                )}
                 {/* <div className="flex flex-col gap-3 rounded-2xl border border-border bg-slate-50/70 p-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <p className="text-sm font-bold text-secondary">Current plan: {currentPlan === "OrganisationPlus" ? "Organisation Plus" : currentPlan}</p>

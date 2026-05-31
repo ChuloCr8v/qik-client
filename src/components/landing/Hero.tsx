@@ -20,7 +20,7 @@ export default function Hero({ onGetStarted, onDemoSignIn }: HeroProps) {
                     transition={{ duration: 0.5 }}
                     className="space-y-6"
                 >
-                    <div className="inline-flex items-center gap-2 rounded-full bg-amber-50 px-3 py-1 text-sm font-semibold text-primary border border-amber-100/50">
+                    <div className="inline-flex items-center gap-2 rounded-full bg-green-50 px-3 py-1 text-sm font-semibold text-primary border border-green-100/50">
                         <Sparkles className="h-3 w-3" />
                         <span className="text-xs tracking-wider">
                             One Prompt, Full Agenda
@@ -42,7 +42,6 @@ export default function Hero({ onGetStarted, onDemoSignIn }: HeroProps) {
                     <div className="max-w-[400px] w-full place-self-center flex md:grid grid-cols-2 flex-col items-center justify-center gap-3 sm:flex-row pt-4">
                         <Button
                             type="primary"
-                            className="w-full"
                             onClick={onGetStarted}
                             className="w-full h-12!"
                         >

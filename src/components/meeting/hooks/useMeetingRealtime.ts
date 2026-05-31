@@ -19,9 +19,9 @@ export function useMeetingRealtime(meetingId: string) {
   const agendaEndRef = useRef<HTMLDivElement>(null);
   const prevAgendaLength = useRef(0);
 
-  const { data: meetingData, error: meetingError } = useGetMeetingQuery(meetingId, { pollingInterval: 3000 });
-  const { data: agendaData } = useGetAgendaQuery(meetingId, { skip: !meetingData, pollingInterval: 3000 });
-  const { data: participantsData } = useGetParticipantsQuery(meetingId, { skip: !meetingData, pollingInterval: 5000 });
+  const { data: meetingData, error: meetingError } = useGetMeetingQuery(meetingId, { skip: !meetingId, pollingInterval: 3000 });
+  const { data: agendaData } = useGetAgendaQuery(meetingId, { skip: !meetingId || !meetingData, pollingInterval: 3000 });
+  const { data: participantsData } = useGetParticipantsQuery(meetingId, { skip: !meetingId || !meetingData, pollingInterval: 5000 });
   const [updatePresence] = useUpdatePresenceMutation();
   const [leaveMeeting] = useLeaveMeetingMutation();
 

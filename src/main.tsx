@@ -13,7 +13,7 @@ createRoot(document.getElementById("root")!).render(
             theme={{
                 token: {
                     colorPrimary: "#18c58a",
-                    //  borderRadius: 12,
+                    borderRadius: 8,
                     fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif"
                 },
                 components: {
@@ -23,9 +23,10 @@ createRoot(document.getElementById("root")!).render(
                         rowHoverBg: "#f8fafc",
                         borderColor: "#e2e8f0"
                     },
-                    Button: {
-                        controlHeight: 36
-                    },
+                    // Button: {
+                    //     controlHeight: 36,
+
+                    // },
                     Tabs: {
                         titleFontSize: 10
                     }

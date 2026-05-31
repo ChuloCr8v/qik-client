@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Loader2, Plus } from "lucide-react";
 import toast from "react-hot-toast";
-import { Pagination } from "antd";
+import { Button, Modal, Pagination } from "antd";
 import PageHeader from "../components/PageHeader";
 import TemplatePreviewModal from "../components/TemplatePreviewModal";
 import TemplateEditorDrawer from "../components/templates/TemplateEditorDrawer";
@@ -90,13 +90,16 @@ export default function TemplatesPage() {
                     id: editingTemplate.id,
                     data: templateData
                 }).unwrap();
+                toast.success("Template updated.");
             } else {
                 await addTemplate(templateData).unwrap();
+                toast.success("Template created.");
             }
             setIsModalOpen(false);
             refetch();
         } catch (error) {
             console.error(error);
+            toast.error(editingTemplate ? "Failed to update template." : "Failed to create template.");
         }
     };
 
@@ -121,10 +124,23 @@ export default function TemplatesPage() {
     };
 
     const handleDeleteTemplate = async (template: TemplateListItem) => {
-        if (!confirm("Are you sure you want to delete this template?")) return;
-        await deleteTemplate(template.id).unwrap();
-        setOpenDropdownId(null);
-        refetch();
+        Modal.confirm({
+            title: "Delete template?",
+            content: `This will permanently delete "${template.name}".`,
+            okText: "Delete",
+            okButtonProps: { danger: true },
+            onOk: async () => {
+                try {
+                    await deleteTemplate(template.id).unwrap();
+                    setOpenDropdownId(null);
+                    refetch();
+                    toast.success("Template deleted.");
+                } catch (error) {
+                    console.error(error);
+                    toast.error("Failed to delete template.");
+                }
+            }
+        });
     };
 
     const updateItem = (
@@ -185,13 +201,13 @@ export default function TemplatesPage() {
             <PageHeader
                 title="Meeting Templates"
                 action={
-                    <button
+                    <Button
+                        type="primary"
                         onClick={() => openEditor()}
-                        className="button-primary flex items-center gap-2"
+                        icon={<Plus className="h-4 w-4" />}
                     >
-                        <Plus className="h-4 w-4" />
                         <span className="max-md:hidden">New Template</span>
-                    </button>
+                    </Button>
                 }
             />
 
@@ -236,10 +252,7 @@ export default function TemplatesPage() {
                 isOpen={!!selectedTemplateForPreview}
                 onClose={() => setSelectedTemplateForPreview(null)}
                 template={selectedTemplateForPreview}
-                onApply={startTime =>
-                    selectedTemplateForPreview &&
-                    handleApplyTemplate(selectedTemplateForPreview, startTime)
-                }
+                onApply={handleApplyTemplate}
             />
 
             <TemplateEditorDrawer

@@ -1,15 +1,18 @@
 import { Button } from 'antd';
 import { EditIcon, User as UserIcon } from 'lucide-react';
-import { User } from '../../types';
 import ContentCard from '../ContentCard';
+import { useAuth } from '../../features/auth/AuthProvider';
+import { useGetCurrentUserQuery } from '../../features/users/usersApi';
 
 interface PersonalInfoPanelProps {
-  user: User | null;
-  profile: User | null;
   onEdit: () => void;
 }
 
-export default function PersonalInfoPanel({ user, profile, onEdit }: PersonalInfoPanelProps) {
+export default function PersonalInfoPanel({ onEdit }: PersonalInfoPanelProps) {
+  const { user } = useAuth();
+  const { data: profile } = useGetCurrentUserQuery(undefined, {
+    skip: !user
+  });
 
   const profileData = [
     {

@@ -1,10 +1,7 @@
 import React from "react";
-import { CalendarClock, Sparkles, Flame, TrendingUp } from "lucide-react";
+import { CalendarClock, Flame, TrendingUp } from "lucide-react";
 import { useAuth } from "../../features/auth/AuthProvider";
-import {
-    useGetCurrentUserQuery,
-    useUpdateCurrentUserMutation
-} from "../../features/users/usersApi";
+import { useGetCurrentUserQuery } from "../../features/users/usersApi";
 import DashboardQuickActions from "./DashboardQuickActions";
 
 interface Meeting {
@@ -19,8 +16,6 @@ interface Props {
     nextMeeting?: Meeting | null;
     monthlyMeetings?: number;
     lastMonthMeetings?: number;
-    onNewAgenda?: () => void;
-    onViewSchedule?: () => void;
 }
 
 const getGreeting = () => {
@@ -35,9 +30,7 @@ const GreetingCard = ({
     meetingsToday = 0,
     nextMeeting = null,
     monthlyMeetings = 0,
-    lastMonthMeetings = 0,
-    onNewAgenda,
-    onViewSchedule
+    lastMonthMeetings = 0
 }: Props) => {
     const { user } = useAuth();
     const { data: profileData } = useGetCurrentUserQuery(undefined, {
@@ -65,14 +58,14 @@ const GreetingCard = ({
 
                 {/* Streak badge */}
                 {streak > 0 && (
-                    <div className="flex flex-col items-center justify-center bg-orange-50 border border-orange-100 rounded-xl px-3 py-2 min-w-[60px]">
+                    <div className="flex flex-col items-center justify-center bg-green-50 border border-green-100 rounded-xl px-3 py-2 min-w-[60px]">
                         <div className="flex items-center gap-1">
                             <Flame className="w-3.5 h-3.5 text-primary" />
                             <span className="text-base font-black text-primary leading-none">
                                 {streak}
                             </span>
                         </div>
-                        <span className="text-sm font-semibold text-primary/70 capitalize mt-0.5">
+                        <span className="text-sm text-primary/70 capitalize mt-0.5">
                             week streak
                         </span>
                     </div>
@@ -83,7 +76,7 @@ const GreetingCard = ({
             <div className="border-t border-border mx-4" />
 
             {/* Middle — insights */}
-            <div className="flex items-center gap-3 px-4 py-3">
+            <div className="flex items-center gap-3 px-4">
                 {/* Today's meetings */}
                 <div className="flex items-center gap-2 flex-1">
                     <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
@@ -106,11 +99,10 @@ const GreetingCard = ({
                     </div>
                 </div>
 
-                {/* Vertical divider */}
-                <div className="w-px h-8 bg-border flex-shrink-0" />
+
 
                 {/* Monthly trend */}
-                <div className="flex items-center gap-2 flex-1">
+                <div className="flex items-center gap-2 flex-1 py-2 border-l border-border pl-3">
                     <div className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center flex-shrink-0">
                         <TrendingUp className="w-4.5 h-4.5 text-green-600" />
                     </div>

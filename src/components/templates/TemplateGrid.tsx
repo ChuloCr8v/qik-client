@@ -1,6 +1,6 @@
 import { Clock, Edit2, FileText, Layout, MoreHorizontal, Search, Sparkles, Trash2 } from 'lucide-react';
 import { MeetingTemplate } from '../../constants/templates';
-import { Button } from 'antd';
+import { Button, Dropdown, type MenuProps, Tag } from 'antd';
 
 export type TemplateListItem = MeetingTemplate & {
   id: string;
@@ -42,40 +42,22 @@ export default function TemplateGrid({
               <h3 className="truncate font-bold text-secondary transition-colors group-hover:text-primary">
                 {template.name}
               </h3>
-              <div className="relative" onClick={(e) => e.stopPropagation()}>
-                <Button
-                  size="small"
-                  onClick={() => onDropdownToggle(template.id)}
+              <div onClick={(e) => e.stopPropagation()}>
+                <Dropdown
+                  trigger={['click']}
+                  open={openDropdownId === template.id}
+                  onOpenChange={(open) => onDropdownToggle(open ? template.id : '')}
+                  menu={{
+                    items: getTemplateMenuItems(template),
+                    onClick: ({ key }) => {
+                      if (key === 'preview') onPreview(template);
+                      if (key === 'edit') onEdit(template);
+                      if (key === 'delete') onDelete(template);
+                    }
+                  }}
                 >
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-
-                {openDropdownId === template.id && (
-                  <div className="animate-in fade-in slide-in-from-top-2 absolute right-0 top-full z-10 mt-1 w-32 rounded-xl border border-border bg-white p-1 shadow-xl duration-100">
-                    <button
-                      onClick={() => onPreview(template)}
-                      className="flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-semibold text-secondary hover:bg-slate-50"
-                    >
-                      <Search className="h-3 w-3" /> Preview
-                    </button>
-                    {!template.isSystem && (
-                      <>
-                        <button
-                          onClick={() => onEdit(template)}
-                          className="flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-semibold text-secondary hover:bg-slate-50"
-                        >
-                          <Edit2 className="h-3 w-3" /> Edit
-                        </button>
-                        <button
-                          onClick={() => onDelete(template)}
-                          className="flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-semibold text-red-500 hover:bg-red-50"
-                        >
-                          <Trash2 className="h-3 w-3" /> Delete
-                        </button>
-                      </>
-                    )}
-                  </div>
-                )}
+                  <Button size="small" icon={<MoreHorizontal className="h-4 w-4" />} />
+                </Dropdown>
               </div>
             </div>
             <p className="mt-1 line-clamp-1 text-xs font-medium leading-relaxed text-muted">
@@ -91,9 +73,7 @@ export default function TemplateGrid({
                 {template.items.reduce((acc, item) => acc + item.duration, 0)}m duration
               </div>
               {template.isSystem && (
-                <div className="ml-auto rounded-full border border-slate-100/50 bg-slate-50 px-2 py-0.5 text-xs   text-slate-400">
-                  Official
-                </div>
+                <Tag className="ml-auto! mr-0!" color="default">Official</Tag>
               )}
             </div>
           </div>
@@ -101,4 +81,32 @@ export default function TemplateGrid({
       ))}
     </div>
   );
+}
+
+function getTemplateMenuItems(template: TemplateListItem): MenuProps['items'] {
+  const items: MenuProps['items'] = [
+    {
+      key: 'preview',
+      icon: <Search className="h-3.5 w-3.5" />,
+      label: 'Preview',
+    },
+  ];
+
+  if (!template.isSystem) {
+    items.push(
+      {
+        key: 'edit',
+        icon: <Edit2 className="h-3.5 w-3.5" />,
+        label: 'Edit',
+      },
+      {
+        key: 'delete',
+        danger: true,
+        icon: <Trash2 className="h-3.5 w-3.5" />,
+        label: 'Delete',
+      },
+    );
+  }
+
+  return items;
 }

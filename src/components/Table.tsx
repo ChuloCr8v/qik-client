@@ -1,95 +1,167 @@
-import React from "react";
-import { Table as AntTable, type TableColumnsType } from "antd";
-import { cn } from "../lib/utils";
+import { Empty, Table } from "antd";
+import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
+import { Key, ReactNode, useRef, useState } from "react";
+import { twMerge } from "tailwind-merge";
+import { useAutoTableScrollY } from "../hooks/useAutoTableScrollY";
+import { useIsMobile } from "../hooks/useIsMobile";
 
-interface TableProps {
-  headers: string[];
-  children: React.ReactNode;
+type Props<T> = {
+  columns: ColumnsType<T>;
+  dataSource: T[];
   className?: string;
-}
+  loading?: boolean;
+  onRow?: (record: T) => void;
+  isRowSelection?: boolean;
+  onSelectionChange?: (selectedRows: T[]) => void;
+  showHeader?: boolean;
+  scrollX?: number | string;
+  scrollY?: number;
+  autoScrollY?: boolean;
+  bottomOffset?: number;
+  minScrollY?: number;
+  pagination?: false | TablePaginationConfig;
+  footer?: (currentPageData: T[]) => ReactNode;
+  header?: ReactNode;
+  showSerialNumber?: boolean;
+  noScroll?: boolean;
+  bordered?: boolean;
+};
 
-interface RowRecord {
-  key: React.Key;
-  onClick?: () => void;
-  className?: string;
-  cells: CellRecord[];
-}
+const TableComponent = <T extends { id: Key }>({
+  columns,
+  dataSource,
+  className,
+  loading,
+  pagination,
+  onRow,
+  header,
+  isRowSelection = false,
+  onSelectionChange,
+  showHeader = true,
+  scrollX,
+  scrollY,
+  showSerialNumber = true,
+  autoScrollY = true,
+  bottomOffset = 24,
+  minScrollY = 240,
+  footer,
+  noScroll = false,
+  bordered = false,
+}: Props<T>) => {
+  const isMobile = useIsMobile();
+  const data = dataSource?.map((item: T) => ({ ...item, key: item.id }));
 
-interface CellRecord {
-  content: React.ReactNode;
-  className?: string;
-  colSpan?: number;
-}
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(25);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
+  const tableWrapperRef = useRef<HTMLDivElement>(null);
+  const calculatedScrollY = useAutoTableScrollY(tableWrapperRef, {
+    enabled: autoScrollY,
+    bottomOffset,
+    minScrollY,
+    deps: [dataSource?.length, loading, pagination, header],
+  });
 
-export default function Table({ headers, children, className }: TableProps) {
-  const rows = React.Children.toArray(children)
-    .filter(React.isValidElement)
-    .map((row, rowIndex) => {
-      const rowElement = row as React.ReactElement<TableRowProps>;
-      const cells = React.Children.toArray(rowElement.props.children)
-        .filter(React.isValidElement)
-        .map(cell => {
-          const cellElement = cell as React.ReactElement<TableCellProps>;
-          return {
-            content: cellElement.props.children,
-            className: cellElement.props.className,
-            colSpan: cellElement.props.colSpan,
-          };
-        });
+  const onSelectChange = (newSelectedRowKeys: Key[]) => {
+    setSelectedRowKeys(newSelectedRowKeys);
+    const selectedRows =
+      data?.filter(item => newSelectedRowKeys.includes(item.key)) || [];
 
-      return {
-        key: rowElement.key ?? rowIndex,
-        onClick: rowElement.props.onClick,
-        className: rowElement.props.className,
-        cells,
+    onSelectionChange?.(selectedRows);
+  };
+
+  const rowSelection = isRowSelection
+    ? {
+      selectedRowKeys,
+      onChange: onSelectChange,
+    }
+    : undefined;
+
+  const tableScrollY = autoScrollY ? calculatedScrollY : scrollY;
+
+  const finalPagination =
+    pagination === false
+      ? false
+      : {
+        current: currentPage,
+        pageSize,
+        total: dataSource?.length,
+        showSizeChanger: true,
+        pageSizeOptions: ["10", "20", "50", "100"],
+        onChange: (page: number, size: number) => {
+          setCurrentPage(page);
+          setPageSize(size);
+        },
+        showTotal: (total: number, range: number[]) =>
+          `${range[0]}-${range[1]} of ${total} items`,
+        ...pagination,
       };
-    });
 
-  const columns: TableColumnsType<RowRecord> = headers.map((header, index) => ({
-    title: header,
-    key: `column-${index}`,
-    dataIndex: `column-${index}`,
-    render: (_value, record) => record.cells[index]?.content ?? null,
-    onCell: record => {
-      const cell = record.cells[index];
-      const firstCellSpan = record.cells[0]?.colSpan;
-      return {
-        className: cn("whitespace-nowrap", cell?.className),
-        colSpan: cell?.colSpan ?? (firstCellSpan && index > 0 ? 0 : undefined),
-      };
-    },
-  }));
+  const finalColumns: ColumnsType<T> = [
+    ...(showSerialNumber && !isMobile
+      ? [
+        {
+          title: "S/N",
+          width: 50,
+          align: "center" as const,
+          render: (_: unknown, __: T, index: number) => (
+            <span className="font-semibold">
+              {(currentPage - 1) * pageSize + index + 1}
+            </span>
+          ),
+        },
+      ]
+      : []),
+    ...columns,
+  ];
 
   return (
-    <div className={cn("w-full overflow-hidden rounded-xl border border-border bg-white shadow-xs", className)}>
-      <AntTable<RowRecord>
-        columns={columns}
-        dataSource={rows}
-        pagination={false}
-        scroll={{ x: "calc(100vw - 200px)" }}
-        rowClassName={(record, index) => cn(record.onClick && "cursor-pointer", record.className, index % 2 === 0 ? "bg-white" : "bg-gray-50")}
-        onRow={record => ({
-          onClick: record.onClick,
-        })}
-        className="qa-ant-table"
-      />
-    </div>
+    <>
+      {header}
+      <div ref={tableWrapperRef}>
+        <Table
+          pagination={finalPagination}
+          loading={loading}
+          footer={footer ? () => footer(data ?? []) : undefined}
+          columns={finalColumns.map(column => {
+            const isAction =
+              typeof column.title === "string" &&
+              column.title.toLowerCase().includes("action");
+            return isAction ? { ...column, fixed: "right" as const } : column;
+          })}
+          dataSource={data}
+          bordered={bordered}
+          locale={{
+            emptyText: (
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description="No record here"
+              />
+            ),
+          }}
+          onRow={record => ({
+            onClick: () => onRow?.(record),
+          })}
+          showHeader={showHeader}
+          scroll={
+            !noScroll
+              ? { x: scrollX ?? "max-content", y: tableScrollY }
+              : undefined
+          }
+          size="small"
+          className={twMerge(
+            className,
+            "bg-white border rounded-md cursor-pointer w-full",
+            bordered && "border-none",
+          )}
+          rowSelection={rowSelection}
+          rowClassName={(_, index) =>
+            index % 2 === 0 ? "bg-transparent" : "bg-gray-50/50"
+          }
+        />
+      </div>
+    </>
   );
-}
+};
 
-interface TableRowProps {
-  children: React.ReactNode;
-  onClick?: () => void;
-  className?: string;
-  key?: string | number;
-}
-
-export const TableRow: React.FC<TableRowProps> = ({ children }) => <>{children}</>;
-
-interface TableCellProps {
-  children: React.ReactNode;
-  className?: string;
-  colSpan?: number;
-}
-
-export const TableCell: React.FC<TableCellProps> = ({ children }) => <>{children}</>;
+export default TableComponent;

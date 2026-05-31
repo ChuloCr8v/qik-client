@@ -10,6 +10,8 @@ import MeetingsRoute from '../pages/MeetingsRoute';
 import MeetingDetailsPage from '../pages/MeetingDetailsPage';
 import { useAuth } from '../features/auth/AuthProvider';
 import { MeetingsProvider } from '../features/meetings/MeetingsProvider';
+import { useGetBillingUsageQuery } from '../features/billing/billingApi';
+import { hasTeamEntitlement } from '../lib/entitlements';
 import AppShell from './AppShell';
 import LoadingScreen from './LoadingScreen';
 import MeetingInvitePrompt from '../features/invites/MeetingInvitePrompt';
@@ -109,6 +111,20 @@ function ProtectedRoutes() {
   );
 }
 
+function TeamRoute() {
+  const { data: usage, isLoading } = useGetBillingUsageQuery();
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
+  if (!hasTeamEntitlement(usage, usage?.plan)) {
+    return <Navigate to="/settings" replace />;
+  }
+
+  return <TeamPage />;
+}
+
 export default function AppRoutes() {
   return (
     <Routes>
@@ -120,7 +136,7 @@ export default function AppRoutes() {
         <Route element={<AppShell />}>
           <Route path="meetings" element={<MeetingsRoute />} />
           <Route path="templates" element={<TemplatesPage />} />
-          <Route path="team" element={<TeamPage />} />
+          <Route path="team" element={<TeamRoute />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
         <Route path="meetings/:meetingId" element={<MeetingDetailsPage />} />

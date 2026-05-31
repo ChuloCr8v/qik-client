@@ -127,19 +127,20 @@ export default function AgendaItemRow({
 
                     <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-1">
                         <div className="flex items-center gap-4">
-                            <button
+                            <Button
                                 onClick={toggleCompleted}
+                                shape="circle"
+                                size="small"
                                 className={cn(
-                                    "mt-1.5 flex h-6! w-6! shrink-0 items-center justify-center rounded-full border-2 transition-all",
+                                    "mt-1.5 h-6! w-6! shrink-0 border-2! transition-all",
                                     isCompleted
-                                        ? "border-emerald-500 bg-emerald-500 text-white"
-                                        : "border-slate-200 hover:border-primary/50"
+                                        ? "border-emerald-500! bg-emerald-500! text-white!"
+                                        : "border-slate-200! hover:border-primary/50!"
                                 )}
+                                icon={isCompleted ? <Check className="h-3 w-3 bold" /> : undefined}
+                                title={isCompleted ? "Mark incomplete" : "Mark complete"}
                             >
-                                {isCompleted && (
-                                    <Check className="h-3 w-3 bold" />
-                                )}
-                            </button>
+                            </Button>
 
                             <div
                                 {...provided.dragHandleProps}
@@ -152,13 +153,16 @@ export default function AgendaItemRow({
                         <div className="flex items-center gap-2">
                             <Button
                                 className="h-7!"
+                                size="small"
+                                icon={<Edit2 className="h-3 w-3" />}
                                 onClick={() => onEdit(item)}
                             >
-                                <Edit2 className="h-3 w-3" />
                                 Edit
                             </Button>
                             <Button
                                 className="h-7!"
+                                size="small"
+                                icon={<Trash2 className="h-3 w-3" />}
                                 onClick={() =>
                                     deleteAgendaItem({
                                         meetingId,
@@ -167,7 +171,6 @@ export default function AgendaItemRow({
                                 }
                                 danger
                             >
-                                <Trash2 className="h-3 w-3" />
                                 Delete
                             </Button>
                         </div>

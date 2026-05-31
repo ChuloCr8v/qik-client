@@ -1,6 +1,6 @@
 import type { FormEvent } from "react";
 import React, { useState } from "react";
-import { Tabs } from "antd";
+import { DatePicker, Input, Tabs } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useMeetings } from "../../features/meetings/MeetingsProvider";
 import { usePopup } from "../../context/PopupContext";
@@ -8,17 +8,14 @@ import CustomModal from "../CustomModal.tsx";
 import TemplatesTab from "../TemplatesTab";
 import { MeetingTemplate } from "../../constants/templates";
 import { parseInvitees } from "./dashboardUtils";
+import toast from "react-hot-toast";
 
-type NewMeetingCardProps = {
-    isOpen: boolean;
-};
-
-const NewMeetingCard: React.FC<NewMeetingCardProps> = ({ isOpen }) => {
+const NewMeetingCard: React.FC = () => {
     const [activeTab, setActiveTab] = useState<"details" | "templates">(
         "details"
     );
     const [title, setTitle] = useState<string>("");
-    const [scheduledAt, setScheduledAt] = useState<string>("");
+    const [scheduledAt, setScheduledAt] = useState<any>(null);
     const [invitees, setInvitees] = useState<string>("");
 
     const { isCreatingMeeting, createNewMeeting } = useMeetings();
@@ -27,7 +24,7 @@ const NewMeetingCard: React.FC<NewMeetingCardProps> = ({ isOpen }) => {
 
     const resetForm = () => {
         setTitle("");
-        setScheduledAt("");
+        setScheduledAt(null);
         setInvitees("");
     };
 
@@ -43,7 +40,7 @@ const NewMeetingCard: React.FC<NewMeetingCardProps> = ({ isOpen }) => {
             const input = {
                 title: title.trim() || template?.name || "Untitled Meeting",
                 template,
-                scheduledAt: templateStartTime || scheduledAt,
+                scheduledAt: templateStartTime || scheduledAt?.toISOString(),
                 invitees: parseInvitees(invitees)
             };
 
@@ -53,8 +50,10 @@ const NewMeetingCard: React.FC<NewMeetingCardProps> = ({ isOpen }) => {
             resetForm();
             closeModal();
             closeDrawer();
+            toast.success("Meeting created.");
         } catch (e) {
-            console.log(e);
+            console.error(e);
+            toast.error("Unable to create meeting.");
         }
     };
 
@@ -79,32 +78,28 @@ const NewMeetingCard: React.FC<NewMeetingCardProps> = ({ isOpen }) => {
         <form className="space-y-3 mt-3" onSubmit={handleCreateMeeting}>
             <div className="space-y-1.5">
                 <label>Meeting Name</label>
-                <input
+                <Input
                     required
-                    type="text"
                     placeholder="e.g. Design Sync"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="input-field"
                 />
             </div>
             <div className="space-y-1.5">
                 <label>Schedule Date & Time (Optional)</label>
-                <input
-                    type="datetime-local"
+                <DatePicker
+                    className="w-full"
+                    showTime
                     value={scheduledAt}
-                    onChange={(e) => setScheduledAt(e.target.value)}
-                    className="input-field"
+                    onChange={setScheduledAt}
                 />
             </div>
             <div className="space-y-1.5">
                 <label>Invite People (Optional)</label>
-                <input
-                    type="text"
+                <Input
                     placeholder="Emails separated by commas"
                     value={invitees}
                     onChange={(e) => setInvitees(e.target.value)}
-                    className="input-field"
                 />
             </div>
         </form>
@@ -133,6 +128,7 @@ const NewMeetingCard: React.FC<NewMeetingCardProps> = ({ isOpen }) => {
             onOk={handleOk}
             okText={activeTab === "details" ? "Create Meeting" : "More Templates"}
             loading={isCreatingMeeting}
+            width={500}
         >
             <div className="flex flex-col">
                 <Tabs

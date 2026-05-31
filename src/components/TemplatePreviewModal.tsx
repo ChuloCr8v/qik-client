@@ -4,18 +4,22 @@ import { Clock, ListChecks, Library } from "lucide-react";
 import CustomDrawer from "./CustomDrawer";
 import { usePopup } from "../context/PopupContext";
 import { DatePicker } from "antd";
-import type { Dayjs } from "dayjs";
+import GradientCard from "./global/GradientCard";
 
 interface TemplatePreviewModalProps {
     onApply: (template: MeetingTemplate, scheduledAt?: string) => void;
     template: MeetingTemplate | null;
+    isOpen?: boolean;
+    onClose?: () => void;
 }
 
 export default function TemplatePreviewModal({
     onApply,
-    template
+    template,
+    isOpen,
+    onClose
 }: TemplatePreviewModalProps) {
-    const [scheduledAt, setScheduledAt] = useState<Dayjs | null>(null);
+    const [scheduledAt, setScheduledAt] = useState<any>(null);
     const { closeDrawer } = usePopup();
 
     if (!template) return null;
@@ -25,23 +29,25 @@ export default function TemplatePreviewModal({
         0
     );
 
-    const handleApply = async (template: MeetingTemplate, scheduledAt?: Dayjs) => {
+    const handleApply = (template: MeetingTemplate, scheduledAt?: any) => {
         const scheduledAtStr = scheduledAt ? scheduledAt.toISOString() : undefined;
-        await onApply(template, scheduledAtStr);
+        onApply(template, scheduledAtStr);
         setScheduledAt(null);
-        closeDrawer();
+        (onClose ?? closeDrawer)();
     };
 
     return (
         <CustomDrawer
-            onClose={closeDrawer}
+            isOpen={isOpen}
+            onClose={onClose ?? closeDrawer}
             icon={<Library className="h-5 w-5 text-primary" />}
             onOk={() => handleApply(template, scheduledAt)}
             title={template.name}
+            okText="Apply Template"
         >
             <div className="space-y-3">
                 {/* Summary Box */}
-                <div className="flex items-center justify-between rounded-xl bg-slate-50 p-2 pr-4 border border-border">
+                <div className="flex items-center justify-between rounded-xl bg-primary/5 p-2 pr-4 border border-primary/30">
                     <div className="flex items-center gap-3">
                         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white">
                             <ListChecks className="h-5 w-5 text-primary" />
@@ -86,7 +92,7 @@ export default function TemplatePreviewModal({
                     <label className="text-sm font-semibold">Agenda Items</label>
                     <div className="space-y-2 mt-2">
                         {template.items.map((item, i) => (
-                            <div
+                            <GradientCard
                                 key={i}
                                 className="flex items-start gap-3 p-3 rounded-xl border border-border bg-gradient-to-b from-primary/10 to-transparent shadow-xs"
                             >
@@ -104,12 +110,12 @@ export default function TemplatePreviewModal({
                                         </div>
                                     </div>
                                     {item.description && (
-                                        <p className="mt-2 text-xs md:text-sm text-muted line-clamp-2 leading-relaxed">
+                                        <p className="mt-2 text-xs text-muted line-clamp-2 leading-relaxed">
                                             {item.description}
                                         </p>
                                     )}
                                 </div>
-                            </div>
+                            </GradientCard>
                         ))}
                     </div>
                 </div>

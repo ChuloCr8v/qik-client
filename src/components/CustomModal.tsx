@@ -12,7 +12,9 @@ export enum ModalTheme {
 interface Props {
     title: string;
     children: ReactNode;
+    isOpen?: boolean;
     okText?: string;
+    onClose?: () => void;
     onCancel?: () => void;
     onOk?: () => void;
     modalSubtitle?: string;
@@ -30,12 +32,15 @@ interface Props {
     maxHeight?: boolean;
     hideCancelButton?: boolean;
     footer?: ReactNode;
+    className?: string;
 }
 
 export default function CustomModal({
     children,
+    isOpen,
     loading,
     icon,
+    onClose,
     onCancel,
     modalSubtitle,
     okText,
@@ -52,7 +57,8 @@ export default function CustomModal({
     hideFooter = false,
     maxHeight = true,
     hideCancelButton = false,
-    footer
+    footer,
+    className
 }: Props) {
     const [stepButtons, setStepButtons] = useState(step ?? false);
     const [isConfirmed, setIsConfirmed] = useState(false);
@@ -65,18 +71,18 @@ export default function CustomModal({
 
     return (
         <Modal
-            open={isModalOpen}
-            onCancel={onCancel ?? closeModal}
+            open={isOpen ?? isModalOpen}
+            onCancel={onCancel ?? onClose ?? closeModal}
             footer={false}
             maskClosable={false}
             closable={closable ?? true}
             confirmLoading={loading}
             width={width}
-            centered
-            className="qa-custom-modal"
+            centered={false}
+            className={twMerge("qa-custom-modal", className)}
             styles={{ container: { padding: 0 } }}
         >
-            <div className="flex max-h-[calc(100vh-48px)] flex-col overflow-hidden rounded-xl">
+            <div className="flex flex-col overflow-hidden">
                 <div
                     className={twMerge(
                         "flex w-full items-center gap-3 bg-linear-to-r from-primary/10 via-amber-50 to-emerald-50 px-4 py-3",
@@ -130,18 +136,18 @@ export default function CustomModal({
                     </div>
                 )}
 
-                {footer ? <div className="px-6 py-4 pt-0">
+                {footer ? <div className="px-6 py-3 pt-0">
                     {footer}
                 </div> : !stepButtons && !hideFooter && (
-                    <div className="w-full border-t border-border px-6 py-4">
+                    <div className="w-full border-t border-border px-6 py-3">
                         <div className="flex items-center justify-end gap-3">
                             {!hideCancelButton && (
-                                <Button className="px-8!" onClick={onCancel ?? closeModal}>
+                                <Button className="px-8!" onClick={onCancel ?? onClose ?? closeModal}>
                                     Cancel
                                 </Button>
                             )}
                             <Button
-                            className="px-8!"
+                                className="px-8!"
                                 onClick={onOk}
                                 loading={loading}
                                 type="primary"

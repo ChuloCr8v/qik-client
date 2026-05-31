@@ -1,9 +1,7 @@
 import {
     CheckCircle2,
-    Loader2,
     MoreHorizontal,
     Search,
-    Shield,
     UserPlus,
     Users,
     Zap
@@ -11,10 +9,14 @@ import {
 import { useState } from "react";
 import SummaryCard from "../components/global/SummaryCards";
 import PageHeader from "../components/PageHeader";
-import Table, { TableCell, TableRow } from "../components/Table";
+import Table from "../components/Table";
 import TeamInviteModal from "../components/TeamInviteModal";
 import { useListUsersQuery } from "../features/users/usersApi";
-import { Input, Button } from "antd";
+import { Button, Empty, Input, Select, Spin, Tag } from "antd";
+import type { ColumnsType } from "antd/es/table";
+import type { User } from "../types";
+
+type TeamRow = User & { id: string };
 
 export default function TeamPage() {
     const { data: membersData = [], isLoading: loading } = useListUsersQuery();
@@ -24,7 +26,10 @@ export default function TeamPage() {
         "All"
     );
 
-    const members = membersData;
+    const members: TeamRow[] = membersData.map(member => ({
+        ...member,
+        id: member.uid
+    }));
 
     const filteredMembers = members.filter(m => {
         const matchesSearch =
@@ -35,10 +40,78 @@ export default function TeamPage() {
         return matchesSearch && matchesStatus;
     });
 
+    const columns: ColumnsType<TeamRow> = [
+        {
+            title: "Member",
+            dataIndex: "displayName",
+            render: (_value, member) => (
+                <div className="flex items-center gap-3">
+                    <div className="relative h-7 w-7 shrink-0 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden border border-border">
+                        {member.photoURL ? (
+                            <img
+                                src={member.photoURL}
+                                alt={member.displayName}
+                                className="h-full w-full object-cover"
+                            />
+                        ) : (
+                            <span className="text-xs md:text-sm font-semibold text-secondary">
+                                {member.displayName[0]}
+                            </span>
+                        )}
+                    </div>
+                    <div className="flex flex-col">
+                        <span className="font-semibold text-secondary">
+                            {member.displayName}
+                        </span>
+                        <span className="text-xs text-muted leading-none mt-0.5">
+                            {member.email || "No email provided"}
+                        </span>
+                    </div>
+                </div>
+            )
+        },
+        {
+            title: "Role",
+            dataIndex: "role",
+            render: role => (
+                <span className="text-xs md:text-sm font-medium text-muted">
+                    {role || "Member"}
+                </span>
+            )
+        },
+        {
+            title: "Status",
+            dataIndex: "status",
+            render: status => (
+                <Tag
+                    color={status === "Away" ? "warning" : "success"}
+                    className="m-0! inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px]! font-semibold uppercase"
+                >
+                    <div
+                        className={`h-1.5 w-1.5 rounded-full ${status === "Away" ? "bg-amber-400" : "bg-accent"}`}
+                    />
+                    {status || "Active"}
+                </Tag>
+            )
+        },
+        {
+            title: "Actions",
+            key: "actions",
+            align: "right",
+            render: () => (
+                <Button
+                    type="text"
+                    size="small"
+                    icon={<MoreHorizontal className="h-4 w-4" />}
+                />
+            )
+        }
+    ];
+
     if (loading) {
         return (
             <div className="flex h-[60vh] items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <Spin size="large" />
             </div>
         );
     }
@@ -49,13 +122,13 @@ export default function TeamPage() {
                 title="Team Members"
                 // description="Invite and manage roles for your team collaborators."
                 action={
-                    <button
+                    <Button
+                        type="primary"
+                        icon={<UserPlus className="h-4 w-4" />}
                         onClick={() => setIsInviteModalOpen(true)}
-                        className="button-primary flex items-center gap-2"
                     >
-                        <UserPlus className="h-4 w-4" />
                         <span className="hidden md:block">Invite Member</span>
-                    </button>
+                    </Button>
                 }
             />
 
@@ -92,95 +165,36 @@ export default function TeamPage() {
 
                 <div className="flex items-center gap-2">
                     <div className="relative flex-1">
-                        <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted" />
                         <Input
-                            className="h-8! text-xs!"
+                            prefix={<Search className="h-3.5 w-3.5 text-muted" />}
                             type="text"
                             placeholder="Search members..."
                             value={search}
                             onChange={e => setSearch(e.target.value)}
                         />
                     </div>
-                    <div className="relative">
-                        <select
-                            value={statusFilter}
-                            onChange={e =>
-                                setStatusFilter(e.target.value as any)
-                            }
-                            className="appearance-none h-8! flex items-center gap-2 rounded-lg border border-border bg-white px-3 text-muted text-xs hover:border-primary hover:text-primary transition-colors cursor-pointer outline-none"
-                        >
-                            <option value="All">All Status</option>
-                            <option value="Active">Active</option>
-                            <option value="Away">Away</option>
-                        </select>
-                    </div>
+                    <Select
+                        value={statusFilter}
+                        onChange={value => setStatusFilter(value)}
+                        className="w-36"
+                        options={[
+                            { label: "All Status", value: "All" },
+                            { label: "Active", value: "Active" },
+                            { label: "Away", value: "Away" }
+                        ]}
+                    />
                 </div>
 
-                <Table headers={["#", "Member", "Role", "Status", ""]}>
-                    {filteredMembers.length > 0 ? (
-                        filteredMembers.map((member, index) => (
-                            <TableRow key={member.uid}>
-                                <TableCell className="w-8 text-muted">
-                                    {index + 1}
-                                </TableCell>
-                                <TableCell className="flex items-center gap-3">
-                                    <div className="relative h-7 w-7 shrink-0 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden border border-border">
-                                        {member.photoURL ? (
-                                            <img
-                                                src={member.photoURL}
-                                                alt={member.displayName}
-                                                className="h-full w-full object-cover"
-                                            />
-                                        ) : (
-                                            <span className="text-xs md:text-sm font-semibold text-secondary">
-                                                {member.displayName[0]}
-                                            </span>
-                                        )}
-                                    </div>
-                                    <div className="flex flex-col">
-                                        <span className="font-semibold text-secondary">
-                                            {member.displayName}
-                                        </span>
-                                        <span className="text-xs text-muted leading-none mt-0.5">
-                                            {member.email ||
-                                                "No email provided"}
-                                        </span>
-                                    </div>
-                                </TableCell>
-                                <TableCell>
-                                    <div className="flex items-center gap-1.5 text-xs  md:text-sm font-medium text-muted">
-                                        {/* <Shield className="h-3 w-3" /> */}
-                                        {member.role || "Member"}
-                                    </div>
-                                </TableCell>
-                                <TableCell>
-                                    <div className="flex items-center gap-1.5">
-                                        <div
-                                            className={`h-1.5 w-1.5 rounded-full ${member.status === "Away" ? "bg-amber-400" : "bg-accent"}`}
-                                        />
-                                        <span className="text-xs font-semibold text-secondary uppercase ">
-                                            {member.status || "Active"}
-                                        </span>
-                                    </div>
-                                </TableCell>
-                                <TableCell className="text-right">
-                                    <Button size="small">
-                                        <MoreHorizontal className="h-4 w-4" />
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                        ))
-                    ) : (
-                        <TableRow>
-                            <TableCell
-                                colSpan={5}
-                                className="py-12 text-center text-muted"
-                            >
-                                No members match your criteria
-                            </TableCell>
-                        </TableRow>
-                    )}
-                </Table>
+                {filteredMembers.length > 0 ? (
+                    <Table columns={columns} dataSource={filteredMembers} />
+                ) : (
+                    <div className="rounded-xl border border-border bg-white py-12">
+                        <Empty
+                            image={Empty.PRESENTED_IMAGE_SIMPLE}
+                            description="No members match your criteria"
+                        />
+                    </div>
+                )}
             </div>
 
             <TeamInviteModal

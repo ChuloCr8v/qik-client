@@ -1,10 +1,11 @@
 import React, { useMemo } from "react";
 import { Button } from "antd";
-import { FileText, CalendarClock, Plus, LayoutTemplate } from "lucide-react";
+import { FileText, CalendarClock, Plus, LayoutTemplate, ArrowRight } from "lucide-react";
 import { MEETING_TEMPLATES, MeetingTemplate } from "../constants/templates";
 import { getTemplateDuration } from "./dashboard/dashboardUtils.ts";
 import { usePopup } from "../context/PopupContext.tsx";
 import TemplatePreviewModal from "./TemplatePreviewModal"
+import GradientCard from "./global/GradientCard.tsx";
 type TemplatesTabProps = {
     onApplyTemplate: (template: MeetingTemplate, startTime?: string) => void;
     isCreatingMeeting?: boolean;
@@ -26,11 +27,11 @@ const TemplatesTab: React.FC<TemplatesTabProps> = ({
                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-primary shadow-xs">
                         <LayoutTemplate className="h-4 w-4" />
                     </div>
-                    <div>
+                    <div className="">
                         <p className="text-xs md:text-sm font-semibold text-secondary">
                             Start structured
                         </p>
-                        <p className="mt-0.5 text-xs md:text-sm leading-relaxed text-muted">
+                        <p className="mt-2 text-xs text-muted">
                             Pick a framework, preview the agenda, then launch
                             with the same meeting details.
                         </p>
@@ -52,20 +53,22 @@ const TemplatesTab: React.FC<TemplatesTabProps> = ({
                                 />
                             )
                         }
-                        className="!h-16 bg-gradient-to-b hover:bg-gradient-to-t from-primary/5 to-transparent w-full flex items-center justify-between"
+                        className="h-fit! px-0! w-full! border-0! flex items-center justify-between group"
                     >
-                        <div className="w-full flex flex-col items-start gap-0.5">
-                            <span className="block truncate text-xs md:text-sm font-semibold text-secondary group-hover:text-primary">
-                                {template.name}
-                            </span>
-                            <span className="mt-0.5 flex items-center gap-1.5 text-xs text-muted">
-                                <FileText className="h-3 w-3" />
-                                {template.items.length} sections
-                                <CalendarClock className="ml-1 h-3 w-3" />
-                                {getTemplateDuration(template.items)}m
-                            </span>
-                        </div>
-                        <Plus className="h-3.5 w-3.5 shrink-0 text-border group-hover:text-primary" />
+                        <GradientCard className="w-full flex items-center justify-between!">
+                            <div className="w-full flex flex-col items-start gap-0.5">
+                                <span className="block truncate text-xs md:text-sm font-semibold text-secondary group-hover:text-primary duration-300">
+                                    {template.name}
+                                </span>
+                                <span className="mt-0.5 flex items-center gap-1.5 text-xs text-muted">
+                                    <FileText className="h-3 w-3" />
+                                    {template.items.length} sections
+                                    <CalendarClock className="ml-1 h-3 w-3" />
+                                    {getTemplateDuration(template.items)}m
+                                </span>
+                            </div>
+                            <ArrowRight className="h-5 w-5 text-secondary/20 group-hover:text-secondary/50 shrink-0 text-border group-hover:text-primary duration-300" />
+                        </GradientCard>
                     </Button>
                 ))}
             </div>

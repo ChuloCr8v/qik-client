@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import Modal from './Modal';
-import { Mail, Loader2, Send } from 'lucide-react';
+import { Alert, Button, Input, Select } from 'antd';
+import CustomModal from './CustomModal';
+import { Mail, Send } from 'lucide-react';
 import toast from 'react-hot-toast';
 import UpgradePrompt from './billing/UpgradePrompt';
 import { useGetBillingUsageQuery } from '../features/billing/billingApi';
 import { useInviteTeamMemberMutation } from '../features/team/teamApi';
+import { isIntegrationConfigured, useGetHealthQuery } from '../features/system/systemApi';
+import { canManageTeam } from '../lib/entitlements';
 
 interface TeamInviteModalProps {
   isOpen: boolean;
@@ -18,10 +21,21 @@ export default function TeamInviteModal({ isOpen, onClose }: TeamInviteModalProp
   const [success, setSuccess] = useState(false);
   const [showUpgradePrompt, setShowUpgradePrompt] = useState(false);
   const { data: usage } = useGetBillingUsageQuery();
+  const { data: health } = useGetHealthQuery();
   const [inviteTeamMember] = useInviteTeamMemberMutation();
+  const mailAvailable = isIntegrationConfigured(health, 'mail');
+  const teamManageAvailable = canManageTeam(usage);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!teamManageAvailable) {
+      toast.error('Permanent team members require an Organisation plan managed by the billing admin.');
+      return;
+    }
+    if (!mailAvailable) {
+      toast.error('Email delivery is not configured yet.');
+      return;
+    }
     if (!email) return;
 
     setIsSending(true);
@@ -51,81 +65,82 @@ export default function TeamInviteModal({ isOpen, onClose }: TeamInviteModalProp
 
   return (
     <>
-      <Modal
+      <CustomModal
         isOpen={isOpen}
         onClose={onClose}
         icon={<Mail className="h-5 w-5 text-primary" />}
-        title={
-          <div className="space-y-0.5 text-left">
-            <h3 className="text-[14px] font-bold text-secondary">Invite Team Member</h3>
-            <p className="text-sm font-medium text-muted leading-tight">
-              Add someone to your workspace
-            </p>
-          </div>
-        }
-        footer={
-          <div className="flex flex-row justify-end gap-3">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-6 py-2.5 text-sm font-semibold text-muted hover:bg-slate-100 rounded-xl transition-all"
-            >
-              Cancel
-            </button>
-            <button
-              form="team-invite-form"
-              type="submit"
-              disabled={isSending || success}
-              className={`flex items-center justify-center gap-2 rounded-xl px-6 py-2.5 text-sm font-semibold text-white   transition-all active:scale-[0.98] ${success ? 'bg-emerald-500 shadow-emerald-200' : 'bg-primary shadow-primary/20 hover:bg-primary/90'}`}
-            >
-              {isSending ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              ) : success ? (
-                'Sent Successfully!'
-              ) : (
-                <>
-                  <Send className="h-3.5 w-3.5" />
-                  <span>Send Invitation</span>
-                </>
-              )}
-            </button>
-          </div>
-        }
+        title="Invite Team Member"
+        modalSubtitle="Add someone to your workspace"
+        hideFooter
       >
         <div className="space-y-6">
           <form id="team-invite-form" onSubmit={handleSubmit} className="space-y-4">
+            {!mailAvailable && (
+              <Alert
+                type="warning"
+                showIcon
+                message="Email is unavailable"
+                description="Team invitations cannot be sent until email delivery is configured."
+              />
+            )}
+            {!teamManageAvailable && (
+              <Alert
+                type="warning"
+                showIcon
+                message="Team invites are unavailable"
+                description="Permanent team members require an Organisation plan and can only be invited by the billing admin."
+              />
+            )}
             <div className="space-y-1.5">
               <label className="text-sm font-semibold uppercase  text-muted">Email Address</label>
-              <input
+              <Input
                 required
                 type="email"
                 placeholder="colleague@company.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-xl border border-border bg-slate-50/50 px-4 py-2.5 text-sm font-semibold focus:border-primary focus:bg-white focus:outline-none transition-all  "
+                className="h-10! rounded-xl!"
               />
             </div>
 
             <div className="space-y-1.5">
               <label className="text-sm font-semibold uppercase  text-muted">Role</label>
-              <select
-                className="w-full h-[38px] rounded-xl border border-border bg-slate-50/50 px-4 text-sm font-semibold focus:border-primary focus:bg-white focus:outline-none transition-all   appearance-none"
+              <Select
                 value={role}
-                onChange={(e) => setRole(e.target.value)}
-              >
-                <option value="Member">Member</option>
-                <option value="Admin">Admin</option>
-              </select>
+                onChange={setRole}
+                className="h-10! w-full"
+                options={[
+                  { value: 'Member', label: 'Member' },
+                  { value: 'Admin', label: 'Admin' },
+                ]}
+              />
             </div>
-          </form>
 
           <div className="pt-4 border-t border-slate-100 italic">
             <p className="text-sm text-center text-muted">
               The recipient will receive an email with instructions to join.
             </p>
           </div>
+          <div className="flex flex-row justify-end gap-3">
+            <Button
+              type="button"
+              onClick={onClose}
+            >
+              Cancel
+            </Button>
+            <Button
+              htmlType="submit"
+              type="primary"
+              disabled={!mailAvailable || !teamManageAvailable || isSending || success}
+              loading={isSending}
+              icon={!isSending && !success ? <Send className="h-3.5 w-3.5" /> : undefined}
+            >
+              {success ? 'Sent Successfully!' : 'Send Invitation'}
+            </Button>
+          </div>
+          </form>
         </div>
-      </Modal>
+      </CustomModal>
       <UpgradePrompt
         isOpen={showUpgradePrompt}
         onClose={() => setShowUpgradePrompt(false)}

@@ -1,15 +1,12 @@
 import React, { useState } from "react";
 import {
-    Calendar,
     Bell,
     LogOut,
     Settings,
-    User as UserIcon,
     ChevronDown,
     Menu,
     Check
 } from "lucide-react";
-import Dropdown, { DropdownItem } from "./Dropdown";
 import { formatDate } from "../lib/utils";
 import { generateAnimeName, getAnimeAvatar } from "../lib/userUtils";
 import { User } from "../types";
@@ -18,7 +15,7 @@ import {
     useGetNotificationsQuery,
     useMarkNotificationAsReadMutation
 } from "../features/notifications/notificationsApi";
-import {Button} from "antd";
+import { Button, Dropdown, type MenuProps } from "antd";
 
 interface HeaderProps {
     user: User | null;
@@ -42,25 +39,55 @@ export default function Header({
     const [markAsRead] = useMarkNotificationAsReadMutation();
 
     const unreadCount = notifications.filter(n => !n.read).length;
+    const profileMenuItems: MenuProps["items"] = [
+        {
+            key: "email",
+            disabled: true,
+            label: (
+                <span className="block max-w-[220px] truncate text-sm font-semibold text-secondary">
+                    {user?.email || "Guest Session"}
+                </span>
+            )
+        },
+        {
+            type: "divider"
+        },
+        {
+            key: "settings",
+            icon: <Settings className="h-4 w-4" />,
+            label: "Settings",
+            onClick: () => onNavigate?.("/settings")
+        },
+        {
+            type: "divider"
+        },
+        {
+            key: "sign-out",
+            icon: <LogOut className="h-4 w-4" />,
+            label: <span className="text-red-600">Sign Out</span>,
+            onClick: signOut
+        }
+    ];
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-border bg-white/80 backdrop-blur-md">
-            <div className="mx-auto flex py-2 max-w-6xl items-center justify-between px-4 sm:px-6">
+            <div className="mx-auto flex py-2 max-w-6xl items-center justify-between px-4 md:pl-0">
                 <div className="flex items-center gap-2">
                     {user && (
-                        <button
+                        <Button
                             onClick={onMenuClick}
-                            className="p-2 border-none! h-full! -ml-2 text-muted hover:text-primary lg:hidden"
+                            className="border-none! h-full! -ml-2 text-muted hover:text-primary"
+                            title="Open sidebar"
                         >
                             <Menu className="h-5 w-5" />
-                        </button>
+                        </Button>
                     )}
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white">
+                    {/* <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white">
                         <Calendar className="h-4 w-4" />
                     </div>
                     <span className="hidden text-base font-semibold tracking-tight text-secondary sm:block">
                         QikAgenda
-                    </span>
+                    </span> */}
                 </div>
 
                 <div className="flex items-center gap-2 sm:gap-4">
@@ -127,8 +154,8 @@ export default function Header({
                                                                     <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">
                                                                         {n.createdAt
                                                                             ? formatDate(
-                                                                                  n.createdAt
-                                                                              )
+                                                                                n.createdAt
+                                                                            )
                                                                             : "Just now"}
                                                                     </p>
                                                                 </div>
@@ -162,49 +189,33 @@ export default function Header({
                             </div>
 
                             <Dropdown
-                                trigger={
-                                    <button className="flex items-center gap-2  border-none! h-full! rounded-full border border-border p-1 pr-3 transition-hover hover:border-primary">
-                                        <img
-                                            src={
-                                                user.photoURL ||
-                                                getAnimeAvatar(
+                                menu={{ items: profileMenuItems }}
+                                trigger={["click"]}
+                                placement="bottomRight"
+                            >
+                                <button className="flex items-center gap-2 border-none! h-full! rounded-full border border-border p-1 pr-3 transition-hover hover:border-primary">
+                                    <img
+                                        src={
+                                            user.photoURL ||
+                                            getAnimeAvatar(
+                                                user.email || user.uid
+                                            )
+                                        }
+                                        className="h-7 w-7 rounded-full object-cover"
+                                        alt={user.displayName || "User"}
+                                    />
+                                    <span className="hidden max-w-[80px] truncate text-sm font-semibold sm:block">
+                                        {
+                                            (
+                                                user.displayName ||
+                                                generateAnimeName(
                                                     user.email || user.uid
                                                 )
-                                            }
-                                            className="h-7 w-7 rounded-full object-cover"
-                                            alt={user.displayName || "User"}
-                                        />
-                                        <span className="hidden max-w-[80px] truncate text-sm font-semibold sm:block">
-                                            {
-                                                (
-                                                    user.displayName ||
-                                                    generateAnimeName(
-                                                        user.email || user.uid
-                                                    )
-                                                ).split(" ")[0]
-                                            }
-                                        </span>
-                                        <ChevronDown className="h-3 w-3 text-muted" />
-                                    </button>
-                                }
-                            >
-                                <p className="text-sm font-semibold truncate text-secondary px-4 py-2">
-                                    {user.email || "Guest Session"}
-                                </p>
-                                <DropdownItem
-                                    icon={Settings}
-                                    onClick={() => onNavigate?.("/settings")}
-                                >
-                                    Settings
-                                </DropdownItem>
-                                <div className="my-1 border-t border-border" />
-                                <DropdownItem
-                                    icon={LogOut}
-                                    variant="danger"
-                                    onClick={signOut}
-                                >
-                                    Sign Out
-                                </DropdownItem>
+                                            ).split(" ")[0]
+                                        }
+                                    </span>
+                                    <ChevronDown className="h-3 w-3 text-muted" />
+                                </button>
                             </Dropdown>
                         </>
                     ) : (

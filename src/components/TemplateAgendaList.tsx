@@ -6,8 +6,8 @@ import CustomDrawer from "./CustomDrawer";
 
 interface TemplateAgendaListProps {
     template: MeetingTemplate;
-    onOk: (itemIndex: number) => void;
-    onClose: () => void;
+    onOk: () => void;
+    onClose?: () => void;
 }
 
 const TemplateAgendaList: React.FC<TemplateAgendaListProps> = ({
@@ -18,6 +18,7 @@ const TemplateAgendaList: React.FC<TemplateAgendaListProps> = ({
     return (
         <CustomDrawer
             onOk={onOk}
+            onClose={onClose}
             okText={"Select"}
             title={template?.name}
         >
@@ -43,7 +44,7 @@ const TemplateAgendaList: React.FC<TemplateAgendaListProps> = ({
                                 </div>
                             </div>
                             {item.description && (
-                                <p className="mt-2 text-xs md:text-sm text-muted line-clamp-2 leading-relaxed">
+                                <p className="mt-2 text-xs text-muted line-clamp-2 leading-relaxed">
                                     {item.description}
                                 </p>
                             )}

@@ -20,7 +20,13 @@ export default function TemplatePicker({
 }: TemplatePickerProps) {
     if (!isOpen) return null;
 
-    const { openDrawer } = usePopup();
+    const { closeDrawer, openDrawer } = usePopup();
+
+    const handleSelectTemplate = (template: MeetingTemplate) => {
+        onSelectTemplate(template);
+        closeDrawer();
+        onClose();
+    };
 
     return (
         <div className="animate-in fade-in slide-in-from-top-4 rounded-xl border border-primary/10 bg-white p-4">
@@ -48,8 +54,9 @@ export default function TemplatePicker({
                         onClick={() =>
                             openDrawer(
                                 <TemplateAgendaList
-                                template={template}
-                                    onOk={onSelectTemplate(template)}
+                                    template={template}
+                                    onOk={() => handleSelectTemplate(template)}
+                                    onClose={closeDrawer}
                                 />
                             )
                         }

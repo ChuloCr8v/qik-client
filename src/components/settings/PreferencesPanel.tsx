@@ -1,7 +1,10 @@
 import { Bell } from 'lucide-react';
 import { Switch } from 'antd';
+import toast from 'react-hot-toast';
 import { User } from '../../types';
 import ContentCard from '../ContentCard';
+import { useAuth } from '../../features/auth/AuthProvider';
+import { useGetCurrentUserQuery, useUpdateCurrentUserMutation } from '../../features/users/usersApi';
 
 const notificationItems = [
   { id: 'email' as const, label: 'Email Notifications', desc: 'Receive agenda updates via email.' },
@@ -9,12 +12,38 @@ const notificationItems = [
   { id: 'aiCoach' as const, label: 'AI Coach Feedback', desc: 'Get automated feedback on your agendas.' }
 ];
 
-interface PreferencesPanelProps {
-  profile: User | null;
-  onToggle: (key: keyof NonNullable<User['notifications']>) => void;
-}
+type NotificationKey = keyof NonNullable<User['notifications']>;
 
-export default function PreferencesPanel({ profile, onToggle }: PreferencesPanelProps) {
+export default function PreferencesPanel() {
+  const { user } = useAuth();
+  const { data: profile } = useGetCurrentUserQuery(undefined, {
+    skip: !user
+  });
+  const [updateUserProfile] = useUpdateCurrentUserMutation();
+
+  const handleToggleNotification = async (key: NotificationKey) => {
+    if (!profile) return;
+
+    const currentNotifications = profile.notifications || {
+      email: true,
+      reminders: true,
+      aiCoach: false
+    };
+    const newNotifications = {
+      ...currentNotifications,
+      [key]: !currentNotifications[key]
+    };
+
+    try {
+      await updateUserProfile({
+        notifications: newNotifications
+      }).unwrap();
+      toast.success('Preferences updated');
+    } catch (error) {
+      toast.error('Failed to update preferences');
+    }
+  };
+
   return (
     <ContentCard
       title={
@@ -35,7 +64,7 @@ export default function PreferencesPanel({ profile, onToggle }: PreferencesPanel
             </div>
             <Switch
               checked={isActive}
-              onChange={() => onToggle(item.id)}
+              onChange={() => handleToggleNotification(item.id)}
               className="shrink-0"
             />
           </div>

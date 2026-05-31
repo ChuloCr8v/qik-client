@@ -39,7 +39,6 @@ export default function UsageStatsDrawer() {
       modalSubtitle="Live plan usage and account activity for this billing month."
       icon={<BarChart3 className="h-5 w-5" />}
       width={520}
-      hideFooter
       maxHeight
     >
       {isLoading ? (

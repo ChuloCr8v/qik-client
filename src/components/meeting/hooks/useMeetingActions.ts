@@ -78,6 +78,9 @@ export function useMeetingActions({
     setAgenda(items);
     reorderAgendaItems( {
       meetingId, items
+    }).unwrap().catch(error => {
+      console.error(error);
+      toast.error('Unable to reorder agenda items.');
     });
   };
 
@@ -101,6 +104,7 @@ export function useMeetingActions({
     url.searchParams.set('m', meetingId);
     navigator.clipboard.writeText(url.toString());
     setIsCopying(true);
+    toast.success('Invite link copied.');
     setTimeout(() => setIsCopying(false), 2000);
   };
 
@@ -109,23 +113,40 @@ export function useMeetingActions({
       toast.error('Add at least one item to the agenda first.');
       return;
     }
-    await startMeeting(meetingId);
+    try {
+      await startMeeting(meetingId).unwrap();
+      toast.success('Meeting is live.');
+    } catch (error) {
+      console.error(error);
+      toast.error('Unable to start meeting.');
+    }
   };
 
   const applyTemplate = async (template: MeetingTemplate, scheduledAt?: string) => {
-    if (scheduledAt) {
-      await updateMeetingProgress( {
-        meetingId, data: {
-          scheduledAt
-        }
-      });
-    }
-    for (let i = 0; i < template.items.length; i++) {
-      await addAgendaItem( {
-        meetingId, item: {
-          ...template.items[i], order: agenda.length + i
-        }
-      });
+    try {
+      if (scheduledAt) {
+        await updateMeetingProgress( {
+          meetingId, data: {
+            scheduledAt
+          }
+        }).unwrap();
+      }
+
+      const createdItems: AgendaItem[] = [];
+      for (let i = 0; i < template.items.length; i++) {
+        const createdItem = await addAgendaItem( {
+          meetingId, item: {
+            ...template.items[i], order: agenda.length + i
+          }
+        }).unwrap();
+        createdItems.push(createdItem);
+      }
+
+      setAgenda([...agenda, ...createdItems]);
+      toast.success('Template applied.');
+    } catch (error) {
+      console.error(error);
+      toast.error('Unable to apply template.');
     }
   };
 
@@ -137,22 +158,26 @@ export function useMeetingActions({
         meetingId, email: normalizedEmail
       }).unwrap();
       toast.success('Invitation sent.');
-    } catch {(error) => {
-        console.log(error)
-        toast.error("Unable to send invite")
-      }
+    } catch (error) {
+      console.error(error);
+      toast.error((error as any)?.data?.message || 'Unable to send invite.');
     }
 
   };
 
   const handleTogglePublic = async () => {
     if (!meeting) return;
-    await updateMeeting( {
-      id: meetingId, data: {
-        isPublic: !meeting.isPublic
-      }
-    }).unwrap();
-    toast.success(meeting.isPublic ? 'Meeting is now private.': 'Meeting is now public.');
+    try {
+      await updateMeeting( {
+        id: meetingId, data: {
+          isPublic: !meeting.isPublic
+        }
+      }).unwrap();
+      toast.success(meeting.isPublic ? 'Meeting is now private.': 'Meeting is now public.');
+    } catch (error) {
+      console.error(error);
+      toast.error('Unable to update meeting visibility.');
+    }
   };
 
   return {
@@ -162,7 +187,15 @@ export function useMeetingActions({
     handleSendReminders,
     handleCopyLink,
     handleStartMeeting,
-    handleStopMeeting: () => stopMeeting(meetingId),
+    handleStopMeeting: async () => {
+      try {
+        await stopMeeting(meetingId).unwrap();
+        toast.success('Meeting ended.');
+      } catch (error) {
+        console.error(error);
+        toast.error('Unable to end meeting.');
+      }
+    },
     applyTemplate,
     handleAddInvitee,
     handleTogglePublic,

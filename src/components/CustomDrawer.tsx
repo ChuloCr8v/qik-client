@@ -8,6 +8,8 @@ import { ModalTheme } from "./CustomModal";
 interface Props {
     title: string;
     children: ReactNode;
+    isOpen?: boolean;
+    onClose?: () => void;
     okText?: string;
     onCancel?: () => void;
     onOk?: () => void;
@@ -31,8 +33,10 @@ interface Props {
 
 export default function CustomDrawer({
     children,
+    isOpen,
     loading,
     icon,
+    onClose,
     onCancel,
     modalSubtitle,
     okText,
@@ -103,8 +107,8 @@ export default function CustomDrawer({
 
     return (
         <Drawer
-            open={isDrawerOpen}
-            onClose={onCancel ?? closeDrawer}
+            open={isOpen ?? isDrawerOpen}
+            onClose={onCancel ?? onClose ?? closeDrawer}
             closable={false}
             width={width}
             maskClosable={false}
@@ -114,26 +118,37 @@ export default function CustomDrawer({
             footer={
                 !stepButtons && !hideFooter ? (
                     <div className="flex justify-end gap-3 px-4 py-2 bg-muted/5">
-                        {!hideCancelButton && (
+                        {!onOk ? (
                             <Button
                                 className="px-8!"
-                                onClick={onCancel ?? closeDrawer}
+                                onClick={onCancel ?? onClose ?? closeDrawer}
                             >
-                                Cancel
+                                Close
                             </Button>
+                        ) : (
+                            <>
+                                {!hideCancelButton && (
+                                    <Button
+                                        className="px-8!"
+                                        onClick={onCancel ?? onClose ?? closeDrawer}
+                                    >
+                                        Cancel
+                                    </Button>
+                                )}
+                                <Button
+                                    onClick={onOk}
+                                    loading={loading}
+                                    type="primary"
+                                    danger={warning}
+                                    className="px-8!"
+                                    disabled={
+                                        showConfirmation ? !isConfirmed : disabled
+                                    }
+                                >
+                                    {okText ?? "Submit"}
+                                </Button>
+                            </>
                         )}
-                        <Button
-                            onClick={onOk}
-                            loading={loading}
-                            type="primary"
-                            danger={warning}
-                            className="px-8!"
-                            disabled={
-                                showConfirmation ? !isConfirmed : disabled
-                            }
-                        >
-                            {okText ?? "Submit"}
-                        </Button>
                     </div>
                 ) : null
             }
