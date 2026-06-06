@@ -23,6 +23,7 @@ import { useMeetingActions } from "./meeting/hooks/useMeetingActions";
 import { useMeetingRealtime } from "./meeting/hooks/useMeetingRealtime";
 import { useMeetingUiState } from "./meeting/hooks/useMeetingUiState";
 import { isIntegrationConfigured, useGetHealthQuery } from "../features/system/systemApi";
+import {Button} from "antd"
 
 export default function MeetingView() {
     const { meetingId } = useParams();
@@ -66,23 +67,23 @@ export default function MeetingView() {
         return (
             <Layout user={user} hideFooter onNavigate={navigate}>
                 <div className="flex min-h-[calc(100vh-56px)] items-center justify-center px-4">
-                    <div className="max-w-md rounded-3xl border border-border bg-white p-6 text-center  ">
+                    <div className="max-w-md rounded-3xl border border-border bg-white p-6 text-center ">
                         <h1 className="text-xl font-bold text-secondary">
                             Meeting unavailable
                         </h1>
-                        <p className="mt-2 text-sm leading-relaxed text-muted">
+                        <p className="mt-3! text-sm leading-relaxed text-muted">
                             This meeting may not exist, or your signed-in email
                             may not be on the invite list.
                         </p>
-                        <button
+                        <Button
                             onClick={async () => {
                                 await refreshMeetings();
                                 navigate("/meetings");
                             }}
-                            className="button-primary mt-5"
+                         
                         >
                             Back to meetings
-                        </button>
+                        </Button>
                     </div>
                 </div>
             </Layout>
@@ -151,8 +152,8 @@ export default function MeetingView() {
                 onTogglePublic={actions.handleTogglePublic}
             />
 
-            <div className="relative mx-auto grid max-w-6xl items-start gap-4 px-4 py-4 sm:px-6 lg:grid-cols-4">
-                <div className="order-2 space-y-6 lg:sticky lg:top-24 lg:order-1 lg:col-span-1 lg:h-fit lg:self-start">
+            <div className="relative mx-auto grid max-w-6xl items-start gap-4 px-4 py-4 sm:px-6 md:grid-cols-4">
+                <div className="order-2 space-y-6 md:sticky md:top-24 md:order-1 md:col-span-1 md:h-fit md:self-start">
                     <AiCoachPanel
                         aiContext={ai.aiContext}
                         agenda={agenda}
@@ -173,7 +174,7 @@ export default function MeetingView() {
                     />
                 </div>
 
-                <div className="lg:col-span-3">
+                <div className="md:col-span-3">
                     <div className="mb-4">
                         <p className="text-sm font-semibold text-secondary mb-2">Description</p>
                         <p className="text-sm text-muted">{meeting.description}</p>
@@ -192,12 +193,6 @@ export default function MeetingView() {
                         }
                         onCloseTemplates={() => ui.setIsTemplateListOpen(false)}
                         onOpenAddTopic={() => ui.setIsAddAgendaModalOpen(true)}
-                        onEditItem={item => {
-                            if (isOwner) {
-                                ui.setEditingItem(item);
-                                ui.setIsAddAgendaModalOpen(true);
-                            }
-                        }}
                         onDragEnd={actions.handleOnDragEnd}
                         onSelectTemplate={async template => {
                             await actions.applyTemplate(template);

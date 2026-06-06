@@ -9,8 +9,10 @@ import { FileText, Library, Plus } from "lucide-react";
 import { AgendaItem, Meeting } from "../../types";
 import { MEETING_TEMPLATES, MeetingTemplate } from "../../constants/templates";
 import AgendaItemRow from "./AgendaItemRow";
+import AgendaItemModal from "../AgendaItemModal";
 import TemplatePicker from "./TemplatePicker";
 import { Button } from "antd";
+import { usePopup } from "../../context/PopupContext";
 
 const DraggableAny = Draggable as any;
 const DroppableAny = Droppable as any;
@@ -27,7 +29,6 @@ interface AgendaListProps {
     onToggleTemplates: () => void;
     onCloseTemplates: () => void;
     onOpenAddTopic: () => void;
-    onEditItem: (item: AgendaItem) => void;
     onDragEnd: (result: DropResult) => void;
     onSelectTemplate: (template: MeetingTemplate) => void;
     onNavigateTemplates?: () => void;
@@ -45,11 +46,12 @@ export default function AgendaList({
     onToggleTemplates,
     onCloseTemplates,
     onOpenAddTopic,
-    onEditItem,
     onDragEnd,
     onSelectTemplate,
     onNavigateTemplates
 }: AgendaListProps) {
+    const { openModal } = usePopup();
+
     return (
         <div className="order-1 space-y-4 lg:order-2 lg:col-span-3">
             <div className="flex items-center justify-between gap-4 mb-4">
@@ -73,7 +75,7 @@ export default function AgendaList({
                             // size="small"
                             // type="text"
                             className="h-7!"
-                            onClick={onOpenAddTopic}
+                            onClick={() => openModal(<AgendaItemModal meetingId={meetingId} />)}
                         >
                             <Plus className="h-3.5 w-3.5" />
                             <span>Add Topic</span>
@@ -99,7 +101,6 @@ export default function AgendaList({
                             No items yet. Use the generator or pick a template
                             to start.
                         </p>
-                     
                     </div>
                 )}
 
@@ -123,7 +124,6 @@ export default function AgendaList({
                                                 index={index}
                                                 meetingId={meetingId}
                                                 isOwner={isOwner}
-                                                onEdit={onEditItem}
                                                 provided={provided}
                                                 isActive={meeting.isActive}
                                                 activeItemIndex={

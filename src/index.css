@@ -35,6 +35,10 @@
 .border-box {
   @apply border border-border rounded-subtle bg-white;
 }
+
+button {
+ @apply text-xs! font-semibold!
+}
 /* 
 button, input {
   @apply h-9 px-3 border border-border rounded-subtle 

@@ -56,7 +56,7 @@ export default function PlanCard() {
 
           <div className="space-y-3">
             <Button
-              className="w-full"
+              className="w-full mb-2!"
               onClick={() => openModal(<PricingModal />)}
               type='primary'>
               {planName === 'Free' ? 'Upgrade' : 'Manage Subscription'}

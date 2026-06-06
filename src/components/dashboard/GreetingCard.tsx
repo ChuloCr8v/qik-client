@@ -3,6 +3,9 @@ import { CalendarClock, Flame, TrendingUp } from "lucide-react";
 import { useAuth } from "../../features/auth/AuthProvider";
 import { useGetCurrentUserQuery } from "../../features/users/usersApi";
 import DashboardQuickActions from "./DashboardQuickActions";
+import { Button } from "antd";
+import { usePopup } from "../../context/PopupContext";
+import NewMeetingCard from "./NewMeetingCard";
 
 interface Meeting {
     id: string;
@@ -32,6 +35,7 @@ const GreetingCard = ({
     monthlyMeetings = 0,
     lastMonthMeetings = 0
 }: Props) => {
+    const { openModal } = usePopup();
     const { user } = useAuth();
     const { data: profileData } = useGetCurrentUserQuery(undefined, {
         skip: !user
@@ -56,9 +60,16 @@ const GreetingCard = ({
                     </h1>
                 </div>
 
+                <Button
+                    type="primary"
+                    onClick={() => openModal(<NewMeetingCard />)}
+                >
+                    Create <span className="text-lg -mt-1">+</span>
+                </Button>
+
                 {/* Streak badge */}
                 {streak > 0 && (
-                    <div className="flex flex-col items-center justify-center bg-green-50 border border-green-100 rounded-xl px-3 py-2 min-w-[60px]">
+                    <div className="flex hidden flex-col items-center justify-center bg-green-50 border border-green-100 rounded-xl px-3 py-2 min-w-[60px]">
                         <div className="flex items-center gap-1">
                             <Flame className="w-3.5 h-3.5 text-primary" />
                             <span className="text-base font-black text-primary leading-none">
@@ -83,7 +94,7 @@ const GreetingCard = ({
                         <CalendarClock className="w-4.5 h-4.5 text-primary" />
                     </div>
                     <div>
-                        <p className="font-semibold text-secondary leading-tight">
+                        <p className="font-semibold leading-tight text-secondary">
                             {meetingsToday} meeting
                             {meetingsToday !== 1 ? "s" : ""} today
                         </p>
@@ -99,15 +110,13 @@ const GreetingCard = ({
                     </div>
                 </div>
 
-
-
                 {/* Monthly trend */}
                 <div className="flex items-center gap-2 flex-1 py-2 border-l border-border pl-3">
                     <div className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center flex-shrink-0">
                         <TrendingUp className="w-4.5 h-4.5 text-green-600" />
                     </div>
                     <div>
-                        <p className="text-sm text-secondary leading-tight">
+                        <p className="text-sm text-secondary font-semibold leading-tight">
                             {monthlyMeetings} this month
                         </p>
                         <p
