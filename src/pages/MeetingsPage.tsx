@@ -1,6 +1,8 @@
 import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
+    Activity,
+    Archive,
     CalendarClock,
     CheckCircle2,
     Clock,
@@ -48,9 +50,11 @@ function getParticipantCount(meeting: Meeting) {
 function getStatusMeta(status: Meeting["status"]) {
     if (status === "active") {
         return {
-            label: "Live Now",
+            label: "Live",
             color: "success",
-            dotClassName: "bg-emerald-500 animate-pulse",
+            icon: Activity,
+            iconClassName: "text-emerald-500",
+            borderClassName: "!border-emerald-400"
         };
     }
 
@@ -58,7 +62,9 @@ function getStatusMeta(status: Meeting["status"]) {
         return {
             label: "Completed",
             color: "default",
-            dotClassName: "bg-slate-400",
+            icon: CheckCircle2,
+            iconClassName: "text-slate-400",
+            borderClassName: "!border-slate-300"
         };
     }
 
@@ -66,28 +72,34 @@ function getStatusMeta(status: Meeting["status"]) {
         return {
             label: "Archived",
             color: "default",
-            dotClassName: "bg-slate-300",
+            icon: Archive,
+            iconClassName: "text-slate-300",
+            borderClassName: "!border-slate-200"
         };
     }
 
     return {
         label: "Scheduled",
         color: "warning",
-        dotClassName: "bg-amber-500",
+        icon: CalendarClock,
+        iconClassName: "text-amber-500",
+        borderClassName: "!border-amber-400"
     };
 }
 
 function StatusPill({ status }: { status: Meeting["status"] }) {
     const meta = getStatusMeta(status);
+    const Icon = meta.icon;
 
     return (
         <Tag
             color={meta.color}
-            className="m-0! inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px]! font-semibold uppercase"
+            className={cn(
+                "!m-0 flex! items-center gap-1 rounded-full! !border px-2 py-0.5 !text-[10px] font-semibold uppercase w-fit!",
+                meta.borderClassName
+            )}
         >
-            <span
-                className={cn("h-1.5 w-1.5 rounded-full", meta.dotClassName)}
-            />
+            <Icon className={cn("h-3 w-3 shrink-0", meta.iconClassName)} />
             {meta.label}
         </Tag>
     );
@@ -117,11 +129,12 @@ function MeetingCard({
             className="h-auto! w-full rounded-xl border border-border bg-white p-4 text-left shadow-xs transition-all hover:border-primary/30 hover:shadow-md"
         >
             <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0 space-y-2">
+                <div className="min-w-0 space-y-2!">
                     <StatusPill status={meeting.status} />
-                    <h3 className="truncate text-base font-semibold text-secondary">
+                    <h3 className="truncate text-sm font-semibold text-secondary mt-1!">
                         {meeting.title}
                     </h3>
+                    <p className="text-xs! text-muted">{meeting.description}</p>
                 </div>
                 <Button
                     danger
@@ -348,9 +361,10 @@ export default function MeetingsPage() {
             </div>
 
             <div className="rounded-xl border border-border bg-white p-3">
-                <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                <div className="flex flex-col gap-2 md:flex-row lg:items-center lg:justify-between">
                     <div className="relative min-w-0 flex-1">
                         <Input
+                            className="text-xs! h-9!"
                             prefix={<Search className="h-4 w-4 text-muted" />}
                             type="text"
                             placeholder="Search by title or description..."
@@ -359,20 +373,20 @@ export default function MeetingsPage() {
                         />
                     </div>
 
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                    <div className="flex gap-2 items-center">
                         <Select
                             value={statusFilter}
                             onChange={value =>
                                 setStatusFilter(value as StatusFilter)
                             }
                             options={statusOptions}
-                            className="w-full sm:w-36"
+                            className="w-full text-xs! h-9! sm:w-36"
                         />
 
                         <Select
                             value={sortBy}
                             onChange={value => setSortBy(value)}
-                            className="w-full sm:w-44"
+                            className="w-full text-xs! h-9! sm:w-44"
                             options={[
                                 { label: "Newest first", value: "newest" },
                                 { label: "Oldest first", value: "oldest" },
@@ -393,7 +407,9 @@ export default function MeetingsPage() {
                             columns={columns}
                             dataSource={filteredMeetings}
                             className="rounded-2xl"
-                            onRow={meeting => navigate(`/meetings/${meeting.id}`)}
+                            onRow={meeting =>
+                                navigate(`/meetings/${meeting.id}`)
+                            }
                         />
                     </div>
 
@@ -402,7 +418,9 @@ export default function MeetingsPage() {
                             <MeetingCard
                                 key={meeting.id}
                                 meeting={meeting}
-                                onOpen={() => navigate(`/meetings/${meeting.id}`)}
+                                onOpen={() =>
+                                    navigate(`/meetings/${meeting.id}`)
+                                }
                                 onDelete={() => setMeetingToDelete(meeting)}
                             />
                         ))}
@@ -447,12 +465,12 @@ export default function MeetingsPage() {
                 okText="Delete Meeting"
             >
                 <p className="text-sm text-muted leading-relaxed">
-                        Are you sure you want to delete{" "}
-                        <span className="font-semibold text-secondary">
-                            "{meetingToDelete?.title}"
-                        </span>
-                        ? This action cannot be undone and all agenda data will
-                        be lost.
+                    Are you sure you want to delete{" "}
+                    <span className="font-semibold text-secondary">
+                        "{meetingToDelete?.title}"
+                    </span>
+                    ? This action cannot be undone and all agenda data will be
+                    lost.
                 </p>
             </CustomModal>
         </div>

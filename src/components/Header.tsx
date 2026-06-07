@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-    Bell,
-    LogOut,
-    Settings,
-    ChevronDown,
-    Menu,
-    Check
-} from "lucide-react";
+import { Bell, LogOut, Settings, ChevronDown, Menu, Check } from "lucide-react";
 import { formatDate } from "../lib/utils";
 import { generateAnimeName, getAnimeAvatar } from "../lib/userUtils";
 import { User } from "../types";
@@ -44,7 +37,7 @@ export default function Header({
             key: "email",
             disabled: true,
             label: (
-                <span className="block max-w-[220px] truncate text-sm font-semibold text-secondary">
+                <span className="block max-w-[220px] truncate text-xs! font-semibold text-secondary">
                     {user?.email || "Guest Session"}
                 </span>
             )
@@ -56,6 +49,7 @@ export default function Header({
             key: "settings",
             icon: <Settings className="h-4 w-4" />,
             label: "Settings",
+            className:"text-xs!",
             onClick: () => onNavigate?.("/settings")
         },
         {
@@ -63,8 +57,8 @@ export default function Header({
         },
         {
             key: "sign-out",
-            icon: <LogOut className="h-4 w-4" />,
-            label: <span className="text-red-600">Sign Out</span>,
+            icon: <LogOut className="h-3 w-3" />,
+            label: <span className="text-red-600 text-xs!">Sign Out</span>,
             onClick: signOut
         }
     ];
@@ -154,8 +148,8 @@ export default function Header({
                                                                     <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">
                                                                         {n.createdAt
                                                                             ? formatDate(
-                                                                                n.createdAt
-                                                                            )
+                                                                                  n.createdAt
+                                                                              )
                                                                             : "Just now"}
                                                                     </p>
                                                                 </div>
@@ -204,7 +198,7 @@ export default function Header({
                                         className="h-7 w-7 rounded-full object-cover"
                                         alt={user.displayName || "User"}
                                     />
-                                    <span className="hidden max-w-[80px] truncate text-sm font-semibold sm:block">
+                                    <span className="max-w-[80px] truncate text-xs!">
                                         {
                                             (
                                                 user.displayName ||

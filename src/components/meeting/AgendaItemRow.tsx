@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { Check, Clock, Edit2, GripVertical, Trash2 } from "lucide-react";
+import AgendaItemModal from "../AgendaItemModal";
 import toast from "react-hot-toast";
 import { AgendaItem } from "../../types";
 import { cn } from "../../lib/utils";
+import { usePopup } from "../../context/PopupContext";
 import {
     useDeleteAgendaItemMutation,
     useUpdateAgendaItemMutation
@@ -13,7 +15,6 @@ interface AgendaItemRowProps {
     item: AgendaItem;
     index: number;
     meetingId: string;
-    onEdit: (item: AgendaItem) => void;
     provided: any;
     isOwner: boolean;
     isActive?: boolean;
@@ -25,7 +26,6 @@ export default function AgendaItemRow({
     item,
     index,
     meetingId,
-    onEdit,
     provided,
     isOwner,
     isActive,
@@ -35,6 +35,8 @@ export default function AgendaItemRow({
     const [timerMode, setTimerMode] = useState<"left" | "used">("left");
     const [updateAgendaItem] = useUpdateAgendaItemMutation();
     const [deleteAgendaItem] = useDeleteAgendaItemMutation();
+
+    const { openModal } = usePopup();
 
     const toggleCompleted = () => {
         if (!isOwner) {
@@ -137,10 +139,17 @@ export default function AgendaItemRow({
                                         ? "border-emerald-500! bg-emerald-500! text-white!"
                                         : "border-slate-200! hover:border-primary/50!"
                                 )}
-                                icon={isCompleted ? <Check className="h-3 w-3 bold" /> : undefined}
-                                title={isCompleted ? "Mark incomplete" : "Mark complete"}
-                            >
-                            </Button>
+                                icon={
+                                    isCompleted ? (
+                                        <Check className="h-3 w-3 bold" />
+                                    ) : undefined
+                                }
+                                title={
+                                    isCompleted
+                                        ? "Mark incomplete"
+                                        : "Mark complete"
+                                }
+                            ></Button>
 
                             <div
                                 {...provided.dragHandleProps}
@@ -155,7 +164,14 @@ export default function AgendaItemRow({
                                 className="h-7!"
                                 size="small"
                                 icon={<Edit2 className="h-3 w-3" />}
-                                onClick={() => onEdit(item)}
+                                onClick={() =>
+                                    openModal(
+                                        <AgendaItemModal
+                                            data={item}
+                                            meetingId={meetingId}
+                                        />
+                                    )
+                                }
                             >
                                 Edit
                             </Button>

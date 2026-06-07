@@ -1,58 +1,49 @@
-import { CreditCard, Lock } from 'lucide-react';
-import CustomModal from '../CustomModal';
-import PricingModal from '../PricingModal';
-import type { PlanName } from '../../config/plans';
-import { usePopup } from '../../context/PopupContext';
+import { CreditCard, Lock } from "lucide-react";
+import CustomModal from "../CustomModal";
+import PricingModal from "../PricingModal";
+import type { PlanName } from "../../config/plans";
+import { usePopup } from "../../context/PopupContext";
 
 interface UpgradePromptProps {
-  isOpen: boolean;
-  onClose: () => void;
-  currentPlan: PlanName;
-  missingFeature: string;
+    isOpen: boolean;
+    onClose: () => void;
+    currentPlan: PlanName;
+    missingFeature: string;
 }
 
 export default function UpgradePrompt({
-  isOpen,
-  onClose,
-  currentPlan,
-  missingFeature,
+    isOpen,
+    onClose,
+    currentPlan,
+    missingFeature
 }: UpgradePromptProps) {
-  const { openModal } = usePopup();
+    const { openModal } = usePopup();
 
-  return (
-    
-      <CustomModal
-        isOpen={isOpen}
-        onClose={onClose}
-        icon={<Lock className="h-5 w-5 text-primary" />}
-        title="Upgrade required"
-        hideFooter
-        width={420}
-      >
-        <div className="space-y-3">
-          <p className="text-sm font-semibold text-secondary">
-            Current plan: {currentPlan}
-          </p>
-          <p className="text-sm leading-relaxed text-muted">
-            {missingFeature}
-          </p>
-          <div className="flex justify-end gap-3">
-            <button onClick={onClose} className="rounded-xl px-4 py-2 text-sm font-semibold text-muted hover:bg-slate-100">
-              Cancel
-            </button>
-            <button
-              onClick={() => {
+    return (
+        <CustomModal
+            isOpen={isOpen}
+            onClose={onClose}
+            icon={<Lock className="h-5 w-5 text-primary" />}
+            title="Upgrade required"
+            onOk={() => {
                 onClose();
                 openModal(<PricingModal />);
-              }}
-              className="flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white"
-            >
-              <CreditCard className="h-3.5 w-3.5" />
-              View plans
-            </button>
-          </div>
-        </div>
-      </CustomModal>
-    
-  );
+            }}
+            okText={"Explore Plans"}
+            width={420}
+        >
+            <div className="flex flex-col gap-4 items-start">
+                <div className="flex items-center justify-between w-full bg-primary/10 border-2 border-primary p-2 py-3 rounded-lg">
+                    <p className="text-xs text-muted">Current plan</p>
+                    <p className="font-semibold text-lg text-secondary leading-none!">
+                        {currentPlan} Plan
+                    </p>
+                </div>
+
+                <p className="text-xs leading-relaxed text-muted">
+                    {missingFeature}
+                </p>
+            </div>
+        </CustomModal>
+    );
 }
