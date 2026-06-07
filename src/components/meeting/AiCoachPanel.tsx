@@ -31,7 +31,7 @@ export default function AiCoachPanel({
         "AI is temporarily unavailable because the provider is not configured.";
 
     return (
-        <div className="space-y-3">
+        <div className="space-y-3 ">
             <div className="flex items-center gap-2">
                 <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/20 text-primary">
                     <BotIcon className="h-4 w-4" />
@@ -49,7 +49,7 @@ export default function AiCoachPanel({
                         description={unavailableMessage}
                     />
                 )}
-                <p className="text-left text-sm text-muted">
+                <p className="text-left text-xs text-muted">
                     Describe what the meeting is about and I will suggest
                     topics.
                 </p>

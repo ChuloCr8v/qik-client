@@ -151,7 +151,7 @@ const TableComponent = <T extends { id: Key }>({
           size="small"
           className={twMerge(
             className,
-            "bg-white border rounded-md cursor-pointer w-full",
+            " w-full",
             bordered && "border-none",
           )}
           rowSelection={rowSelection}

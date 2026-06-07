@@ -13,11 +13,11 @@ export default function PageHeader({
     <div className="">
       <div className="flex flex-row items-center justify-between gap-4 sm:gap-6">
         <div className="min-w-0 flex-1">
-          <h1 className="text-lg font-semibold tracking-tight text-secondary sm:text-base break-words">
+          <h1 className="text-lg lg:text-xl font-semibold tracking-tight text-secondary sm:text-base break-words">
             {title}
           </h1>
           {description && (
-            <p className="mt-0.5 hidden sm:block max-w-[200px] sm:max-w-xl text-xs text-muted leading-relaxed">
+            <p className="hidden sm:block max-w-[200px] sm:max-w-xl text-xs lg:text-sm text-muted leading-relaxed">
               {description}
             </p>
           )}

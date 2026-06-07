@@ -23,7 +23,7 @@ import { useMeetingActions } from "./meeting/hooks/useMeetingActions";
 import { useMeetingRealtime } from "./meeting/hooks/useMeetingRealtime";
 import { useMeetingUiState } from "./meeting/hooks/useMeetingUiState";
 import { isIntegrationConfigured, useGetHealthQuery } from "../features/system/systemApi";
-import {Button} from "antd"
+import { Button } from "antd"
 
 export default function MeetingView() {
     const { meetingId } = useParams();
@@ -80,7 +80,7 @@ export default function MeetingView() {
                                 await refreshMeetings();
                                 navigate("/meetings");
                             }}
-                         
+
                         >
                             Back to meetings
                         </Button>
@@ -152,8 +152,8 @@ export default function MeetingView() {
                 onTogglePublic={actions.handleTogglePublic}
             />
 
-            <div className="relative mx-auto grid max-w-6xl items-start gap-4 px-4 py-4 sm:px-6 md:grid-cols-4">
-                <div className="order-2 space-y-6 md:sticky md:top-24 md:order-1 md:col-span-1 md:h-fit md:self-start">
+            <div className="relative mx-auto grid h-full!  items-start gap-4 px-4 py-4 sm:px-6 md:grid-cols-3">
+                <div className="max-md:pb-20! md:bg-white order-2 space-y-6 md:sticky md:-mt-4 md:pt-4 md:order-1 md:border-x md:shadow-xs md:border-slate-200 md:px-3 h-full! md:col-span-1 md:self-start">
                     <AiCoachPanel
                         aiContext={ai.aiContext}
                         agenda={agenda}
@@ -174,7 +174,7 @@ export default function MeetingView() {
                     />
                 </div>
 
-                <div className="md:col-span-3">
+                <div className="md:col-span-2">
                     <div className="mb-4">
                         <p className="text-sm font-semibold text-secondary mb-2">Description</p>
                         <p className="text-sm text-muted">{meeting.description}</p>
@@ -207,20 +207,12 @@ export default function MeetingView() {
                     isInviteOpen={ui.isInviteModalOpen}
                     isDeleteOpen={ui.isDeleteModalOpen}
                     isDeleting={ui.isDeleting}
-                    isAddOpen={ui.isAddAgendaModalOpen}
-                    editingItem={ui.editingItem}
                     selectedTemplate={ui.selectedTemplateForPreview}
                     onCloseInvite={() => ui.setIsInviteModalOpen(false)}
                     onCloseDelete={() => ui.setIsDeleteModalOpen(false)}
                     onConfirmDelete={handleDeleteMeeting}
-                    onCloseAdd={() => ui.setIsAddAgendaModalOpen(false)}
-                    onCloseEdit={() => ui.setEditingItem(null)}
                     onCloseTemplate={() =>
                         ui.setSelectedTemplateForPreview(null)
-                    }
-                    onAddItem={actions.handleAddItem}
-                    onUpdateItem={data =>
-                        actions.handleUpdateItem(ui.editingItem, data)
                     }
                     onApplyTemplate={async startTime => {
                         if (!ui.selectedTemplateForPreview) return;

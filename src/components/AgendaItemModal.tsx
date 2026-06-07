@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Input, InputNumber, Form } from "antd";
 import CustomModal from "./CustomModal";
-import { Clock, AlignLeft, Type } from "lucide-react";
+import { Clock, AlignLeft, Type, Edit } from "lucide-react";
 import toast from "react-hot-toast";
 import {
     useUpdateAgendaItemMutation,
@@ -68,13 +68,13 @@ export default function AgendaItemModal({
 
     return (
         <CustomModal
-            icon={<Type className="h-5 w-5 text-primary" />}
+            icon={<Edit className="h-5 w-5 text-primary" />}
             title={data ? "Edit Agenda" : "Add Agenda"}
             onOk={handleSubmit}
             okText="Save Changes"
             loading={loading}
         >
-            <Form form={form}>
+            <Form form={form} layout="vertical">
                 <Form.Item required name="title" label="Topic">
                     <Input
                         autoFocus
@@ -84,8 +84,8 @@ export default function AgendaItemModal({
                     />
                 </Form.Item>
 
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <Form.Item required name="duration" label="Duration (mins)">
+                <div className="grid grid-cols-1 w-full">
+                    <Form.Item className="w-full" required name="duration" label="Duration (mins)">
                         <InputNumber
                             min={1}
                             required

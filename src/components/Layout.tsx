@@ -56,9 +56,9 @@ export default function Layout({
                     onGoogleSignIn={onGoogleSignIn}
                 />
 
-                <main className="flex-1 w-full h-full overflow-y-auto">
-                    <div className="w-full flex flex-col">
-                        <div className="bg-gray-50/10 pb-20">
+                <main className="flex-1 w-full h-full! overflow-y-auto">
+                    <div className="w-full flex h-full! flex-col">
+                        <div className="bg-gray-50/10 h-full!">
                             {children}
                             {!hideFooter && (
                                 <Footer variant={user ? "minimal" : "full"} />

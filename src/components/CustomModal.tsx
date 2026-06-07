@@ -79,7 +79,7 @@ export default function CustomModal({
             confirmLoading={loading}
             width={width}
             centered={false}
-            className={twMerge("qa-custom-modal", className)}
+            className={twMerge(className)}
             styles={{ container: { padding: 0 } }}
         >
             <div className="flex flex-col overflow-hidden">

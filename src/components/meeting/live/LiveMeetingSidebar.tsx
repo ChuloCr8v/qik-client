@@ -84,7 +84,7 @@ export default function LiveMeetingSidebar({ agenda, activeItemIndex, participan
       <div className="border-t border-white/5 bg-slate-900/30 p-8">
         {nextItem ? (
           <div className="space-y-3">
-            <p className="text-xs font-bold uppercase  text-slate-500">Next Topic</p>
+            <p className="text-xs font-bold uppercase  text-slate-500 pb-2">Next Topic</p>
             <div className="rounded-2xl border border-white/10 bg-white/[0.05] p-4 transition-colors group-hover/sidebar:border-amber-500/20">
               <h4 className="mb-1 truncate text-sm font-bold text-white">{nextItem.title}</h4>
               <p className="line-clamp-2 text-sm text-white/40">{nextItem.description || 'No description provided.'}</p>
