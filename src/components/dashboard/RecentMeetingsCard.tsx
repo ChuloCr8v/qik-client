@@ -14,6 +14,7 @@ export default function RecentMeetingsCard() {
                 meetings={meetings}
                 onShowAll={() => navigate("/meetings")}
                 onOpenMeeting={meetingId => navigate(`/meetings/${meetingId}`)}
+                message="No Recent Meetings Yet"
             />
         </div>
     );
