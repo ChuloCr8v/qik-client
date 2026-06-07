@@ -23,7 +23,9 @@ import { useMeetingActions } from "./meeting/hooks/useMeetingActions";
 import { useMeetingRealtime } from "./meeting/hooks/useMeetingRealtime";
 import { useMeetingUiState } from "./meeting/hooks/useMeetingUiState";
 import { isIntegrationConfigured, useGetHealthQuery } from "../features/system/systemApi";
-import { Button } from "antd"
+import { Button, Input, Modal } from "antd";
+import { useState } from "react";
+import { useAddTemplateMutation } from "../features/templates/templatesApi";
 
 export default function MeetingView() {
     const { meetingId } = useParams();
@@ -42,6 +44,11 @@ export default function MeetingView() {
         setAgenda: realtime.setAgenda,
         setIsCopying: ui.setIsCopying
     });
+    const [addTemplate] = useAddTemplateMutation();
+    const [isSaveTemplateOpen, setIsSaveTemplateOpen] = useState(false);
+    const [templateName, setTemplateName] = useState("");
+    const [isSavingTemplate, setIsSavingTemplate] = useState(false);
+    const [isSaveTemplateUpgradeOpen, setIsSaveTemplateUpgradeOpen] = useState(false);
 
     if (!meetingId) {
         return null;
@@ -109,6 +116,35 @@ export default function MeetingView() {
     const aiAvailable = isIntegrationConfigured(health, "ai");
     const mailAvailable = isIntegrationConfigured(health, "mail");
 
+    const isPaidUser = user?.plan && user.plan !== 'Free';
+
+    const handleSaveAsTemplate = () => {
+        if (!isPaidUser) {
+            setIsSaveTemplateUpgradeOpen(true);
+            return;
+        }
+        setTemplateName(realtime.meeting?.title || "");
+        setIsSaveTemplateOpen(true);
+    };
+
+    const handleConfirmSaveTemplate = async () => {
+        if (!templateName.trim() || !realtime.agenda.length) return;
+        setIsSavingTemplate(true);
+        try {
+            await addTemplate({
+                name: templateName.trim(),
+                description: realtime.meeting?.description || "",
+                items: realtime.agenda.map(({ title, description, duration, order }) => ({ title, description, duration, order })),
+            }).unwrap();
+            toast.success("Saved as template!");
+            setIsSaveTemplateOpen(false);
+        } catch (err: any) {
+            toast.error(err?.data?.message || "Unable to save template.");
+        } finally {
+            setIsSavingTemplate(false);
+        }
+    };
+
     const handleExportPDF = async () => {
         try {
             await exportAgendaToPDF(meeting, agenda, realtime.participants);
@@ -150,6 +186,8 @@ export default function MeetingView() {
                 onExportMarkdown={handleExportMarkdown}
                 onDelete={() => ui.setIsDeleteModalOpen(true)}
                 onTogglePublic={actions.handleTogglePublic}
+                canSaveTemplate={!!isPaidUser}
+                onSaveAsTemplate={handleSaveAsTemplate}
             />
 
             <div className="relative mx-auto grid h-full!  items-start gap-4 px-4 py-4 sm:px-6 md:grid-cols-3">
@@ -233,6 +271,35 @@ export default function MeetingView() {
                     currentPlan={ai.currentPlan}
                     missingFeature="You have reached your monthly AI generation limit. Upgrade to continue generating agendas."
                 />
+
+                <UpgradePrompt
+                    isOpen={isSaveTemplateUpgradeOpen}
+                    onClose={() => setIsSaveTemplateUpgradeOpen(false)}
+                    currentPlan={ai.currentPlan}
+                    missingFeature="Saving meetings as templates is a paid feature. Upgrade to Individual or Organisation to build your own template library."
+                />
+
+                <Modal
+                    open={isSaveTemplateOpen}
+                    title="Save as Template"
+                    okText="Save Template"
+                    onOk={handleConfirmSaveTemplate}
+                    onCancel={() => setIsSaveTemplateOpen(false)}
+                    confirmLoading={isSavingTemplate}
+                    okButtonProps={{ disabled: !templateName.trim() }}
+                    width={420}
+                >
+                    <p className="mb-3 text-sm text-muted">
+                        This will save the current agenda structure as a reusable template. Give it a name:
+                    </p>
+                    <Input
+                        value={templateName}
+                        onChange={e => setTemplateName(e.target.value)}
+                        placeholder="e.g. Weekly Team Sync"
+                        autoFocus
+                        onPressEnter={handleConfirmSaveTemplate}
+                    />
+                </Modal>
 
                 <LiveStickyBar
                     meeting={meeting}
