@@ -23,10 +23,10 @@ createRoot(document.getElementById("root")!).render(
                         rowHoverBg: "#f8fafc",
                         borderColor: "#e2e8f0"
                     },
-                    // Button: {
-                    //     controlHeight: 36,
+                     Button: {
+                       controlHeight: 36,
 
-                    // },
+                    },
                     Tabs: {
                         titleFontSize: 10
                     }

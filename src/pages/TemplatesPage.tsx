@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Loader2, Plus } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
-import { Button, Modal, Pagination } from "antd";
+import { Modal, Pagination } from "antd";
 import PageHeader from "../components/PageHeader";
 import TemplatePreviewModal from "../components/TemplatePreviewModal";
 import TemplateEditorDrawer from "../components/templates/TemplateEditorDrawer";
@@ -99,7 +99,11 @@ export default function TemplatesPage() {
             refetch();
         } catch (error) {
             console.error(error);
-            toast.error(editingTemplate ? "Failed to update template." : "Failed to create template.");
+            toast.error(
+                editingTemplate
+                    ? "Failed to update template."
+                    : "Failed to create template."
+            );
         }
     };
 
@@ -200,15 +204,15 @@ export default function TemplatesPage() {
         <div className="mx-auto space-y-3 max-w-6xl p-4">
             <PageHeader
                 title="Meeting Templates"
-                action={
-                    <Button
-                        type="primary"
-                        onClick={() => openEditor()}
-                        icon={<Plus className="h-4 w-4" />}
-                    >
-                        <span className="max-md:hidden">New Template</span>
-                    </Button>
-                }
+                // action={
+                //     <Button
+                //         type="primary"
+                //         onClick={() => openEditor()}
+                //         icon={<Plus className="h-4 w-4" />}
+                //     >
+                //         <span className="max-md:hidden">New Template</span>
+                //     </Button>
+                // }
             />
 
             <div className="grid gap-3">
