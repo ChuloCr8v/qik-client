@@ -30,7 +30,9 @@ export default function TemplatePreviewModal({
     );
 
     const handleApply = (template: MeetingTemplate, scheduledAt?: any) => {
-        const scheduledAtStr = scheduledAt ? scheduledAt.toISOString() : undefined;
+        const scheduledAtStr = scheduledAt
+            ? scheduledAt.toISOString()
+            : undefined;
         onApply(template, scheduledAtStr);
         setScheduledAt(null);
         (onClose ?? closeDrawer)();
@@ -53,7 +55,9 @@ export default function TemplatePreviewModal({
                             <ListChecks className="h-5 w-5 text-primary" />
                         </div>
                         <div>
-                            <p className="text-xs md:text-sm text-muted">Total Duration</p>
+                            <p className="text-xs md:text-sm text-muted">
+                                Total Duration
+                            </p>
                             <p className="text-xs md:text-sm font-semibold text-secondary">
                                 {totalDuration} minutes
                             </p>
@@ -69,37 +73,35 @@ export default function TemplatePreviewModal({
 
                 {/* Description */}
                 <div>
-                    <label className="text-sm font-semibold">Description</label>
-                    <p className="text-xs md:text-sm text-muted">{template.description}</p>
+                    <label>Description</label>
+                    <p className="text-xs md:text-sm">{template.description}</p>
                 </div>
 
                 {/* Schedule Picker */}
                 <div className="flex flex-col mt-4">
-                    <label className="text-sm font-semibold mb-1">
-                        Schedule Date & Time (Optional)
-                    </label>
+                    <label>Schedule Date & Time (Optional)</label>
                     <DatePicker
                         showTime
                         placeholder="Pick meeting time"
                         value={scheduledAt}
-                        onChange={(value) => setScheduledAt(value)}
-                        className="w-full text-xs"
+                        onChange={value => setScheduledAt(value)}
+                        className="w-full text-xs!"
                     />
                 </div>
 
                 {/* Agenda Items */}
                 <div>
-                    <label className="text-sm font-semibold">Agenda Items</label>
+                    <label>Agenda Items</label>
                     <div className="space-y-2 mt-2">
                         {template.items.map((item, i) => (
                             <GradientCard
                                 key={i}
-                                className="flex items-start gap-3 p-3 rounded-xl border border-border bg-gradient-to-b from-primary/10 to-transparent shadow-xs"
+                                className="flex items-start gap-3 p-3"
                             >
-                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-slate-50 text-xs md:text-sm font-semibold text-muted">
+                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-xs md:text-sm font-semibold text-muted">
                                     {i + 1}
                                 </div>
-                                <div className="min-w-0 flex-1">
+                                <div className="min-w-0 flex-1 space-y-2">
                                     <div className="flex items-center justify-between gap-2">
                                         <p className="truncate text-xs md:text-sm font-semibold text-secondary">
                                             {item.title}

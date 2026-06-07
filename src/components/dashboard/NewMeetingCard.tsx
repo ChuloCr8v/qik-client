@@ -82,7 +82,7 @@ const NewMeetingCard: React.FC = () => {
                     required
                     placeholder="e.g. Design Sync"
                     value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={e => setTitle(e.target.value)}
                 />
             </div>
             <div className="space-y-1.5">
@@ -99,7 +99,7 @@ const NewMeetingCard: React.FC = () => {
                 <Input
                     placeholder="Emails separated by commas"
                     value={invitees}
-                    onChange={(e) => setInvitees(e.target.value)}
+                    onChange={e => setInvitees(e.target.value)}
                 />
             </div>
         </form>
@@ -126,7 +126,9 @@ const NewMeetingCard: React.FC = () => {
             onClose={closeModal}
             className="max-w-xl min-w-[400px]"
             onOk={handleOk}
-            okText={activeTab === "details" ? "Create Meeting" : "More Templates"}
+            okText={
+                activeTab === "details" ? "Create Meeting" : "More Templates"
+            }
             loading={isCreatingMeeting}
             width={500}
         >
@@ -134,12 +136,12 @@ const NewMeetingCard: React.FC = () => {
                 <Tabs
                     centered
                     activeKey={activeTab}
-                    onChange={(key) =>
+                    onChange={key =>
                         setActiveTab(key as "details" | "templates")
                     }
                     items={tabItems}
                     size="small"
-                    className="w-full"
+                    className="w-full -mt-3!"
                 />
             </div>
         </CustomModal>

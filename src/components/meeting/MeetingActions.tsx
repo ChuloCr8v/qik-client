@@ -55,17 +55,17 @@ export default function MeetingActions({
         },
         ...(isOwner
             ? [
-                {
-                    key: "visibility",
-                    icon: meeting.isPublic ? (
-                        <EyeOff className="h-4 w-4" />
-                    ) : (
-                        <Eye className="h-4 w-4" />
-                    ),
-                    label: meeting.isPublic ? "Make Private" : "Make Public",
-                    onClick: onTogglePublic
-                }
-            ]
+                  {
+                      key: "visibility",
+                      icon: meeting.isPublic ? (
+                          <EyeOff className="h-4 w-4" />
+                      ) : (
+                          <Eye className="h-4 w-4" />
+                      ),
+                      label: meeting.isPublic ? "Make Private" : "Make Public",
+                      onClick: onTogglePublic
+                  }
+              ]
             : []),
         {
             key: "invite",
@@ -76,14 +76,14 @@ export default function MeetingActions({
         },
         ...(hasInvitees
             ? [
-                {
-                    key: "reminders",
-                    icon: <Mail className="h-4 w-4" />,
-                    label: "Send Reminders",
-                    disabled: !mailAvailable,
-                    onClick: onSendReminders
-                }
-            ]
+                  {
+                      key: "reminders",
+                      icon: <Mail className="h-4 w-4" />,
+                      label: "Send Reminders",
+                      disabled: !mailAvailable,
+                      onClick: onSendReminders
+                  }
+              ]
             : []),
         {
             key: "pdf",
@@ -99,14 +99,14 @@ export default function MeetingActions({
         },
         ...(isOwner
             ? [
-                {
-                    key: "delete",
-                    danger: true,
-                    icon: <Trash2 className="h-4 w-4" />,
-                    label: "Delete Meeting",
-                    onClick: onDelete
-                }
-            ]
+                  {
+                      key: "delete",
+                      danger: true,
+                      icon: <Trash2 className="h-4 w-4" />,
+                      label: "Delete Meeting",
+                      onClick: onDelete
+                  }
+              ]
             : [])
     ];
 
@@ -116,8 +116,8 @@ export default function MeetingActions({
             trigger={["click"]}
             placement="bottomRight"
         >
-            <Button icon={<MoreVertical className="h-4 w-4" />}>
-                {/* <span className="hidden sm:inline">Actions</span> */}
+            <Button>
+                <span className="">Actions</span>
             </Button>
         </Dropdown>
     );

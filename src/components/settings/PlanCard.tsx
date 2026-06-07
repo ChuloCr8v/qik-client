@@ -15,7 +15,7 @@ export default function PlanCard() {
   });
   const planName = (profile?.plan || 'Free') as PlanName;
   const limits = PLAN_LIMITS[planName];
-
+console.log(profile)
   return (
     <div className="group relative overflow-hidden rounded-3xl border border-border bg-white p-6  ">
       <div className="absolute right-0 top-0 rounded-bl-[100px] bg-primary p-4 opacity-5 transition-all group-hover:opacity-10">
@@ -56,7 +56,7 @@ export default function PlanCard() {
 
           <div className="space-y-3">
             <Button
-              className="w-full"
+              className="w-full mb-2!"
               onClick={() => openModal(<PricingModal />)}
               type='primary'>
               {planName === 'Free' ? 'Upgrade' : 'Manage Subscription'}

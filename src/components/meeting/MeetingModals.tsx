@@ -73,25 +73,6 @@ export default function MeetingModals({
         </p>
       </CustomModal>
 
-      <AgendaItemModal
-        isOpen={isAddOpen}
-        onClose={onCloseAdd}
-        onSave={onAddItem}
-        title="Add Agenda Topic"
-      />
-
-      <AgendaItemModal
-        isOpen={!!editingItem}
-        onClose={onCloseEdit}
-        onSave={onUpdateItem}
-        initialData={editingItem ? {
-          title: editingItem.title,
-          description: editingItem.description || '',
-          duration: editingItem.duration
-        } : undefined}
-        title="Edit Agenda Topic"
-      />
-
       <TemplatePreviewModal
         isOpen={!!selectedTemplate}
         onClose={onCloseTemplate}

@@ -23,15 +23,15 @@ export default function SettingsPage() {
         description='Manage your account and billing information'
       />
 
-      <div className="grid gap-3 lg:grid-cols-12">
-        <div className="space-y-3 lg:col-span-4">
+      <div className="grid gap-3 md:grid-cols-12">
+        <div className="space-y-3 md:col-span-4">
           <ProfileSummaryCard
             onEdit={() => setIsProfileModalOpen(true)}
           />
           <PlanCard />
         </div>
 
-        <div className="space-y-6 lg:col-span-8">
+        <div className="space-y-6 md:col-span-8">
           <div className="grid gap-3">
             <PersonalInfoPanel onEdit={() => setIsProfileModalOpen(true)} />
             <PreferencesPanel />

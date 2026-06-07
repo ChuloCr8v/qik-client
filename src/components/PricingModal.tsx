@@ -24,7 +24,10 @@ import {
     useGetBillingUsageQuery,
     useResumeSubscriptionMutation
 } from "../features/billing/billingApi";
-import { isIntegrationConfigured, useGetHealthQuery } from "../features/system/systemApi";
+import {
+    isIntegrationConfigured,
+    useGetHealthQuery
+} from "../features/system/systemApi";
 import { PLAN_LIMITS, type PlanName } from "../config/plans";
 import { cn } from "../lib/utils";
 
@@ -42,52 +45,54 @@ const PLANS: Array<{
     popular?: boolean;
     accent: "primary" | "amber" | "violet" | "slate";
 }> = [
-        {
-            name: "Free",
-            label: "Free",
-            price: "$0",
-            period: "",
-            description: "For one-off meetings and light AI usage.",
-            icon: Star,
-            color: "text-slate-500",
-            bgColor: "bg-slate-100",
-            accent: "slate"
-        },
-        {
-            name: "Individual",
-            label: "Individual",
-            price: "$20",
-            period: "/mo",
-            description: "For solo users who need more AI without a team plan.",
-            icon: Zap,
-            color: "text-primary",
-            bgColor: "bg-primary/10",
-            accent: "primary"
-        },
-        {
-            name: "Organisation",
-            label: "Organisation",
-            price: "$69",
-            period: "/mo",
-            description: "For small teams with shared agendas, tasks, and decisions.",
-            icon: Building2,
-            color: "text-amber-600",
-            bgColor: "bg-amber-50",
-            popular: true,
-            accent: "amber"
-        },
-        {
-            name: "OrganisationPlus",
-            label: "Organisation Plus",
-            price: "$99",
-            period: "/mo",
-            description: "For growing teams that need more seats and admin AI power.",
-            icon: Building,
-            color: "text-violet-600",
-            bgColor: "bg-violet-50",
-            accent: "violet"
-        }
-    ];
+    {
+        name: "Free",
+        label: "Free",
+        price: "$0",
+        period: "",
+        description: "For one-off meetings and light AI usage.",
+        icon: Star,
+        color: "text-slate-500",
+        bgColor: "bg-slate-100",
+        accent: "slate"
+    },
+    {
+        name: "Individual",
+        label: "Individual",
+        price: "$20",
+        period: "/mo",
+        description: "For solo users who need more AI without a team plan.",
+        icon: Zap,
+        color: "text-primary",
+        bgColor: "bg-primary/10",
+        accent: "primary"
+    },
+    {
+        name: "Organisation",
+        label: "Organisation",
+        price: "$69",
+        period: "/mo",
+        description:
+            "For small teams with shared agendas, tasks, and decisions.",
+        icon: Building2,
+        color: "text-amber-600",
+        bgColor: "bg-amber-50",
+        popular: true,
+        accent: "amber"
+    },
+    {
+        name: "OrganisationPlus",
+        label: "Organisation Plus",
+        price: "$99",
+        period: "/mo",
+        description:
+            "For growing teams that need more seats and admin AI power.",
+        icon: Building,
+        color: "text-violet-600",
+        bgColor: "bg-violet-50",
+        accent: "violet"
+    }
+];
 
 const rank: Record<PlanName, number> = {
     Free: 0,
@@ -133,7 +138,9 @@ const formatDate = (value?: string | null) => {
 };
 
 export default function PricingModal() {
-    const [activeAction, setActiveAction] = useState<PlanName | "portal" | null>(null);
+    const [activeAction, setActiveAction] = useState<
+        PlanName | "portal" | null
+    >(null);
     const { closeModal } = usePopup();
     const { data: usage } = useGetBillingUsageQuery();
     const { data: health } = useGetHealthQuery();
@@ -149,26 +156,37 @@ export default function PricingModal() {
     const handlePlanAction = async (planName: PlanName) => {
         if (planName === "Free") return;
         if (!stripeReady) {
-            toast.error("Billing is not configured yet. Please contact support.");
+            toast.error(
+                "Billing is not configured yet. Please contact support."
+            );
             return;
         }
         setActiveAction(planName);
         try {
-            const result = await changePlan({ planType: planName as PaidPlanName }).unwrap();
+            const result = await changePlan({
+                planType: planName as PaidPlanName
+            }).unwrap();
             if (result.url) {
                 window.location.href = result.url;
                 return;
             }
             if (result.status === "upgraded") {
-                toast.success("Plan upgraded. Stripe will apply prorations automatically.");
+                toast.success(
+                    "Plan upgraded. Stripe will apply prorations automatically."
+                );
             } else if (result.status === "downgrade_scheduled") {
-                toast.success(`Downgrade scheduled${formatDate(result.effectiveAt) ? ` for ${formatDate(result.effectiveAt)}` : ""}.`);
+                toast.success(
+                    `Downgrade scheduled${formatDate(result.effectiveAt) ? ` for ${formatDate(result.effectiveAt)}` : ""}.`
+                );
             } else {
                 toast.success("Plan is already up to date.");
             }
         } catch (error) {
             console.error(error);
-            toast.error((error as any)?.data?.message || "Unable to update subscription.");
+            toast.error(
+                (error as any)?.data?.message ||
+                    "Unable to update subscription."
+            );
         } finally {
             setActiveAction(null);
         }
@@ -176,16 +194,23 @@ export default function PricingModal() {
 
     const handleCancel = async () => {
         if (!stripeReady) {
-            toast.error("Billing is not configured yet. Please contact support.");
+            toast.error(
+                "Billing is not configured yet. Please contact support."
+            );
             return;
         }
         setActiveAction("Free");
         try {
             const result = await cancelSubscription().unwrap();
-            toast.success(`Cancellation scheduled${formatDate(result.effectiveAt) ? ` for ${formatDate(result.effectiveAt)}` : ""}.`);
+            toast.success(
+                `Cancellation scheduled${formatDate(result.effectiveAt) ? ` for ${formatDate(result.effectiveAt)}` : ""}.`
+            );
         } catch (error) {
             console.error(error);
-            toast.error((error as any)?.data?.message || "Unable to schedule cancellation.");
+            toast.error(
+                (error as any)?.data?.message ||
+                    "Unable to schedule cancellation."
+            );
         } finally {
             setActiveAction(null);
         }
@@ -193,16 +218,22 @@ export default function PricingModal() {
 
     const handleResume = async () => {
         if (!stripeReady) {
-            toast.error("Billing is not configured yet. Please contact support.");
+            toast.error(
+                "Billing is not configured yet. Please contact support."
+            );
             return;
         }
         setActiveAction(currentPlan);
         try {
             const result = await resumeSubscription().unwrap();
-            toast.success(`Renewal resumed${formatDate(result.renewsAt) ? ` through ${formatDate(result.renewsAt)}` : ""}.`);
+            toast.success(
+                `Renewal resumed${formatDate(result.renewsAt) ? ` through ${formatDate(result.renewsAt)}` : ""}.`
+            );
         } catch (error) {
             console.error(error);
-            toast.error((error as any)?.data?.message || "Unable to resume renewal.");
+            toast.error(
+                (error as any)?.data?.message || "Unable to resume renewal."
+            );
         } finally {
             setActiveAction(null);
         }
@@ -210,7 +241,9 @@ export default function PricingModal() {
 
     const handlePortal = async () => {
         if (!stripeReady) {
-            toast.error("Billing is not configured yet. Please contact support.");
+            toast.error(
+                "Billing is not configured yet. Please contact support."
+            );
             return;
         }
         setActiveAction("portal");
@@ -219,16 +252,23 @@ export default function PricingModal() {
             window.location.href = result.url;
         } catch (error) {
             console.error(error);
-            toast.error((error as any)?.data?.message || "Unable to open billing portal.");
+            toast.error(
+                (error as any)?.data?.message ||
+                    "Unable to open billing portal."
+            );
             setActiveAction(null);
         }
     };
 
     const getButtonText = (planName: PlanName, isCurrent: boolean) => {
-        if (planName === "Free") return hasPaidPlan ? "Cancel paid plan" : "Current Plan";
+        if (planName === "Free")
+            return hasPaidPlan ? "Cancel paid plan" : "Current Plan";
         if (isCurrent && usage?.cancelAtPeriodEnd) return "Resume renewal";
         if (isCurrent) return "Current Plan";
-        if (rank[planName] > rank[currentPlan]) return currentPlan === "Free" ? `Start ${planName}` : `Upgrade to ${planName}`;
+        if (rank[planName] > rank[currentPlan])
+            return currentPlan === "Free"
+                ? `Start ${planName}`
+                : `Upgrade to ${planName}`;
         return `Downgrade to ${planName}`;
     };
 
@@ -240,26 +280,31 @@ export default function PricingModal() {
             width={920}
             hideFooter={false}
             maxHeight
-            footer={<div className="grid gap-4 rounded-2xl md:border md:border-secondary/10 md:bg-secondary md:p-5 text-white md:grid-cols-[1fr_auto] md:items-center">
-                <div className="hidden md:flex items-start gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10">
-                        <Mail className="h-5 w-5 text-primary" />
+            footer={
+                <div className="grid gap-4 rounded-2xl md:border md:border-secondary/10 md:bg-secondary md:p-5 text-white md:grid-cols-[1fr_auto] md:items-center">
+                    <div className="hidden md:flex items-start gap-3">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10">
+                            <Mail className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                            <h3 className="md:text-base font-bold">
+                                Custom / Enterprise
+                            </h3>
+                            <p className="mt-1 text-xs md:text-sm text-white/65">
+                                Need custom seats, usage, onboarding,
+                                procurement, or support?
+                            </p>
+                        </div>
                     </div>
-                    <div>
-                        <h3 className="md:text-base font-bold">Custom / Enterprise</h3>
-                        <p className="mt-1 text-xs md:text-sm text-white/65">
-                            Need custom seats, usage, onboarding, procurement, or support?
-                        </p>
-                    </div>
+                    <Button
+                        icon={<MailIcon size={16} />}
+                        href="mailto:sales@qikagenda.com?subject=QikAgenda%20custom%20plan"
+                        className="max-md:bg-secondary! max-md:text-white! h-10! rounded-xl! border-none! px-5! font-bold! uppercase!"
+                    >
+                        Contact Sales
+                    </Button>
                 </div>
-                <Button
-                    icon={<MailIcon size={16} />}
-                    href="mailto:sales@qikagenda.com?subject=QikAgenda%20custom%20plan"
-                    className="max-md:bg-secondary! max-md:text-white! h-10! rounded-xl! border-none! px-5! font-bold! uppercase!"
-                >
-                    Contact Sales
-                </Button>
-            </div>}
+            }
         >
             <div className="space-y-4">
                 {!stripeReady && (
@@ -301,7 +346,9 @@ export default function PricingModal() {
                                 activeAction !== null ||
                                 (!hasPaidPlan && plan.name === "Free") ||
                                 (isCurrent && !usage?.cancelAtPeriodEnd);
-                            const pendingDate = formatDate(usage?.pendingChangeEffectiveAt);
+                            const pendingDate = formatDate(
+                                usage?.pendingChangeEffectiveAt
+                            );
                             const renewsAt = formatDate(usage?.renewsAt);
                             const styles = accentStyles[plan.accent];
 
@@ -310,88 +357,132 @@ export default function PricingModal() {
                                     key={plan.name}
                                     className={cn(
                                         "relative flex w-[280px] shrink-0 flex-col rounded-2xl border p-4 pt-6 transition-all hover:scale-95",
-                                        styles.card,
+                                        styles.card
                                         // isCurrent && `ring-2 ${styles.ring}`
                                     )}
                                 >
-
                                     <div className="flex flex-wrap justify-end gap-1.5 absolute left-1/3 top-0">
-                                        {plan.popular && <Tag className="border! border-orange-200! rounded-t-none! border-t-0! p-2" color="gold">Best for teams</Tag>}
+                                        {plan.popular && (
+                                            <Tag
+                                                className="border! border-orange-200! rounded-t-none! border-t-0! p-2"
+                                                color="gold"
+                                            >
+                                                Best for teams
+                                            </Tag>
+                                        )}
                                         {/* {isCurrent && <Tag color="green">Current</Tag>} */}
                                     </div>
 
-                                    {(isCurrent && usage?.cancelAtPeriodEnd) && (
+                                    {isCurrent && usage?.cancelAtPeriodEnd && (
                                         <div className="mb-3 rounded-xl border border-rose-100 bg-rose-50 px-3 py-2 text-sm font-medium text-rose-700">
-                                            Cancels {pendingDate || "at period end"}
+                                            Cancels{" "}
+                                            {pendingDate || "at period end"}
                                         </div>
                                     )}
 
-                                    {usage?.pendingPlanType === plan.name && !isCurrent && (
-                                        <div className="mb-3 rounded-xl border border-amber-100 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-700">
-                                            Scheduled for {pendingDate || "renewal"}
-                                        </div>
-                                    )}
+                                    {usage?.pendingPlanType === plan.name &&
+                                        !isCurrent && (
+                                            <div className="mb-3 rounded-xl border border-amber-100 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-700">
+                                                Scheduled for{" "}
+                                                {pendingDate || "renewal"}
+                                            </div>
+                                        )}
 
                                     <div>
-                                        <h3 className="text-base font-bold text-secondary">{plan.label}</h3>
+                                        <h3 className="text-base font-bold text-secondary">
+                                            {plan.label}
+                                        </h3>
                                         <div className="mt-2 flex items-end gap-1">
                                             <div className="flex flex-col items-start gap-2 w-full">
-                                                <p className="text-4xl font-bold text-secondary">{plan.price} <span className="text-sm text-muted">{plan.period}</span></p>
+                                                <p className="text-4xl font-bold text-secondary">
+                                                    {plan.price}{" "}
+                                                    <span className="text-sm text-muted">
+                                                        {plan.period}
+                                                    </span>
+                                                </p>
                                                 <Button
-                                                    type={isDisabled ? "default" : "primary"}
+                                                    type={
+                                                        isDisabled
+                                                            ? "default"
+                                                            : "primary"
+                                                    }
                                                     disabled={isDisabled}
                                                     block
                                                     className={cn(
                                                         "w-full! h-8! rounded-md!",
-                                                        !isDisabled && `${styles.button} border-none!`
+                                                        !isDisabled &&
+                                                            `${styles.button} border-none!`
                                                     )}
                                                     onClick={() => {
-                                                        if (plan.name === "Free") {
+                                                        if (
+                                                            plan.name === "Free"
+                                                        ) {
                                                             handleCancel();
                                                             return;
                                                         }
-                                                        if (isCurrent && usage?.cancelAtPeriodEnd) {
+                                                        if (
+                                                            isCurrent &&
+                                                            usage?.cancelAtPeriodEnd
+                                                        ) {
                                                             handleResume();
                                                             return;
                                                         }
-                                                        handlePlanAction(plan.name);
+                                                        handlePlanAction(
+                                                            plan.name
+                                                        );
                                                     }}
                                                 >
                                                     <span className="inline-flex items-center justify-center gap-2">
-                                                        {isProcessing && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-                                                        {isCurrent && usage?.cancelAtPeriodEnd && !isProcessing && <RefreshCw className="h-3.5 w-3.5" />}
-                                                        {getButtonText(plan.name, isCurrent)}
+                                                        {isProcessing && (
+                                                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                                        )}
+                                                        {isCurrent &&
+                                                            usage?.cancelAtPeriodEnd &&
+                                                            !isProcessing && (
+                                                                <RefreshCw className="h-3.5 w-3.5" />
+                                                            )}
+                                                        {getButtonText(
+                                                            plan.name,
+                                                            isCurrent
+                                                        )}
                                                     </span>
                                                 </Button>
                                             </div>
-
                                         </div>
                                     </div>
                                     <div className=" border-t border-border mt-5 pt-4">
-                                        <p className="mt-3 text-xs leading-relaxed text-gray-600">{plan.description}</p>
+                                        <p className="mt-3 text-xs leading-relaxed text-gray-600">
+                                            {plan.description}
+                                        </p>
                                         <div className="flex-1 space-y-2.5 mt-4">
                                             {limits.features.map(feature => (
-                                                <div key={feature} className="flex items-start gap-2.5">
+                                                <div
+                                                    key={feature}
+                                                    className="flex items-start gap-2.5"
+                                                >
                                                     <div className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-primary/10">
                                                         <Check className="h-2.5 w-2.5 text-primary" />
                                                     </div>
-                                                    <span className="text-xs leading-snug text-gray-600">{feature}</span>
+                                                    <span className="text-xs leading-snug text-gray-600">
+                                                        {feature}
+                                                    </span>
                                                 </div>
                                             ))}
                                         </div>
-
                                     </div>
 
-                                    {isCurrent && renewsAt && !usage?.cancelAtPeriodEnd && (
-                                        <p className="mt-3 text-center text-xs text-muted">Renews {renewsAt}</p>
-                                    )}
+                                    {isCurrent &&
+                                        renewsAt &&
+                                        !usage?.cancelAtPeriodEnd && (
+                                            <p className="mt-3 text-center text-xs text-muted">
+                                                Renews {renewsAt}
+                                            </p>
+                                        )}
                                 </article>
                             );
                         })}
                     </div>
                 </div>
-
-
             </div>
         </CustomModal>
     );

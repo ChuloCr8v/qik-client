@@ -1,115 +1,107 @@
-import React, { useState, useEffect } from 'react';
-import { Input, InputNumber } from 'antd';
-import CustomDrawer from './CustomDrawer';
-import { Clock, AlignLeft, Type } from 'lucide-react';
-import toast from 'react-hot-toast';
+import React, { useState, useEffect } from "react";
+import { Input, InputNumber, Form } from "antd";
+import CustomModal from "./CustomModal";
+import { Clock, AlignLeft, Type } from "lucide-react";
+import toast from "react-hot-toast";
+import {
+    useUpdateAgendaItemMutation,
+    useAddAgendaItemMutation
+} from "../features/meetings/meetingsApi";
+import { AgendaItem } from "../types";
+import { usePopup } from "../context/PopupContext";
 
 interface AgendaItemModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSave: (data: { title: string; description: string; duration: number }) => Promise<void>;
-  initialData?: { title: string; description: string; duration: number };
-  title: string;
+    data?: AgendaItem;
+    meetingId?: string;
 }
 
 export default function AgendaItemModal({
-  isOpen,
-  onClose,
-  onSave,
-  initialData,
-  title
+    data,
+    meetingId
 }: AgendaItemModalProps) {
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    duration: 5
-  });
-  const [loading, setLoading] = useState(false);
+    const { closeModal } = usePopup();
+    const [updateAgendaItem, { isLoading: isUpdatingAgenda }] =
+        useUpdateAgendaItemMutation();
+    const [addAgendaItem, { isLoading: isAddingAgenda }] =
+        useAddAgendaItemMutation();
+    const [form] = Form.useForm();
 
-  useEffect(() => {
-    if (initialData) {
-      setFormData(initialData);
-    } else {
-      setFormData({ title: '', description: '', duration: 5 });
-    }
-  }, [initialData, isOpen]);
+    useEffect(() => {
+        if (!data) return;
+        const initialData = {
+            title: data.title,
+            description: data.description,
+            duration: data.duration
+        };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.title.trim()) return;
+        form.setFieldsValue(initialData);
+    }, [data]);
 
-    setLoading(true);
-    try {
-      await onSave(formData);
-      toast.success(initialData ? 'Agenda topic updated.' : 'Agenda topic added.');
-      onClose();
-    } catch (error) {
-      console.error(error);
-      toast.error(initialData ? 'Unable to update agenda topic.' : 'Unable to add agenda topic.');
-    } finally {
-      setLoading(false);
-    }
-  };
+    const handleSubmit = async () => {
+        try {
+            const values = await form.validateFields();
+            if (!data) {
+                await addAgendaItem({ meetingId, item: values }).unwrap();
+                toast.success("Agenda topic added.");
+                closeModal();
+                return;
+            } else {
+                await updateAgendaItem({
+                    meetingId,
+                    itemId: data.id,
+                    data: values
+                }).unwrap();
+                toast.success("Agenda topic updated.");
+                closeModal();
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error(
+                data
+                    ? "Unable to update agenda topic."
+                    : "Unable to add agenda topic."
+            );
+        }
+    };
 
-  return (
-    <CustomDrawer
-      isOpen={isOpen}
-      onClose={onClose}
-      icon={<Type className="h-5 w-5 text-primary" />}
-      title={title}
-      onOk={() => (document.getElementById('agenda-item-form') as HTMLFormElement | null)?.requestSubmit()}
-      okText="Save Changes"
-      loading={loading}
-      disabled={!formData.title.trim()}
-    >
-      <form id="agenda-item-form" onSubmit={handleSubmit} className="space-y-6">
-        <div className="space-y-4">
-          <div className="space-y-1.5">
-            <label className="flex items-center gap-2 text-sm font-semibold uppercase text-muted">
-              <Type className="h-3 w-3" />
-              Topic Title
-            </label>
-            <Input
-              autoFocus
-              required
-              value={formData.title}
-              onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-              placeholder="e.g., Marketing Update"
-              className="h-10! rounded-xl!"
-            />
-          </div>
+    const loading = isUpdatingAgenda || isAddingAgenda;
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="space-y-1.5">
-              <label className="flex items-center gap-2 text-sm font-semibold uppercase text-muted">
-                <Clock className="h-3 w-3" />
-                Duration (min)
-              </label>
-              <InputNumber
-                min={1}
-                required
-                value={formData.duration}
-                onChange={(value) => setFormData(prev => ({ ...prev, duration: Number(value) || 0 }))}
-                className="h-10! w-full rounded-xl!"
-              />
-            </div>
-          </div>
+    return (
+        <CustomModal
+            icon={<Type className="h-5 w-5 text-primary" />}
+            title={data ? "Edit Agenda" : "Add Agenda"}
+            onOk={handleSubmit}
+            okText="Save Changes"
+            loading={loading}
+        >
+            <Form form={form}>
+                <Form.Item required name="title" label="Topic">
+                    <Input
+                        autoFocus
+                        required
+                        placeholder="e.g., Marketing Update"
+                        className="w-full h-9! text-xs!"
+                    />
+                </Form.Item>
 
-          <div className="space-y-1.5">
-            <label className="flex items-center gap-2 text-sm font-semibold uppercase text-muted">
-              <AlignLeft className="h-3 w-3" />
-              Description (optional)
-            </label>
-            <Input.TextArea
-              rows={6}
-              value={formData.description}
-              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-              placeholder="Details about this topic..."
-              className="rounded-xl!"
-            />
-          </div>
-        </div>
-      </form>
-    </CustomDrawer>
-  );
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <Form.Item required name="duration" label="Duration (mins)">
+                        <InputNumber
+                            min={1}
+                            required
+                            className="w-full! text-xs! h-9!"
+                        />
+                    </Form.Item>
+                </div>
+
+                <Form.Item name="description" label="Description (optional)">
+                    <Input.TextArea
+                        rows={6}
+                        placeholder="Details about this topic..."
+                        className="w-full text-xs! pt-2!"
+                    />
+                </Form.Item>
+            </Form>
+        </CustomModal>
+    );
 }
