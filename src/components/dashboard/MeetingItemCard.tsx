@@ -1,5 +1,9 @@
-
-
+import { Button } from "antd";
+import {
+    getMeetingStatusDotClassName,
+    getMeetingStatusClassName,
+    getMeetingStatusLabel
+} from "./dashboardUtils";
 interface MeetingItemCardProps {
     key?: Key;
     meeting: Meeting;
@@ -7,7 +11,7 @@ interface MeetingItemCardProps {
     onClick: () => void;
     subtitleMode?: "status" | "schedule";
 }
-
+import {ArrowRight} from 'lucide-react'
 
 function MeetingItemCard({
     meeting,
@@ -66,4 +70,4 @@ function MeetingItemCard({
     );
 }
 
-export default MeetingItemCard
+export default MeetingItemCard;

@@ -131,10 +131,12 @@ function MeetingCard({
             <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 space-y-2!">
                     <StatusPill status={meeting.status} />
-                    <h3 className="truncate text-sm font-semibold text-secondary mt-1!">
+                    <h3 className="truncate text-sm font-semibold text-secondary my-2!">
                         {meeting.title}
                     </h3>
-                    <p className="text-xs! text-muted">{meeting.description}</p>
+                    <p className="text-xs! pt-1! text-muted">
+                        {meeting.description}
+                    </p>
                 </div>
                 <Button
                     danger

@@ -13,7 +13,6 @@ export default function TemplateSearch({ value, onChange }: TemplateSearchProps)
         placeholder="Search templates..."
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="h-10! rounded-2xl!"
       />
   );
 }
