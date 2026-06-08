@@ -1,4 +1,5 @@
 import {
+    Bookmark,
     Check,
     Copy,
     Download,
@@ -19,12 +20,14 @@ interface MeetingActionsProps {
     isCopying: boolean;
     hasInvitees: boolean;
     mailAvailable?: boolean;
+    canSaveTemplate?: boolean;
     onCopyLink: () => void;
     onSendReminders: () => void;
     onInvite: () => void;
     onTogglePublic: () => void;
     onExportPDF: () => void;
     onExportMarkdown: () => void;
+    onSaveAsTemplate: () => void;
     onDelete: () => void;
 }
 
@@ -34,12 +37,14 @@ export default function MeetingActions({
     isCopying,
     hasInvitees,
     mailAvailable = true,
+    canSaveTemplate = false,
     onCopyLink,
     onSendReminders,
     onInvite,
     onTogglePublic,
     onExportPDF,
     onExportMarkdown,
+    onSaveAsTemplate,
     onDelete
 }: MeetingActionsProps) {
     const actionItems: MenuProps["items"] = [
@@ -99,6 +104,13 @@ export default function MeetingActions({
         },
         ...(isOwner
             ? [
+                {
+                    key: "save-template",
+                    icon: <Bookmark className="h-4 w-4" />,
+                    label: canSaveTemplate ? "Save as Template" : "Save as Template ⭐",
+                    onClick: onSaveAsTemplate
+                },
+                { type: 'divider' as const },
                 {
                     key: "delete",
                     danger: true,

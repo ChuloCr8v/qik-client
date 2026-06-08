@@ -18,6 +18,7 @@ interface MeetingHeaderProps {
   isHeaderVisible: boolean;
   isCopying: boolean;
   mailAvailable?: boolean;
+  canSaveTemplate?: boolean;
   onStartMeeting: () => void;
   onStopMeeting: () => void;
   onOpenOverlay: () => void;
@@ -26,6 +27,7 @@ interface MeetingHeaderProps {
   onInvite: () => void;
   onExportPDF: () => void;
   onExportMarkdown: () => void;
+  onSaveAsTemplate: () => void;
   onDelete: () => void;
   onTogglePublic: () => void;
 }
@@ -39,6 +41,7 @@ export default function MeetingHeader({
   isHeaderVisible,
   isCopying,
   mailAvailable = true,
+  canSaveTemplate = false,
   onStartMeeting,
   onStopMeeting,
   onOpenOverlay,
@@ -47,6 +50,7 @@ export default function MeetingHeader({
   onInvite,
   onExportPDF,
   onExportMarkdown,
+  onSaveAsTemplate,
   onDelete,
   onTogglePublic,
 }: MeetingHeaderProps) {
@@ -90,12 +94,14 @@ export default function MeetingHeader({
             isCopying={isCopying}
             hasInvitees={hasInvitees}
             mailAvailable={mailAvailable}
+            canSaveTemplate={canSaveTemplate}
             onCopyLink={onCopyLink}
             onSendReminders={onSendReminders}
             onInvite={onInvite}
             onTogglePublic={onTogglePublic}
             onExportPDF={onExportPDF}
             onExportMarkdown={onExportMarkdown}
+            onSaveAsTemplate={onSaveAsTemplate}
             onDelete={onDelete}
             />
         </div>
