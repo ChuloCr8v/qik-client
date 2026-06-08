@@ -28,8 +28,7 @@ export default function InviteModal({
   const [success,
     setSuccess] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     if (!mailAvailable) {
       toast.error('Email delivery is not configured yet.');
       return;
@@ -62,12 +61,13 @@ export default function InviteModal({
       icon={<Mail className="h-5 w-5 text-primary" />}
       title="Invite Guest"
       modalSubtitle={`Send an invite for ${meetingTitle}`}
-      hideFooter
+      onOk={handleSubmit}
+      okText={success ? 'Invites Sent!' : 'Send Invitation'}
     >
       <div className="space-y-6">
         {invitees.length > 0 && (
-          <div className="rounded-2xl border border-border bg-slate-50 p-3">
-            <p className="mb-2 text-sm font-semibold uppercase  text-muted">
+          <div className="rounded-xl border border-border bg-slate-50 py-2 px-3">
+            <p className="pb-2! text-xs font-semibold  text-muted">
               Current invitees
             </p>
             <div className="flex flex-wrap gap-1.5">
@@ -95,24 +95,11 @@ export default function InviteModal({
               placeholder="teammate@company.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="h-10! rounded-xl!"
             />
-          </div>
-          <div className="flex flex-row justify-end gap-3 border-t border-slate-100 pt-4">
-            <Button type="button" onClick={onClose}>Cancel</Button>
-            <Button
-              htmlType="submit"
-              type="primary"
-              disabled={!mailAvailable || isSending || success}
-              loading={isSending}
-              icon={!isSending && !success ? <Send className="h-3.5 w-3.5" /> : undefined}
-            >
-              {success ? 'Sent Successfully!' : 'Send Invitation'}
-            </Button>
           </div>
         </form>
 
-        <div className="pt-4 border-t border-slate-100 italic">
+        <div className="border border-slate-200 bg-slate-50 px-3 py-4 rounded-xl italic">
           <p className="text-sm text-center text-muted">
             They'll receive a secure link to join as a participant.
           </p>

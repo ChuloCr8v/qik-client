@@ -82,8 +82,8 @@ export default function AgendaItemRow({
                 background: isCurrent
                     ? `linear-gradient(to right, rgb(251 191 36 / 0.1) ${progress}%, white ${progress}%)`
                     : isCompleted
-                      ? "#ecfdf5"
-                      : "white"
+                        ? "#ecfdf5"
+                        : "white"
             }}
         >
             <div className="flex items-start gap-3 text-left sm:gap-4">
@@ -108,8 +108,8 @@ export default function AgendaItemRow({
                                 isCurrent
                                     ? "scale-105 bg-amber-500 text-slate-950 ring-amber-600/20"
                                     : isCompleted
-                                      ? "bg-emerald-100 text-emerald-700 ring-emerald-200"
-                                      : "bg-slate-100/80 text-muted ring-slate-200/50 group-hover:bg-white group-hover:ring-primary/20"
+                                        ? "bg-emerald-100 text-emerald-700 ring-emerald-200"
+                                        : "bg-slate-100/80 text-muted ring-slate-200/50 group-hover:bg-white group-hover:ring-primary/20"
                             )}
                         >
                             <Clock className="h-3 w-3" />
@@ -172,11 +172,8 @@ export default function AgendaItemRow({
                                         />
                                     )
                                 }
-                            >
-                                Edit
-                            </Button>
+                            />
                             <Button
-                                className="h-7!"
                                 size="small"
                                 icon={<Trash2 className="h-3 w-3" />}
                                 onClick={() =>
@@ -186,9 +183,7 @@ export default function AgendaItemRow({
                                     })
                                 }
                                 danger
-                            >
-                                Delete
-                            </Button>
+                            />
                         </div>
                     </div>
                 </div>

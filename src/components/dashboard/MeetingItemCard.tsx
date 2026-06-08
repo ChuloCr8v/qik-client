@@ -11,7 +11,10 @@ interface MeetingItemCardProps {
     onClick: () => void;
     subtitleMode?: "status" | "schedule";
 }
-import {ArrowRight} from 'lucide-react'
+import { ArrowRight, Clock } from 'lucide-react'
+import { formatDate } from "@/src/lib/utils";
+import { Key } from "readline";
+import { Meeting } from "@/src/types";
 
 function MeetingItemCard({
     meeting,

@@ -37,27 +37,36 @@ export default function ActiveMeetingOverlay({
   const [timeLeft, setTimeLeft] = useState(currentItem ? currentItem.duration * 60 : 0);
   const [timeUsed, setTimeUsed] = useState(0);
   const [timerMode, setTimerMode] = useState<'left' | 'used'>('left');
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const [updateMeetingProgress] = useUpdateMeetingProgressMutation();
   const [updateAgendaItem] = useUpdateAgendaItemMutation();
   const [stopMeeting] = useStopMeetingMutation();
 
   const handleNext = useCallback(async () => {
-    if (activeItemIndex === agenda.length - 1) {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+
+    try {
+      if (activeItemIndex === agenda.length - 1) {
+        if (currentItem) {
+          await updateAgendaItem({ meetingId, itemId: currentItem.id, data: { completed: true } });
+        }
+        await stopMeeting(meetingId);
+        onStop?.();
+        return;
+      }
       if (currentItem) {
         await updateAgendaItem({ meetingId, itemId: currentItem.id, data: { completed: true } });
       }
-      await stopMeeting(meetingId);
-      onStop?.();
-      return;
+      await updateMeetingProgress({
+        meetingId,
+        data: { activeItemIndex: activeItemIndex + 1, isPaused: false, startedAt: new Date().toISOString() as any },
+      });
+    } finally {
+      // Small delay before releasing the lock to allow RTK query polling to update the active item index
+      setTimeout(() => setIsTransitioning(false), 3000);
     }
-    if (currentItem) {
-      await updateAgendaItem({ meetingId, itemId: currentItem.id, data: { completed: true } });
-    }
-    await updateMeetingProgress({
-      meetingId,
-      data: { activeItemIndex: activeItemIndex + 1, isPaused: false, startedAt: new Date().toISOString() as any },
-    });
-  }, [activeItemIndex, agenda.length, currentItem, meetingId, onStop, stopMeeting, updateAgendaItem, updateMeetingProgress]);
+  }, [activeItemIndex, agenda.length, currentItem, meetingId, onStop, stopMeeting, updateAgendaItem, updateMeetingProgress, isTransitioning]);
 
   useEffect(() => {
     if (!currentItem || isPaused) return;

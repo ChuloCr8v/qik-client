@@ -83,56 +83,58 @@ const GreetingCard = ({
                 )}
             </div>
 
-            {/* Divider */}
-            <div className="border-t border-border mx-4" />
 
-            {/* Middle — insights */}
-            <div className="flex items-center gap-3 px-4">
-                {/* Today's meetings */}
-                <div className="flex items-center gap-2 flex-1">
-                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                        <CalendarClock className="w-4.5 h-4.5 text-primary" />
+            <div className="border border-border overflow-hidden m-2 rounded-md">
+                {/* Middle — insights */}
+                <div className="flex items-center gap-3 px-4">
+                    {/* Today's meetings */}
+                    <div className="flex items-center gap-2 flex-1">
+                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                            <CalendarClock className="w-4.5 h-4.5 text-primary" />
+                        </div>
+                        <div>
+                            <p className="font-semibold leading-tight text-secondary">
+                                {meetingsToday} meeting
+                                {meetingsToday !== 1 ? "s" : ""} today
+                            </p>
+                            {nextMeeting ? (
+                                <p className="text-xs text-muted leading-tight truncate max-w-[120px]">
+                                    Next: {nextMeeting.title} · {nextMeeting.time}
+                                </p>
+                            ) : (
+                                <p className="text-xs text-muted">
+                                    Clear schedule!
+                                </p>
+                            )}
+                        </div>
                     </div>
-                    <div>
-                        <p className="font-semibold leading-tight text-secondary">
-                            {meetingsToday} meeting
-                            {meetingsToday !== 1 ? "s" : ""} today
-                        </p>
-                        {nextMeeting ? (
-                            <p className="text-xs text-muted leading-tight truncate max-w-[120px]">
-                                Next: {nextMeeting.title} · {nextMeeting.time}
+
+                    {/* Monthly trend */}
+                    <div className="flex items-center gap-2 flex-1 py-2 border-l border-border pl-3">
+                        <div className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center flex-shrink-0">
+                            <TrendingUp className="w-4.5 h-4.5 text-green-600" />
+                        </div>
+                        <div>
+                            <p className="text-sm text-secondary font-semibold leading-tight">
+                                {monthlyMeetings} this month
                             </p>
-                        ) : (
-                            <p className="text-xs text-muted">
-                                Clear schedule!
+                            <p
+                                className={`text-xs leading-tight ${isUp ? "text-green-500" : "text-red-400"}`}
+                            >
+                                {isUp ? "▲" : "▼"} {Math.abs(diff)} vs last month
                             </p>
-                        )}
+                        </div>
                     </div>
                 </div>
 
-                {/* Monthly trend */}
-                <div className="flex items-center gap-2 flex-1 py-2 border-l border-border pl-3">
-                    <div className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center flex-shrink-0">
-                        <TrendingUp className="w-4.5 h-4.5 text-green-600" />
-                    </div>
-                    <div>
-                        <p className="text-sm text-secondary font-semibold leading-tight">
-                            {monthlyMeetings} this month
-                        </p>
-                        <p
-                            className={`text-xs leading-tight ${isUp ? "text-green-500" : "text-red-400"}`}
-                        >
-                            {isUp ? "▲" : "▼"} {Math.abs(diff)} vs last month
-                        </p>
-                    </div>
-                </div>
+                {/* Divider */}
+                <div className="border-t border-border mx-4" />
+
+                {/* Bottom — CTA buttons */}
+                <DashboardQuickActions />
             </div>
 
-            {/* Divider */}
-            <div className="border-t border-border mx-4" />
 
-            {/* Bottom — CTA buttons */}
-            <DashboardQuickActions />
             {/**
                 <div className="flex items-center gap-2 px-4 py-3">
                     <button

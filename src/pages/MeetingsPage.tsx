@@ -25,6 +25,7 @@ import { useMeetings } from "../features/meetings/MeetingsProvider";
 import { usePopup } from "../context/PopupContext";
 import NewMeetingCard from "../components/dashboard/NewMeetingCard";
 import toast from "react-hot-toast";
+import TableComponent from "../components/Table";
 
 type StatusFilter = "all" | Meeting["status"];
 type SortOption = "newest" | "oldest" | "scheduled";
@@ -131,7 +132,7 @@ function MeetingCard({
             <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 space-y-2!">
                     <StatusPill status={meeting.status} />
-                    <h3 className="truncate text-sm font-semibold text-secondary my-2!">
+                    <h3 className="truncate text-xs font-semibold text-secondary my-2!">
                         {meeting.title}
                     </h3>
                     <p className="text-xs! pt-1! text-muted">
@@ -151,7 +152,7 @@ function MeetingCard({
                 />
             </div>
 
-            <div className="mt-4 flex items-center gap-3 text-sm text-muted">
+            <div className="mt-4 flex items-center gap-3 text-xs text-muted">
                 <div className="text-xs! flex items-center gap-2">
                     <Clock className="h-3 w-3 md:h-4 md:w-4 text-slate-400" />
                     <span>
@@ -251,7 +252,7 @@ export default function MeetingsPage() {
             dataIndex: "title",
             render: (_value, meeting) => (
                 <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold text-secondary">
+                    <p className="truncate text-xs font-semibold text-secondary">
                         {meeting.title}
                     </p>
                     <p className="mt-0.5 truncate text-xs text-muted max-w-[200px]!">
@@ -265,7 +266,7 @@ export default function MeetingsPage() {
             dataIndex: "scheduledAt",
             render: scheduledAt =>
                 scheduledAt ? formatDate(scheduledAt) : "Not scheduled",
-            className: "text-sm text-muted"
+            className: "text-xs text-muted"
         },
         {
             title: "Status",
@@ -276,7 +277,7 @@ export default function MeetingsPage() {
             title: "Participants",
             key: "participants",
             render: (_value, meeting) => (
-                <span className="text-sm text-muted">
+                <span className="text-xs text-muted">
                     {getParticipantCount(meeting)}{" "}
                     {getParticipantCount(meeting) === 1 ? "person" : "people"}
                 </span>
@@ -286,7 +287,7 @@ export default function MeetingsPage() {
             title: "Created",
             dataIndex: "createdAt",
             render: createdAt => (
-                <span className="text-sm text-muted">
+                <span className="text-xs text-muted">
                     {formatDate(createdAt)}
                 </span>
             )
@@ -294,7 +295,7 @@ export default function MeetingsPage() {
         {
             title: "Actions",
             key: "actions",
-            align: "right",
+            align: "center",
             render: (_value, meeting) => (
                 <Button
                     danger
@@ -363,10 +364,10 @@ export default function MeetingsPage() {
             </div>
 
             <div className="rounded-xl border border-border bg-white p-3">
-                <div className="flex flex-col gap-2 md:flex-row lg:items-center lg:justify-between">
+                <div className="grid grid-cols-2 md:flex flex-col gap-2 md:flex-row lg:items-center lg:justify-between">
                     <div className="relative min-w-0 flex-1">
                         <Input
-                            className="text-xs! h-9!"
+                            className="text-xs! h-7!"
                             prefix={<Search className="h-4 w-4 text-muted" />}
                             type="text"
                             placeholder="Search by title or description..."
@@ -382,13 +383,13 @@ export default function MeetingsPage() {
                                 setStatusFilter(value as StatusFilter)
                             }
                             options={statusOptions}
-                            className="w-full text-xs! h-9! sm:w-36"
+                            className="w-full text-xs! h-7! sm:w-36"
                         />
 
                         <Select
                             value={sortBy}
                             onChange={value => setSortBy(value)}
-                            className="w-full text-xs! h-9! sm:w-44"
+                            className="w-full text-xs! h-7! sm:w-44"
                             options={[
                                 { label: "Newest first", value: "newest" },
                                 { label: "Oldest first", value: "oldest" },
@@ -405,13 +406,14 @@ export default function MeetingsPage() {
             {filteredMeetings.length > 0 ? (
                 <>
                     <div className="hidden md:block">
-                        <Table
+                        <TableComponent
                             columns={columns}
                             dataSource={filteredMeetings}
                             className="rounded-2xl"
                             onRow={meeting =>
                                 navigate(`/meetings/${meeting.id}`)
                             }
+                            bordered
                         />
                     </div>
 
@@ -437,7 +439,7 @@ export default function MeetingsPage() {
                                 <p className="text-base font-semibold text-secondary">
                                     No meetings found
                                 </p>
-                                <p className="mt-1 text-sm text-muted">
+                                <p className="mt-1 text-xs text-muted">
                                     Try a different search, clear the status
                                     filter, or create a new meeting.
                                 </p>
@@ -466,7 +468,7 @@ export default function MeetingsPage() {
                 loading={isDeleting}
                 okText="Delete Meeting"
             >
-                <p className="text-sm text-muted leading-relaxed">
+                <p className="text-xs text-muted leading-relaxed">
                     Are you sure you want to delete{" "}
                     <span className="font-semibold text-secondary">
                         "{meetingToDelete?.title}"
