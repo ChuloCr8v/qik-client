@@ -39,18 +39,18 @@ export function LoginMeetingContext({ meetingId }: Props) {
       <p className="text-sm font-bold uppercase  text-primary">Meeting invite</p>
       <h3 className="mt-1 text-sm font-bold text-secondary">{meeting.title}</h3>
       <div className="mt-3 grid grid-cols-2 gap-2">
-        <div className="flex items-center gap-2 rounded-xl bg-white px-3 py-2">
+        <div className="flex items-center gap-2 rounded-md border border-border bg-white px-3 py-2">
           <CalendarClock className="h-3.5 w-3.5 text-primary" />
           <span className="truncate text-sm font-semibold text-secondary">
             {meeting.scheduledAt ? formatDate(meeting.scheduledAt) : 'Not scheduled'}
           </span>
         </div>
-        <div className="flex items-center gap-2 rounded-xl bg-white px-3 py-2">
+        <div className="flex items-center gap-2 rounded-md bg-white border border-border px-3 py-2">
           <FileText className="h-3.5 w-3.5 text-primary" />
           <span className="text-sm font-semibold text-secondary">{meeting.agendaCount} agenda items</span>
         </div>
       </div>
-      <p className="mt-3 text-sm leading-relaxed text-muted">
+      <p className="pt-3! text-xs leading-relaxed text-muted">
         Sign in with your invited email and we will redirect you to this meeting.
       </p>
     </div>

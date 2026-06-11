@@ -18,7 +18,7 @@ const SummaryCards = ({ stat }: Props) => {
     return (
         <div
             className={cn(
-                "flex items-center justify-between pr-6! gap-2 rounded-lg md:rounded-2xl border border-border bg-white p-3 py-2 transition-all hover:shadow-md",
+                "flex items-center justify-between pr-6! gap-2 rounded-lg border border-border bg-white p-3 py-2 transition-all",
                 stat.bg
             )}
         >
@@ -33,7 +33,7 @@ const SummaryCards = ({ stat }: Props) => {
                 </p>
             </div>
 
-            <p className="text-sm font-semibold text-secondary sm:text-xl">
+            <p className="text-sm font-semibold text-secondary sm:text-lg!">
                 {stat.value}
             </p>
         </div>

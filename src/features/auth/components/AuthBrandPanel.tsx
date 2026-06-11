@@ -31,11 +31,11 @@ export function AuthBrandPanel() {
         <span className="text-lg font-bold tracking-tight">AgendaPro</span>
       </div>
 
-      <div className="relative z-10 space-y-8 -mt-24">
-        <h1 className="text-4xl font-bold leading-tight">
+      <div className="relative z-10 space-y-8! -mt-24">
+        <h1 className="text-6xl font-bold">
           Plan less, <br />achieve more.
         </h1>
-        <div className="space-y-6">
+        <div className="space-y-6 pt-8">
           {highlights.map(({ icon: Icon, iconClassName, title, description }) => (
             <div key={title} className="flex items-center gap-4">
               <div className="h-8 w-8 rounded-lg bg-white/10 flex items-center justify-center shrink-0">

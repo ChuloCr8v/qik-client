@@ -40,7 +40,7 @@ export default function AiCoachPanel({
                     Generate Agenda
                 </h3>
             </div>
-            <div className="space-y-3! bg-slate-50">
+            <div className="space-y-3!  rounded-md p-2! border border-border bg-slate-50">
                 {!aiAvailable && (
                     <Alert
                         type="warning"

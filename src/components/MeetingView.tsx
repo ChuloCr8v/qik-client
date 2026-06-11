@@ -190,7 +190,7 @@ export default function MeetingView() {
                 onSaveAsTemplate={handleSaveAsTemplate}
             />
 
-            <div className="relative mx-auto grid h-full!  items-start gap-4 px-4 py-4 sm:px-6 md:grid-cols-3">
+            <div className="relative mx-auto grid h-full! max-w-6xl items-start gap-4 px-4 py-4 sm:px-6 md:grid-cols-3">
                 <div className="max-md:pb-20! md:bg-white order-2 space-y-6 md:sticky md:-mt-4 md:pt-4 md:order-1 md:border-x md:shadow-xs md:border-slate-200 md:px-3 h-full! md:col-span-1 md:self-start">
                     <AiCoachPanel
                         aiContext={ai.aiContext}

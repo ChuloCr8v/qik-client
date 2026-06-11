@@ -38,7 +38,7 @@ export default function TemplateGrid({
             {templates.map(template => (
                 <div
                     key={template.id}
-                    className="group rounded-xl overflow-hidden relative flex cursor-pointer items-start gap-4 border border-border bg-white p-4 transition-all hover:border-primary/40 hover:shadow-lg"
+                    className="group rounded-xl overflow-hidden relative flex cursor-pointer items-start gap-4 border border-border bg-white p-4 transition-all hover:border-primary/40"
                     onClick={() => onPreview(template)}
                 >
                     <div className="min-w-0 flex-1 relative">
