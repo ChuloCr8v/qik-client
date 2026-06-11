@@ -55,7 +55,7 @@ export default function Footer({ variant = 'full' }: FooterProps) {
           </div>
         </div>
 
-        <div className="mt-12 border-t border-border pt-2 text-center text-muted">
+        <div className="mt-12 text-xs! border-t border-border pt-2 text-center text-muted">
           &copy; {currentYear} QikAgenda. All rights reserved.
         </div>
       </div>

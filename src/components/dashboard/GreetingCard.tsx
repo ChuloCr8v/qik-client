@@ -84,7 +84,7 @@ const GreetingCard = ({
             </div>
 
 
-            <div className="border border-border overflow-hidden m-2 rounded-md">
+            <div className="border border-border overflow-hidden bg-gray-50 m-2 rounded-2xl">
                 {/* Middle — insights */}
                 <div className="flex items-center gap-3 px-4">
                     {/* Today's meetings */}
@@ -128,7 +128,7 @@ const GreetingCard = ({
                 </div>
 
                 {/* Divider */}
-                <div className="border-t border-border mx-4" />
+                <div className="border-t border-border" />
 
                 {/* Bottom — CTA buttons */}
                 <DashboardQuickActions />

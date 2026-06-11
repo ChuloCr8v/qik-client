@@ -49,7 +49,7 @@ export default function Header({
             key: "settings",
             icon: <Settings className="h-4 w-4" />,
             label: "Settings",
-            className:"text-xs!",
+            className: "text-xs!",
             onClick: () => onNavigate?.("/settings")
         },
         {
@@ -65,7 +65,7 @@ export default function Header({
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-border bg-white/80 backdrop-blur-md">
-            <div className="mx-auto flex py-2 max-w-6xl items-center justify-between px-4 md:pl-0">
+            <div className="mx-auto flex py-2 items-center justify-between px-4 md:pl-0">
                 <div className="flex items-center gap-2">
                     {user && (
                         <Button
@@ -148,8 +148,8 @@ export default function Header({
                                                                     <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">
                                                                         {n.createdAt
                                                                             ? formatDate(
-                                                                                  n.createdAt
-                                                                              )
+                                                                                n.createdAt
+                                                                            )
                                                                             : "Just now"}
                                                                     </p>
                                                                 </div>

@@ -90,7 +90,7 @@ export default function AgendaItemRow({
                 <div className="min-w-0 flex-1">
                     <div className="mb-1 flex items-start justify-between gap-3">
                         <h4
-                            className={`py-0.5 text-sm font-semibold leading-tight text-secondary ${isCompleted ? "line-through decoration-slate-300" : ""}`}
+                            className={`py-0.5 text-sm lg:text-base font-semibold leading-tight text-secondary ${isCompleted ? "line-through decoration-slate-300" : ""}`}
                         >
                             {item.title}
                         </h4>

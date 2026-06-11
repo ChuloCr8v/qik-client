@@ -63,7 +63,7 @@ const DashboardQuickActions = () => {
                     <Button
                         key={s.title}
                         onClick={s.onOk}
-                        className={`hover:bg-gray-50 h-10! md:px-5! border-0! border-l! overflow-hidden flex items-center justify-start! gap-2 transition-colors rounded-none! ${i === 0 && "border-l-0!"} ${s.bgColor}!`}
+                        className={`hover:bg-gray-100! bg-gray-50! h-10! md:px-5! border-0! border-l! overflow-hidden flex items-center justify-start! gap-2 transition-colors rounded-none! ${i === 0 && "border-l-0!"} ${s.bgColor}!`}
                     >
                         <div
                             className={`inline-flex items-center justify-center w-5 h-5 md:w-6 md:h-6 rounded-md flex-shrink-0 ${s.iconBg}`}
