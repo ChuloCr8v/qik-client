@@ -11,7 +11,8 @@ import {
     Search,
     Trash2,
     Users,
-    Video
+    Video,
+    MoreVertical
 } from "lucide-react";
 import { Meeting } from "../types";
 import PageHeader from "../components/PageHeader";
@@ -116,6 +117,26 @@ function MeetingCard({
     onOpen: () => void;
     onDelete: () => void;
 }) {
+    const meta = getStatusMeta(meeting.status);
+    const Icon = meta.icon;
+    const count = getParticipantCount(meeting);
+
+    const iconBoxClass = cn(
+        "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border",
+        meeting.status === "active" && "bg-emerald-50 border-emerald-200/60",
+        meeting.status === "scheduled" && "bg-amber-50 border-amber-200/60",
+        meeting.status === "completed" && "bg-slate-100 border-slate-200/60",
+        meeting.status === "archived" && "bg-slate-100 border-slate-200/60"
+    );
+
+    const pillClass = cn(
+        "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide",
+        meeting.status === "active" && "bg-emerald-50 border-emerald-200/70 text-emerald-500",
+        meeting.status === "scheduled" && "bg-amber-50 border-amber-200/70 text-amber-500",
+        meeting.status === "completed" && "bg-slate-100 border-slate-200/70 text-slate-400",
+        meeting.status === "archived" && "bg-slate-100 border-slate-200/70 text-slate-300"
+    );
+
     return (
         <div
             role="button"
@@ -127,54 +148,89 @@ function MeetingCard({
                     onOpen();
                 }
             }}
-            className="h-auto! w-full rounded-xl border border-border bg-white p-4 text-left shadow-xs transition-all hover:border-primary/30 hover:shadow-md"
+            className="w-full rounded-[14px] border border-border bg-white px-3 py-2.5 text-left shadow-xs transition-all hover:bg-[var(--status-soft)] hover:border-[var(--status-accent)]/25 hover:shadow-md cursor-pointer"
         >
-            <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0 space-y-2!">
-                    <StatusPill status={meeting.status} />
-                    <h3 className="truncate text-xs font-semibold text-secondary my-2!">
-                        {meeting.title}
-                    </h3>
-                    <p className="text-xs! pt-1! text-muted">
-                        {meeting.description}
-                    </p>
+            <div className="flex items-center gap-2.5">
+                {/* Icon box */}
+                <div className={iconBoxClass}>
+                    <Icon className={cn("h-4 w-4", meta.iconClassName)} />
                 </div>
-                <Button
-                    danger
-                    type="text"
-                    size="small"
-                    icon={<Trash2 className="h-4 w-4" />}
-                    onClick={event => {
-                        event.stopPropagation();
-                        onDelete();
-                    }}
-                    title="Delete meeting"
-                />
+
+                {/* Content */}
+                <div className="min-w-0 flex-1">
+                    <div className="flex items-center justify-between">
+                        <span className={pillClass}>
+                            <Icon className={cn("h-2.5 w-2.5", meta.iconClassName)} />
+                            {meta.label}
+                        </span>
+                        <Button
+                            type="text"
+                            size="small"
+                            icon={<MoreVertical className="h-3.5 w-3.5 text-muted" />}
+                            onClick={event => {
+                                event.stopPropagation();
+                                onDelete();
+                            }}
+                            title="Meeting options"
+                            className="shrink-0 -mr-1"
+                        />
+                    </div>
+
+                    <p className="mt-0.5 text-[12.5px] font-bold text-secondary leading-snug truncate">
+                        {meeting.title}
+                    </p>
+
+                    {meeting.description && (
+                        <p className="mt-0.5 text-[10.5px] text-muted line-clamp-1 leading-snug">
+                            {meeting.description}
+                        </p>
+                    )}
+                </div>
             </div>
 
-            <div className="mt-4 flex items-center gap-3 text-xs text-muted">
-                <div className="text-xs! flex items-center gap-2">
-                    <Clock className="h-3 w-3 md:h-4 md:w-4 text-slate-400" />
+            {/* Footer */}
+            <div className="mt-2 pt-1.5 border-t border-border flex items-center justify-between">
+                <div className="flex items-center gap-1 text-[10.5px] text-muted">
+                    <Clock className="h-2.5 w-2.5 shrink-0 text-slate-400" />
                     <span>
                         {meeting.scheduledAt
                             ? formatDate(meeting.scheduledAt)
                             : formatDate(meeting.createdAt)}
                     </span>
                 </div>
-                <div className="flex text-xs! border-l border-border pl-3 items-center gap-2">
-                    <Users className="h-3 w-3 md:h-4 md:w-4 text-slate-400" />
-                    <span>
-                        {getParticipantCount(meeting)}{" "}
-                        {getParticipantCount(meeting) === 1
-                            ? "participant"
-                            : "participants"}
+
+                {/* Stacked avatars */}
+                <div className="flex items-center">
+                    {Array.from({ length: Math.min(count, 3) }).map((_, i) => (
+                        <div
+                            key={i}
+                            className="flex h-[18px] w-[18px] items-center justify-center rounded-full border-2 border-white text-[7px] font-bold text-white"
+                            style={{
+                                background: ["#6366f1","#10b981","#f59e0b"][i],
+                                marginLeft: i === 0 ? 0 : -5,
+                                zIndex: 3 - i,
+                                position: "relative"
+                            }}
+                        >
+                            {String.fromCharCode(65 + i)}
+                        </div>
+                    ))}
+                    {count > 3 && (
+                        <div
+                            className="flex h-[18px] w-[18px] items-center justify-center rounded-full border-2 border-white bg-slate-200 text-[7px] font-bold text-slate-500"
+                            style={{ marginLeft: -5, position: "relative", zIndex: 0 }}
+                        >
+                            +{count - 3}
+                        </div>
+                    )}
+                    <span className="ml-1.5 text-[10.5px] text-muted">
+                        {count} {count === 1 ? "person" : "people"}
                     </span>
                 </div>
             </div>
         </div>
     );
 }
-
 export default function MeetingsPage() {
     const navigate = useNavigate();
     const { meetings, deleteMeetingById } = useMeetings();
