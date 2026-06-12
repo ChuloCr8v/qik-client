@@ -10,6 +10,8 @@ import AIUsageRings from "../components/dashboard/charts/AIUsageRings";
 import AgendaQualityChart from "../components/dashboard/charts/AgendaQualityChart";
 import TopMeetingsChart from "../components/dashboard/charts/TopMeetingsChart";
 import { useGetDashboardStatsQuery } from "../features/meetings/meetingsApi";
+import DashboardQuickActions from "../components/dashboard/DashboardQuickActions";
+
 
 export default function DashboardPage() {
     const { data: stats, isLoading } = useGetDashboardStatsQuery();
@@ -32,6 +34,9 @@ export default function DashboardPage() {
                 monthlyMeetings={stats?.greeting?.monthlyMeetings}
                 lastMonthMeetings={stats?.greeting?.lastMonthMeetings}
             />
+            
+                            <DashboardQuickActions />
+
             <DashboardStatsCards
                 totalMeetings={stats?.statsCards?.totalMeetings}
                 thisMonth={stats?.statsCards?.thisMonth}

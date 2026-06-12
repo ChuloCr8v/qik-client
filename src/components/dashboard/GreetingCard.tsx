@@ -2,7 +2,6 @@ import React from "react";
 import { CalendarClock, Flame, TrendingUp } from "lucide-react";
 import { useAuth } from "../../features/auth/AuthProvider";
 import { useGetCurrentUserQuery } from "../../features/users/usersApi";
-import DashboardQuickActions from "./DashboardQuickActions";
 import { Button } from "antd";
 import { usePopup } from "../../context/PopupContext";
 import NewMeetingCard from "./NewMeetingCard";
@@ -49,7 +48,7 @@ const GreetingCard = ({
     return (
         <div className="rounded-xl border border-border bg-white overflow-hidden">
             {/* Top — greeting + streak */}
-            <div className="flex items-center justify-between px-4 pt-4 pb-3">
+            <div className="flex items-center justify-between px-4 pt-4">
                 <div>
                     <p className="text-muted mb-0.5">
                         {greeting.text}
@@ -83,57 +82,46 @@ const GreetingCard = ({
                 )}
             </div>
 
-
-            <div className="border border-border overflow-hidden bg-gray-50 m-2 rounded-2xl">
-                {/* Middle — insights */}
-                <div className="flex items-center gap-3 px-4">
-                    {/* Today's meetings */}
-                    <div className="flex items-center gap-2 flex-1">
-                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                            <CalendarClock className="w-4.5 h-4.5 text-primary" />
-                        </div>
-                        <div>
-                            <p className="font-semibold leading-tight text-secondary">
-                                {meetingsToday} meeting
-                                {meetingsToday !== 1 ? "s" : ""} today
-                            </p>
-                            {nextMeeting ? (
-                                <p className="text-xs text-muted leading-tight truncate max-w-[120px]">
-                                    Next: {nextMeeting.title} · {nextMeeting.time}
-                                </p>
-                            ) : (
-                                <p className="text-xs text-muted">
-                                    Clear schedule!
-                                </p>
-                            )}
-                        </div>
+            <div className="grid grid-cols-2 items-center gap-2 p-3">
+                {/* Today's meetings */}
+                <div className="border border-border overflow-hidden bg-gray-50 rounded-lg flex items-center gap-2 flex-1 p-3">
+                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <CalendarClock className="w-4.5 h-4.5 text-primary" />
                     </div>
-
-                    {/* Monthly trend */}
-                    <div className="flex items-center gap-2 flex-1 py-2 border-l border-border pl-3">
-                        <div className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center flex-shrink-0">
-                            <TrendingUp className="w-4.5 h-4.5 text-green-600" />
-                        </div>
-                        <div>
-                            <p className="text-sm text-secondary font-semibold leading-tight">
-                                {monthlyMeetings} this month
+                    <div>
+                        <p className="font-semibold leading-tight text-secondary">
+                            {meetingsToday} meeting
+                            {meetingsToday !== 1 ? "s" : ""} today
+                        </p>
+                        {nextMeeting ? (
+                            <p className="text-xs text-muted leading-tight truncate max-w-[120px]">
+                                Next: {nextMeeting.title} · {nextMeeting.time}
                             </p>
-                            <p
-                                className={`text-xs leading-tight ${isUp ? "text-green-500" : "text-red-400"}`}
-                            >
-                                {isUp ? "▲" : "▼"} {Math.abs(diff)} vs last month
+                        ) : (
+                            <p className="text-xs text-muted">
+                                Clear schedule!
                             </p>
-                        </div>
+                        )}
                     </div>
                 </div>
 
-                {/* Divider */}
-                <div className="border-t border-border" />
-
-                {/* Bottom — CTA buttons */}
-                <DashboardQuickActions />
+                {/* Monthly trend */}
+                <div className="flex items-center gap-2 border border-border overflow-hidden bg-gray-50 p-3 rounded-lg">
+                    <div className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center flex-shrink-0">
+                        <TrendingUp className="w-4.5 h-4.5 text-green-600" />
+                    </div>
+                    <div>
+                        <p className="text-sm text-secondary font-semibold leading-tight">
+                            {monthlyMeetings} this month
+                        </p>
+                        <p
+                            className={`text-xs leading-tight ${isUp ? "text-green-500" : "text-red-400"}`}
+                        >
+                            {isUp ? "▲" : "▼"} {Math.abs(diff)} vs last month
+                        </p>
+                    </div>
+                </div>
             </div>
-
 
             {/**
                 <div className="flex items-center gap-2 px-4 py-3">
